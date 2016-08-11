@@ -1,7 +1,7 @@
 === WC - APG City ===
 Contributors: artprojectgroup
 Donate link: http://www.artprojectgroup.es/tienda/donacion
-Tags: woocommerce, commerce, e-commerce, commerce, shop, virtual shop, city, postcode
+Tags: woocommerce, commerce, e-commerce, commerce, shop, virtual shop, city, town, postcode
 Requires at least: 3.8
 Tested up to: 4.6
 Stable tag: 2.0
@@ -26,7 +26,7 @@ Add to WooCommerce an automatic city name generated from postcode.
 **Art Project Group** offers [**Technical support**](http://www.wcprojectgroup.es/tienda/ticket-de-soporte) to configure or install ***WC - APG City***.
 
 = Origin =
-**WC - APG City** has been programmed from code published on [*¿Cómo añadir un campo NIF o CIF con validación a WooCommerce 2.4?*](http://www.artprojectgroup.es/como-anadir-un-campo-nif-o-cif-con-validacion-a-woocommerce-2-4) from [Art Project Group](http://www.artprojectgroup.es/).
+**WC - APG City** has been programmed from [Thekla Kurpjuweit](https://www.facebook.com/profile.php?id=100010011270290) request to add to WooCommerce automatic city name input from the postcode.
 
 = More information =
 On our official website you can learn more about [**WC - APG City**](http://www.artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city).
