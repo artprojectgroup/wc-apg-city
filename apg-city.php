@@ -32,7 +32,7 @@ $apg_city = array(
 	'donacion' 		=> 'http://www.artprojectgroup.es/tienda/donacion',
 	'soporte' 		=> 'http://www.wcprojectgroup.es/tienda/ticket-de-soporte',
 	'plugin_url' 	=> 'http://www.artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city', 
-	'puntuacion' 	=> 'http://wordpress.org/support/view/plugin-reviews/wc-apg-city'
+	'puntuacion' 	=> 'https://wordpress.org/support/view/plugin-reviews/wc-apg-city'
 );
 $envios_adicionales = $limpieza = NULL;
 
@@ -48,7 +48,7 @@ function apg_city_enlaces( $enlaces, $archivo ) {
 		$enlaces[] = '<a href="' . $apg_city['donacion'] . '" target="_blank" title="' . __( 'Make a donation by ', 'apg_city' ) . 'APG"><span class="genericon genericon-cart"></span></a>';
 		$enlaces[] = '<a href="'. $apg_city['plugin_url'] . '" target="_blank" title="' . $apg_city['plugin'] . '"><strong class="artprojectgroup">APG</strong></a>';
 		$enlaces[] = '<a href="https://www.facebook.com/artprojectgroup" title="' . __( 'Follow us on ', 'apg_city' ) . 'Facebook" target="_blank"><span class="genericon genericon-facebook-alt"></span></a> <a href="https://twitter.com/artprojectgroup" title="' . __( 'Follow us on ', 'apg_city' ) . 'Twitter" target="_blank"><span class="genericon genericon-twitter"></span></a> <a href="https://plus.google.com/+ArtProjectGroupES" title="' . __( 'Follow us on ', 'apg_city' ) . 'Google+" target="_blank"><span class="genericon genericon-googleplus-alt"></span></a> <a href="http://es.linkedin.com/in/artprojectgroup" title="' . __( 'Follow us on ', 'apg_city' ) . 'LinkedIn" target="_blank"><span class="genericon genericon-linkedin"></span></a>';
-		$enlaces[] = '<a href="http://profiles.wordpress.org/artprojectgroup/" title="' . __( 'More plugins on ', 'apg_city' ) . 'WordPress" target="_blank"><span class="genericon genericon-wordpress"></span></a>';
+		$enlaces[] = '<a href="https://profiles.wordpress.org/artprojectgroup/" title="' . __( 'More plugins on ', 'apg_city' ) . 'WordPress" target="_blank"><span class="genericon genericon-wordpress"></span></a>';
 		$enlaces[] = '<a href="mailto:info@artprojectgroup.es" title="' . __( 'Contact with us by ', 'apg_city' ) . 'e-mail"><span class="genericon genericon-mail"></span></a> <a href="skype:artprojectgroup" title="' . __( 'Contact with us by ', 'apg_city' ) . 'Skype"><span class="genericon genericon-skype"></span></a>';
 		$enlaces[] = apg_city_plugin( $apg_city['plugin_uri'] );
 	}
@@ -75,7 +75,7 @@ add_filter( "plugin_action_links_$plugin", 'apg_city_enlace_de_ajustes' );
 
 //¿Está activo WooCommerce?
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
-	function campos_de_direccion( $campos ) {
+	function apg_city_campos_de_direccion( $campos ) {
 		$campos['city']['custom_attributes']		= array( 
 			'readonly'	=> 'readonly'
 		);
@@ -116,7 +116,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 		return $campos_nuevos;
 	}
-	add_filter( 'woocommerce_default_address_fields', 'campos_de_direccion' );
+	add_filter( 'woocommerce_default_address_fields', 'apg_city_campos_de_direccion' );
 	
 	//Añade código JavaScript a en checkout
 	function codigo_javascript_en_checkout() {

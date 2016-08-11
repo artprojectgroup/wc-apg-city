@@ -583,3 +583,12 @@ div.star-holder .star-rate a:first-child {
 div.star-holder .star-rate a:hover ~ a, div.star-holder .star-rate a:hover {
 	background: url("/wp-admin/images/stars.png?ver=20121108") no-repeat scroll left top rgba(0, 0, 0, 0);
 }
+.estrellas div {
+	display: inline!important;
+}
+.estrellas div:hover {
+	color: #2ea2cc;
+}
+.estrellas .star-rating .star {
+	font-size: 18px;
+}
