@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WooCommerce - APG NIF/CIF/NIE field\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: Tue Aug 09 2016 14:50:28 GMT+0200 (CEST)\n"
-"PO-Revision-Date: Wed Aug 10 2016 23:44:47 GMT+0200 (CEST)\n"
+"PO-Revision-Date: Sat Aug 13 2016 00:23:33 GMT+0200 (CEST)\n"
 "Last-Translator: Art Project Group <info@artprojectgroup.es>\n"
 "Language-Team: \n"
 "Language: Spanish (Spain)\n"
@@ -22,32 +22,19 @@ msgstr ""
 "X-Generator: Loco - https://localise.biz/\n"
 "X-Loco-Target-Locale: es_ES"
 
+#. URI of the plugin
+msgid "https://wordpress.org/plugins/wc-apg-city"
+msgstr "https://wordpress.org/plugins/wc-apg-city"
+
 #. Name of the plugin
 msgid "WC - APG City"
 msgstr "WC - APG Localidad"
-
-#. URI of the plugin
-msgid "http://wordpress.org/plugins/wc-apg-city"
-msgstr "http://wordpress.org/plugins/wc-apg-city"
 
 #. Description of the plugin
 msgid "Add to WooCommerce an automatic city name generated from postcode."
 msgstr ""
 "Añade a WooCommerce un nombre de localidad automático generado a partir del "
 "código postal."
-
-#: ../../apg-city.php:83
-msgid "Town / City"
-msgstr "Localidad / Ciudad"
-
-#: ../../apg-city.php:84
-msgctxt "placeholder"
-msgid "Select city name"
-msgstr "Selecciona una localidad"
-
-#: ../../apg-city.php:95
-msgid "Select city name"
-msgstr "Selecciona una localidad"
 
 #. Author URI of the plugin
 msgid "http://www.artprojectgroup.es"
@@ -81,6 +68,19 @@ msgstr "Soporte técnico de "
 #: ../../apg-city.php:65
 msgid "Support"
 msgstr "Soporte técnico"
+
+#: ../../apg-city.php:83
+msgid "Town / City"
+msgstr "Localidad / Ciudad"
+
+#: ../../apg-city.php:84
+msgctxt "placeholder"
+msgid "Select city name"
+msgstr "Selecciona una localidad"
+
+#: ../../apg-city.php:95
+msgid "Select city name"
+msgstr "Selecciona una localidad"
 
 #: ../../apg-city.php:137
 msgid "This plugin require WooCommerce active to run!"
