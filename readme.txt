@@ -4,7 +4,7 @@ Donate link: http://www.artprojectgroup.es/tienda/donacion
 Tags: woocommerce, commerce, e-commerce, commerce, shop, virtual shop, city, town, state, postcode
 Requires at least: 3.8
 Tested up to: 4.6
-Stable tag: 0.2
+Stable tag: 0.2.1
 WC requires at least: 2.1
 WC tested up to: 2.6.4
 License: GPLv3
@@ -67,6 +67,8 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 1. Screenshot of WC - APG City. Billing and shipping forms.
 
 == Changelog ==
+= 0.2.1 =
+* New call to Google Maps API.
 = 0.2 =
 * Fixed JavaScript bugs.
 * Added state name selection.
@@ -74,9 +76,8 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 * Initial version.
 
 == Upgrade Notice ==
-= 0.2 =
-* Fixed JavaScript bugs.
-* Added state name selection.
+= 0.2.1 =
+* New call to Google Maps API.
 
 == Translations ==
 * *English*: by [**Art Project Group**](http://www.artprojectgroup.es/) (default language).

@@ -9,7 +9,7 @@ Requires at least: 3.8
 
 Tested up to: 4.6
 
-Stable tag: 0.2
+Stable tag: 0.2.1
 
 WC requires at least: 2.1
 
@@ -73,6 +73,9 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 *En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.*
 
 ## Changelog
+###0.2.1
+* Nueva llamada a la API de Google Maps.
+
 ###0.2
 * Se han corregido errores de JavaScript.
 * Se ha añadido la selección del nombre de la provincia (estado).
