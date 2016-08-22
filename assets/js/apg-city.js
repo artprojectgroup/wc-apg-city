@@ -7,19 +7,19 @@ jQuery( document ).ready( function() {
 			jQuery( '#' + formulario + '_city' ).append( 
 				jQuery( "<option></option>" ).attr( "value", "" ).text( "Select city name" )
 			);
-
-			//Controlamos el orden de los campos
-			for ( var i = 0; i < data.results[0].address_components.length; i++ ) {
-				if ( jQuery.inArray( "locality", data.results[0].address_components[i].types ) !== -1 ) {
-					var ciudad = i;
-				}
-
-				if ( jQuery.inArray( "administrative_area_level_2", data.results[0].address_components[i].types ) !== -1 ) {
-					var provincia = i;
-				}
-			}
 			
 			if ( data.status !== 'ZERO_RESULTS' ) {
+				//Controlamos el orden de los campos
+				for ( var i = 0; i < data.results[0].address_components.length; i++ ) {
+					if ( jQuery.inArray( "locality", data.results[0].address_components[i].types ) !== -1 ) {
+						var ciudad = i;
+					}
+	
+					if ( jQuery.inArray( "administrative_area_level_2", data.results[0].address_components[i].types ) !== -1 ) {
+						var provincia = i;
+					}
+				}
+				
 				if ( data.results[0].postcode_localities ) { //Es un código postal con múltiples localidades
 					jQuery.each( data.results[0].postcode_localities, function( key, value ) { 
 						jQuery( '#' + formulario + '_city' ).append( 
