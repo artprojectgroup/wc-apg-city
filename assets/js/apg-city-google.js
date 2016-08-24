@@ -26,16 +26,13 @@ jQuery( document ).ready( function() {
 							jQuery( "<option></option>" ).attr( "value", value ).text( value )
 						);
 					} );
-					//Actualizamos el campo select
-					jQuery( '#' + formulario + '_city option[value="' + data.results[0].address_components[ciudad].long_name + '"]' ).attr( 'selected', 'selected' ).trigger( "change" );
 				} else { //Es un código postal único
 					jQuery( '#' + formulario + '_city' ).append( 
 						jQuery( "<option></option>" ).attr( "value", data.results[0].address_components[ciudad].long_name ).text( data.results[0].address_components[ciudad].long_name )
 					);
-					//Actualizamos el campo select
-					jQuery( '#' + formulario + '_city option[value="' + data.results[0].address_components[ciudad].long_name + '"]' ).attr( 'selected', 'selected' ).trigger( "change" );
 				}
-			
+				//Actualizamos el campo select
+				jQuery( '#' + formulario + '_city option[value="' + data.results[0].address_components[ciudad].long_name + '"]' ).attr( 'selected', 'selected' ).trigger( "change" );
 				jQuery( '#' + formulario + '_state option:contains(' + data.results[0].address_components[provincia].long_name + ')' ).attr( 'selected', 'selected' ).trigger( "change" );
 			}		
 		} );

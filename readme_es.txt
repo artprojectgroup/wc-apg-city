@@ -1,10 +1,10 @@
 === WC - APG City ===
 Contributors: artprojectgroup
 Donate link: http://www.artprojectgroup.es/tienda/donacion
-Tags: woocommerce, commerce, e-commerce, commerce, shop, virtual shop, city, town, state, postcode
+Tags: woocommerce, commerce, e-commerce, commerce, shop, virtual shop, city, town, state, postcode, geonames, google maps
 Requires at least: 3.8
 Tested up to: 4.6
-Stable tag: 0.2.1
+Stable tag: 0.3
 WC requires at least: 2.1
 WC tested up to: 2.6.4
 License: GPLv3
@@ -13,9 +13,10 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Añade a WooCommerce un nombre de localidad automático generado a partir del código postal.
 
 == Description ==
-**WC - APG City** añade a tu tienda WooCommerce un nuevo campo localidad automático generado a partir del código postal a través de la API de Google Maps.
+**WC - APG City** añade a tu tienda WooCommerce un nuevo campo localidad automático generado a partir del código postal a través de la API de GeoNames o Google Maps.
 
 = Características =
+* Puedes seleccionar entre las API de GeoNames o Google Maps.
 * En caso de que el código postal sea compartido por más de una localidad, el cliente podrá seleccionar el nombre de la localidad correcto del listado devuelto por Google Maps.
 * También selecciona la provincia (estado), siempre que el nombre coincida con el obtenido de Google Maps.
 
@@ -56,7 +57,9 @@ Puedes seguir el desarrollo de este plugin en [Github](https://github.com/artpro
 
 == Frequently asked questions ==
 = ¿Necesita configuración? =
-No, el plugin es totalmente autónomo
+Sólo necesitas seleccionar entre la API de GeoNames y Google Maps.
+= ¿Qué API es mejor? =
+Depende de muchos factores pero la que mejores resultados nos ha dado es la API de GeoNames.
 
 = Soporte técnico =
 Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project Group** te ofrece su servicio de [**Soporte técnico**](http://www.wcprojectgroup.es/tienda/ticket-de-soporte). 
@@ -64,9 +67,14 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 *En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.*
 
 == Screenshots ==
-1. Captura de pantalla de WC - APG City. Formularios de facturación y envío.
+1. Captura de pantalla de WC - APG City.
+2. Captura de pantalla de WC - APG City. Formularios de facturación y envío.
 
 == Changelog ==
+= 0.3 =
+* Añadido soporte para la API de GeoNames.
+* Nueva pantalla de configuración para seleccionar API.
+* Nueva captura de pantalla.
 = 0.2.1 =
 * Nueva llamada a la API de Google Maps.
 = 0.2 =
@@ -76,8 +84,10 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 * Versión inicial.
 
 == Upgrade Notice ==
-= 0.2.1 =
-* Nueva llamada a la API de Google Maps.
+=0.3 =
+* Añadido soporte para la API de GeoNames.
+* Nueva pantalla de configuración para seleccionar API.
+* Nueva captura de pantalla.
 
 ==Traducciones ==
 * *English*: by [**Art Project Group**](http://www.artprojectgroup.es/) (default language).

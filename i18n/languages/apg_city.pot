@@ -1,10 +1,9 @@
-# Loco Gettext template
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce - APG NIF/CIF/NIE field\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: Tue Aug 09 2016 14:50:28 GMT+0200 (CEST)\n"
+"POT-Creation-Date: 2016-08-24 10:28+0000\n"
 "POT-Revision-Date: Sat Aug 13 2016 00:23:19 GMT+0200 (CEST)\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
@@ -24,69 +23,119 @@ msgstr ""
 "esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
 "X-Generator: Loco - https://localise.biz/"
 
+#: apg-city.php:49 includes/cuadro-informacion.php:7
+msgid "Make a donation by "
+msgstr ""
+
+#: apg-city.php:51 apg-city.php:51 apg-city.php:51 apg-city.php:51 
+#: includes/cuadro-informacion.php:19 includes/cuadro-informacion.php:19 
+#: includes/cuadro-informacion.php:19 includes/cuadro-informacion.php:19
+msgid "Follow us on "
+msgstr ""
+
+#: apg-city.php:52 includes/cuadro-informacion.php:25
+msgid "More plugins on "
+msgstr ""
+
+#: apg-city.php:53 apg-city.php:53 includes/cuadro-informacion.php:33 
+#: includes/cuadro-informacion.php:33
+msgid "Contact with us by "
+msgstr ""
+
+#: apg-city.php:66
+msgid "Settings of "
+msgstr ""
+
+#: apg-city.php:66
+msgid "Settings"
+msgstr ""
+
+#: apg-city.php:67
+msgid "Support of "
+msgstr ""
+
+#: apg-city.php:67 includes/cuadro-informacion.php:39
+msgid "Support"
+msgstr ""
+
+#: apg-city.php:87
+msgid "APG City"
+msgstr ""
+
+#: apg-city.php:87
+msgid "City field"
+msgstr ""
+
+#: apg-city.php:112
+msgctxt "placeholder"
+msgid "Select city name"
+msgstr ""
+
+#: apg-city.php:123
+msgid "Select city name"
+msgstr ""
+
+#: apg-city.php:170
+msgid "This plugin require WooCommerce active to run!"
+msgstr ""
+
+#: apg-city.php:209 includes/cuadro-informacion.php:44
+msgid "Please, rate %s:"
+msgstr ""
+
+#: includes/cuadro-informacion.php:5
+msgid "If you enjoyed and find helpful this plugin, please make a donation:"
+msgstr ""
+
+#: includes/cuadro-informacion.php:17
+msgid "Follow us:"
+msgstr ""
+
+#: includes/cuadro-informacion.php:23
+msgid "More plugins:"
+msgstr ""
+
+#: includes/cuadro-informacion.php:31
+msgid "Contact with us:"
+msgstr ""
+
+#: includes/cuadro-informacion.php:37
+msgid "Documentation and Support:"
+msgstr ""
+
+#: includes/formulario.php:5
+msgid "APG City Options."
+msgstr ""
+
+#. Description of the plugin
+#: includes/formulario.php:14
+msgid "Add to WooCommerce an automatic city name generated from postcode."
+msgstr ""
+
+#: includes/formulario.php:23
+msgid "Select a public API"
+msgstr ""
+
+#: includes/formulario.php:25
+msgid "Select which API would you want to use"
+msgstr ""
+
+#: includes/formulario.php:33
+msgid "Save Changes"
+msgstr ""
+
 #. Name of the plugin
 msgid "WC - APG City"
 msgstr ""
 
 #. URI of the plugin
-msgid "https://wordpress.org/plugins/wc-apg-city"
-msgstr ""
-
-#. Description of the plugin
-msgid "Add to WooCommerce an automatic city name generated from postcode."
-msgstr ""
-
-#. Author URI of the plugin
-msgid "http://www.artprojectgroup.es"
+msgid "https://wordpress.org/plugins/wc-apg-city/"
 msgstr ""
 
 #. Author of the plugin
 msgid "Art Project Group"
 msgstr ""
 
-#: ../../apg-city.php:48
-msgid "Make a donation by "
-msgstr ""
-
-#: ../../apg-city.php:50 ../../apg-city.php:50 ../../apg-city.php:50 ../../apg-
-#: city.php:50
-msgid "Follow us on "
-msgstr ""
-
-#: ../../apg-city.php:51
-msgid "More plugins on "
-msgstr ""
-
-#: ../../apg-city.php:52 ../../apg-city.php:52
-msgid "Contact with us by "
-msgstr ""
-
-#: ../../apg-city.php:65
-msgid "Support of "
-msgstr ""
-
-#: ../../apg-city.php:65
-msgid "Support"
-msgstr ""
-
-#: ../../apg-city.php:83
-msgid "Town / City"
-msgstr ""
-
-#: ../../apg-city.php:84
-msgctxt "placeholder"
-msgid "Select city name"
-msgstr ""
-
-#: ../../apg-city.php:95
-msgid "Select city name"
-msgstr ""
-
-#: ../../apg-city.php:137
-msgid "This plugin require WooCommerce active to run!"
-msgstr ""
-
-#: ../../apg-city.php:176
-#, php-format
-msgid "Please, rate %s:"
+#. Author URI of the plugin
+msgid "http://www.artprojectgroup.es/"
 msgstr ""

@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WC - APG City
-Version: 0.2.1
+Version: 0.3
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Add to WooCommerce an automatic city name generated from postcode.
 Author URI: http://www.artprojectgroup.es/
@@ -32,6 +32,7 @@ $apg_city = array(
 	'donacion' 		=> 'http://www.artprojectgroup.es/tienda/donacion',
 	'soporte' 		=> 'http://www.wcprojectgroup.es/tienda/ticket-de-soporte',
 	'plugin_url' 	=> 'http://www.artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city', 
+	'ajustes' 		=> 'admin.php?page=apg_city', 
 	'puntuacion' 	=> 'https://wordpress.org/support/view/plugin-reviews/wc-apg-city'
 );
 $envios_adicionales = $limpieza = NULL;
@@ -62,6 +63,7 @@ function apg_city_enlace_de_ajustes( $enlaces ) {
 	global $apg_city;
 
 	$enlaces_de_ajustes = array(
+		'<a href="' . $apg_city['ajustes'] . '" title="' . __( 'Settings of ', 'apg_city' ) . $apg_city['plugin'] .'">' . __( 'Settings', 'apg_city' ) . '</a>', 
 		'<a href="' . $apg_city['soporte'] . '" title="' . __( 'Support of ', 'apg_city' ) . $apg_city['plugin'] .'">' . __( 'Support', 'apg_city' ) . '</a>'
 	);
 	foreach ( $enlaces_de_ajustes as $enlace_de_ajustes ) {
@@ -75,6 +77,32 @@ add_filter( "plugin_action_links_$plugin", 'apg_city_enlace_de_ajustes' );
 
 //¿Está activo WooCommerce?
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+	//Pinta el formulario de configuración
+	function apg_city_tab() {
+		include( 'includes/formulario.php' );
+	}
+
+	//Añade en el menú a WooCommerce
+	function apg_city_admin_menu() {
+		add_submenu_page( 'woocommerce', __( 'APG City', 'apg_city' ),  __( 'City field', 'apg_city' ) , 'manage_woocommerce', 'apg_city', 'apg_city_tab' );
+	}
+	add_action( 'admin_menu', 'apg_city_admin_menu', 15 );
+
+	//Registra las opciones
+	function apg_city_registra_opciones() {
+		register_setting( 'apg_city_settings_group', 'apg_city_settings' );
+	}
+	add_action( 'admin_init', 'apg_city_registra_opciones' );
+
+	//Carga los scripts y CSS de WooCommerce
+	function apg_city_screen_id( $woocommerce_screen_ids ) {
+		$woocommerce_screen_ids[] = 'woocommerce_page_apg_city';
+
+		return $woocommerce_screen_ids;
+	}
+	add_filter( 'woocommerce_screen_ids', 'apg_city_screen_id' );
+	
+	//Modifica el campo Localidad
 	function apg_city_campos_de_direccion( $campos ) {
 		$campos['city']['custom_attributes']		= array( 
 			'readonly'	=> 'readonly'
@@ -121,7 +149,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	//Añade código JavaScript a en checkout
 	function codigo_javascript_en_checkout() {
 		if ( is_checkout() ) {
-			wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city.js', __FILE__ ) );
+			$configuracion = get_option( 'apg_city_settings' );
+			if ( isset( $configuracion['api'] ) && $configuracion['api'] == "google" ) {
+				wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city-google.js', __FILE__ ) );
+			} else {
+				wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city-geonames.js', __FILE__ ) );
+			}
 			wp_enqueue_script( 'apg_city' );
 		}
 	}
@@ -178,7 +211,7 @@ function apg_city_plugin( $nombre ) {
 
 //Carga la hoja de estilo
 function apg_city_muestra_mensaje() {
-	wp_register_style( 'apg_city_hoja_de_estilo', plugins_url( 'assets/fonts/stylesheet.css', __FILE__ ) );
+	wp_register_style( 'apg_city_hoja_de_estilo', plugins_url( 'assets/css/style.css', __FILE__ ) );
 	wp_enqueue_style( 'apg_city_hoja_de_estilo' );
 }
 add_action( 'admin_init', 'apg_city_muestra_mensaje' );
