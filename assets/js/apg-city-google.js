@@ -1,7 +1,7 @@
 jQuery( document ).ready( function() {
 	//Función que chequea el código postal en Google Maps
 	var comprueba_google = function( formulario ) {
-		jQuery.getJSON( "http://maps.googleapis.com/maps/api/geocode/json?components=country:" + jQuery( '#' + formulario + '_country' ).val() + "|postal_code:" + jQuery( '#' + formulario + '_postcode' ).val(), function( data ) {
+		jQuery.getJSON( "https://maps.googleapis.com/maps/api/geocode/json?components=country:" + jQuery( '#' + formulario + '_country' ).val() + "|postal_code:" + jQuery( '#' + formulario + '_postcode' ).val(), function( data ) {
 			//Limpiamos y metemos la opción inicial
 			jQuery( '#' + formulario + '_city' ).empty();
 			jQuery( '#' + formulario + '_city' ).append( 

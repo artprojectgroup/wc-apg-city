@@ -1,7 +1,7 @@
 jQuery( document ).ready( function() {
 	//Función que chequea el código postal en Google Maps
 	var comprueba_geonames = function( formulario ) {
-		jQuery.getJSON( "http://www.geonames.org/postalCodeLookupJSON?postalcode=" + jQuery( '#' + formulario + '_postcode' ).val() + "&country=" + jQuery( '#' + formulario + '_country' ).val(), function( data ) {
+		jQuery.getJSON( ruta_wordpress + "/wp-content/plugins/wc-apg-city/includes/admin/geonames.php?codigo_postal=" + jQuery( '#' + formulario + '_postcode' ).val() + "&pais=" + jQuery( '#' + formulario + '_country' ).val() , function( data ) {
 			//Limpiamos y metemos la opción inicial
 			jQuery( '#' + formulario + '_city' ).empty();
 			jQuery( '#' + formulario + '_city' ).append( 

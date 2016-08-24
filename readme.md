@@ -9,7 +9,7 @@ Requires at least: 3.8
 
 Tested up to: 4.6
 
-Stable tag: 0.3
+Stable tag: 0.3.1
 
 WC requires at least: 2.1
 
@@ -77,6 +77,9 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 *En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.*
 
 ## Changelog
+### 0.3.1
+* Arreglo de incompatibilidad con sitios web con certificado SSL.
+
 ###0.3
 * Añadido soporte para la API de GeoNames.
 * Nueva pantalla de configuración para seleccionar API.
