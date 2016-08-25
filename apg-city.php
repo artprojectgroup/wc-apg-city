@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WC - APG City
-Version: 0.3.1
+Version: 0.3.2
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Add to WooCommerce an automatic city name generated from postcode.
 Author URI: http://www.artprojectgroup.es/
@@ -104,45 +104,24 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	
 	//Modifica el campo Localidad
 	function apg_city_campos_de_direccion( $campos ) {
-		$campos['city']['custom_attributes']		= array( 
-			'readonly'	=> 'readonly'
-		);
-		$campos['city']							= array(
+		$campos['city']	= array(
 			'label'         => __( 'Town / City', 'woocommerce' ),
 			'placeholder'   => _x( 'Select city name', 'placeholder', 'apg_city' ),
 			'required'		=> true,
-			'clear'       	=> false,
+			'clear'       	=> ( in_array( 'form-row-last', $campos['city']['class'] ) ) ? "true" : "false",
 			'type'        	=> 'select',
-			'class'       	=> array(
-				'form-row-wide'
-			),
+			'class'       	=> $campos['city']['class'],
 			'input_class'	=> array(
 				'state_select'
 			),
 			'options'		=> array(
 				'' => __( 'Select city name', 'apg_city' ),
 			),
-			'readonly'	=> 'readonly'
+			'readonly'		=> 'readonly',
+			'autocomplete'	=> 'address-level2'
         );
 
-		//Reordenamos los campos
-		$campos_nuevos['country']		= $campos['country'];
-		$campos_nuevos['first_name']		= $campos['first_name'];
-		$campos_nuevos['last_name']		= $campos['last_name'];
-		$campos_nuevos['company']		= $campos['company'];
-		$campos_nuevos['address_1']		= $campos['address_1'];
-		$campos_nuevos['address_2']		= $campos['address_2'];
-		$campos_nuevos['postcode']		= $campos['postcode'];
-		$campos_nuevos['city']			= $campos['city'];
-		$campos_nuevos['state']			= $campos['state'];
-		if ( isset( $campos['email'] ) ) {
-			$campos_nuevos['email'] = $campos['email'];
-		}
-		if ( isset( $campos['phone'] ) ) {
-			$campos_nuevos['phone'] = $campos['phone'];
-		}
-
-		return $campos_nuevos;
+		return $campos;
 	}
 	add_filter( 'woocommerce_default_address_fields', 'apg_city_campos_de_direccion' );
 	
