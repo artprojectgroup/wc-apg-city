@@ -38,6 +38,9 @@ jQuery( document ).ready( function() {
 				}
 				//Actualizamos el campo select
 				jQuery( '#' + formulario + '_city option[value="' + data.results[0].address_components[ciudad].long_name + '"]' ).attr( 'selected', 'selected' ).trigger( "change" );
+				if ( data.results[0].postcode_localities ) {
+					jQuery( '#s2id_' + formulario + '_city' ).data('select2').open();
+				}
 				jQuery( '#' + formulario + "_state option[value='" + data.results[0].address_components[provincia].short_name + "']" ).attr( 'selected', 'selected' ).trigger( "change" );
 				jQuery( '#' + formulario + "_state option:contains('" + data.results[0].address_components[provincia].long_name + "')" ).attr( 'selected', 'selected' ).trigger( "change" );
 			}		

@@ -23,6 +23,9 @@ jQuery( document ).ready( function() {
 				//Actualizamos los campos select
 				var provincia = ( jQuery.isNumeric( data.postalcodes[0].adminCode2 ) ) ? data.postalcodes[0].adminCode1 : data.postalcodes[0].adminCode2;
 				jQuery( '#' + formulario + '_city option[value="' + data.postalcodes[0].placeName + '"]' ).attr( 'selected', 'selected' ).trigger( "change" );
+				if ( data.postalcodes.length > 1 ) {
+					jQuery( '#s2id_' + formulario + '_city' ).data('select2').open();
+				}
 				jQuery( '#' + formulario + '_state option[value=' + provincia + ']' ).attr( 'selected', 'selected' ).trigger( "change" );
 			}		
 		} );
