@@ -18,6 +18,11 @@ jQuery( document ).ready( function() {
 					if ( jQuery.inArray( "administrative_area_level_2", data.results[0].address_components[i].types ) !== -1 ) {
 						var provincia = i;
 					}
+					if ( typeof( provincia ) == "undefined" ) {
+						if ( jQuery.inArray( "administrative_area_level_1", data.results[0].address_components[i].types ) !== -1 ) {
+							var provincia = i;
+						}
+					}
 				}
 				
 				if ( data.results[0].postcode_localities ) { //Es un código postal con múltiples localidades
@@ -33,7 +38,8 @@ jQuery( document ).ready( function() {
 				}
 				//Actualizamos el campo select
 				jQuery( '#' + formulario + '_city option[value="' + data.results[0].address_components[ciudad].long_name + '"]' ).attr( 'selected', 'selected' ).trigger( "change" );
-				jQuery( '#' + formulario + '_state option:contains(' + data.results[0].address_components[provincia].long_name + ')' ).attr( 'selected', 'selected' ).trigger( "change" );
+				jQuery( '#' + formulario + "_state option[value='" + data.results[0].address_components[provincia].short_name + "']" ).attr( 'selected', 'selected' ).trigger( "change" );
+				jQuery( '#' + formulario + "_state option:contains('" + data.results[0].address_components[provincia].long_name + "')" ).attr( 'selected', 'selected' ).trigger( "change" );
 			}		
 		} );
 	}

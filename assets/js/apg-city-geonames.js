@@ -21,8 +21,9 @@ jQuery( document ).ready( function() {
 					);
 				}
 				//Actualizamos los campos select
+				var provincia = ( jQuery.isNumeric( data.postalcodes[0].adminCode2 ) ) ? data.postalcodes[0].adminCode1 : data.postalcodes[0].adminCode2;
 				jQuery( '#' + formulario + '_city option[value="' + data.postalcodes[0].placeName + '"]' ).attr( 'selected', 'selected' ).trigger( "change" );
-				jQuery( '#' + formulario + '_state option[value=' + data.postalcodes[0].adminCode2 + ']' ).attr( 'selected', 'selected' ).trigger( "change" );
+				jQuery( '#' + formulario + '_state option[value=' + provincia + ']' ).attr( 'selected', 'selected' ).trigger( "change" );
 			}		
 		} );
 	}
