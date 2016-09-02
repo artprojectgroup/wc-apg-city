@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WC - APG City
-Version: 0.3.4
+Version: 0.3.5
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Add to WooCommerce an automatic city name generated from postcode.
 Author URI: http://www.artprojectgroup.es/
@@ -10,7 +10,7 @@ Requires at least: 3.8
 Tested up to: 4.6
 
 Text Domain: apg_city
-Domain Path: /i18n/languages
+Domain Path: /languages
 
 @package WC - APG City
 @category Core
@@ -38,7 +38,7 @@ $apg_city = array(
 $envios_adicionales = $limpieza = NULL;
 
 //Carga el idioma
-load_plugin_textdomain( 'apg_city', null, dirname( DIRECCION_apg_city ) . '/i18n/languages' );
+load_plugin_textdomain( 'apg_city', null, dirname( DIRECCION_apg_city ) . '/languages' );
 
 //Enlaces adicionales personalizados
 function apg_city_enlaces( $enlaces, $archivo ) {
@@ -127,7 +127,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	
 	//Añade código JavaScript a en checkout
 	function codigo_javascript_en_checkout() {
-		if ( is_checkout() ) {
+		if ( is_checkout() || is_account_page() ) {
 			$configuracion = get_option( 'apg_city_settings' );
 			if ( isset( $configuracion['api'] ) && $configuracion['api'] == "google" ) {
 				wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city-google.js', __FILE__ ), array( 'select2' ) );
