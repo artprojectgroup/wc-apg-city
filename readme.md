@@ -9,7 +9,7 @@ Requires at least: 3.8
 
 Tested up to: 4.6
 
-Stable tag: 0.3.5
+Stable tag: 0.3.5.1
 
 WC requires at least: 2.1
 
@@ -22,6 +22,8 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Añade a WooCommerce un nombre de localidad automático generado a partir del código postal.
 
 ## Description
+**IMPORTANTE: *WC - APG City* no es compatible con Microsoft Internet Explorer 11 y anteriores.**
+
 **WC - APG City** añade a tu tienda WooCommerce un nuevo campo localidad automático generado a partir del código postal a través de la API de GeoNames o Google Maps.
 
 ### Características
@@ -77,6 +79,9 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 *En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.*
 
 ## Changelog
+### 0.3.5.1
+* Evita el funcionamiento en Microsoft Internet Explorer 11 o anterior.
+
 ### 0.3.5
 * Añadido JavaScript a los campos de formulario de Mi cuenta.
 

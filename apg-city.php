@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WC - APG City
-Version: 0.3.5
+Version: 0.3.5.1
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Add to WooCommerce an automatic city name generated from postcode.
 Author URI: http://www.artprojectgroup.es/
@@ -123,7 +123,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 		return $campos;
 	}
-	add_filter( 'woocommerce_default_address_fields', 'apg_city_campos_de_direccion' );
+	$version = ( preg_match( '/Trident\/(.*)/', $_SERVER['HTTP_USER_AGENT'], $navegador ) ) ? intval( $matches[1] ) + 4 : 11;
+	if ( $version >= 11 ) { //No funciona en Microsoft Internet Explorer 11 o anterior
+		add_filter( 'woocommerce_default_address_fields', 'apg_city_campos_de_direccion' );
+		add_action( 'wp_footer', 'codigo_javascript_en_checkout' );
+	}
 	
 	//Añade código JavaScript a en checkout
 	function codigo_javascript_en_checkout() {
@@ -138,7 +142,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			wp_enqueue_script( 'apg_city' );
 		}
 	}
-	add_action( 'wp_footer', 'codigo_javascript_en_checkout' );
 } else {
 	add_action( 'admin_notices', 'apg_city_requiere_wc' );
 }
