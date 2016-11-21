@@ -20,7 +20,7 @@ This program incorporates work covered by the following copyright and
 permission notices:
 
   WC - APG City is Copyright (c) 2016 Art Project Group
-  http://www.artprojectgroup.es - http://www.artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city
+  http://artprojectgroup.es - http://artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city
 
   WC - APG City is released under the GPL
 

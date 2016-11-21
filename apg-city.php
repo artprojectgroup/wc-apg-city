@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: WC - APG City
-Version: 0.3.5.1
+Version: 0.3.6
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Add to WooCommerce an automatic city name generated from postcode.
 Author URI: http://www.artprojectgroup.es/
 Author: Art Project Group
 Requires at least: 3.8
-Tested up to: 4.6
+Tested up to: 4.7
 
 Text Domain: apg_city
 Domain Path: /languages
@@ -137,11 +137,22 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city-google.js', __FILE__ ), array( 'select2' ) );
 			} else {
 				wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city-geonames.js', __FILE__ ), array( 'select2' ) );
-				wp_localize_script( 'apg_city', 'ruta_wordpress', get_home_url() );
+				wp_localize_script( 'apg_city', 'ruta_ajax', admin_url( 'admin-ajax.php' ) );
 			}
 			wp_enqueue_script( 'apg_city' );
 		}
 	}
+	
+	//Obtiene los resultados de la API de Geonames
+	function apg_city_geonames() {
+		$respuesta = wp_remote_get( "http://www.geonames.org/postalCodeLookupJSON?postalcode=" . $_REQUEST['codigo_postal'] . "&country=" . $_REQUEST['pais'] );
+
+		echo $respuesta['body'];
+
+		wp_die();
+	}
+	add_action( 'wp_ajax_nopriv_apg_city_geonames', 'respuesta_ajax' );
+	add_action( 'wp_ajax_apg_city_geonames', 'apg_city_geonames' );
 } else {
 	add_action( 'admin_notices', 'apg_city_requiere_wc' );
 }
