@@ -1,10 +1,10 @@
 === WC - APG City ===
 Contributors: artprojectgroup
-Donate link: http://www.artprojectgroup.es/tienda/donacion
+Donate link: http://artprojectgroup.es/tienda/donacion
 Tags: woocommerce, commerce, e-commerce, commerce, shop, virtual shop, city, town, state, postcode, geonames, google maps
 Requires at least: 3.8
 Tested up to: 4.7
-Stable tag: 0.3.5.1
+Stable tag: 0.3.6.1
 WC requires at least: 2.1
 WC tested up to: 2.6.8
 License: GPLv3
@@ -23,28 +23,28 @@ Add to WooCommerce an automatic city name generated from postcode.
 * Also select the state, only when name matches with obtained from Google Maps.
 
 = Translations =
-* Español ([**Art Project Group**](http://www.artprojectgroup.es/)).
-* English ([**Art Project Group**](http://www.artprojectgroup.es/)).
+* Español ([**Art Project Group**](http://artprojectgroup.es/)).
+* English ([**Art Project Group**](http://artprojectgroup.es/)).
 
 = Technical support =
-**Art Project Group** offers [**Technical support**](http://www.wcprojectgroup.es/tienda/ticket-de-soporte) to configure or install ***WC - APG City***.
+**Art Project Group** offers [**Technical support**](http://wcprojectgroup.es/tienda/ticket-de-soporte) to configure or install ***WC - APG City***.
 
 = Origin =
 **WC - APG City** has been programmed from [Thekla Kurpjuweit](https://www.facebook.com/profile.php?id=100010011270290) request to add to WooCommerce automatic city name input from the postcode.
 
 = More information =
-On our official website you can learn more about [**WC - APG City**](http://www.artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city).
+On our official website you can learn more about [**WC - APG City**](http://artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city).
 
 = Comments =
 Don’t forget to leave us your comment on:
 
-* [WC - APG City](http://www.artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city) on Art Project Group.
+* [WC - APG City](http://artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city) on Art Project Group.
 * [Art Project Group](https://www.facebook.com/artprojectgroup) on Facebook.
 * [@artprojectgroup](https://twitter.com/artprojectgroup) on Twitter.
 * [+ArtProjectGroupES](https://plus.google.com/+ArtProjectGroupES/) on Google+.
 
 = More plugins =
-Remember that you can find more [plugins for WordPress](http://www.artprojectgroup.es/plugins-para-wordpress) and more [plugins for WooCommerce](http://www.artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce) on [Art Project Group](http://www.artprojectgroup.es) and our profile on [WordPress](http://profiles.wordpress.org/artprojectgroup/).
+Remember that you can find more [plugins for WordPress](http://artprojectgroup.es/plugins-para-wordpress) and more [plugins for WooCommerce](http://artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce) on [Art Project Group](http://artprojectgroup.es) and our profile on [WordPress](http://profiles.wordpress.org/artprojectgroup/).
 
 = GitHub =
 You can follow the development of this plugin on [Github](https://github.com/artprojectgroup/wc-apg-city).
@@ -55,7 +55,7 @@ You can follow the development of this plugin on [Github](https://github.com/art
  * Upload the full ZIP file via *Plugins -> Add New -> Upload* on your WordPress Administration Panel.
  * Search **WC - APG City** in the search engine available on *Plugins -> Add New* and press *Install Now* button.
 2. Activate plugin through *Plugins* menu on WordPress Administration Panel.
-3. Ready, now you can enjoy it, and if you like it and find it useful, make a [*donation*](http://www.artprojectgroup.es/tienda/donacion).
+3. Ready, now you can enjoy it, and if you like it and find it useful, make a [*donation*](http://artprojectgroup.es/tienda/donacion).
 
 == Frequently asked questions ==
 = Configuration is needed? =
@@ -64,7 +64,7 @@ Just select from GeoNames and Google Maps API.
 It depends on many factors but which has given the best results to us is GeoNames API.
 
 = Support =
-If you need help to configuring or installing **WC - APG City**, **Art Project Group** offers its service [**Technical Support**](http://www.wcprojectgroup.es/tienda/ticket-de-soporte). 
+If you need help to configuring or installing **WC - APG City**, **Art Project Group** offers its service [**Technical Support**](http://wcprojectgroup.es/tienda/ticket-de-soporte). 
 
 *In any case **Art Project Group** provides any kind of free technical support.*
 
@@ -73,6 +73,8 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 2. Screenshot of WC - APG City. Billing and shipping forms.
 
 == Changelog ==
+= 0.3.6.1 =
+* Fixed GeoNames API support.
 = 0.3.6 =
 * GeoNames API support over iThemes Security.
 = 0.3.5.1 =
@@ -100,18 +102,18 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 * Initial version.
 
 == Upgrade Notice ==
-= 0.3.6 =
-* GeoNames API support over iThemes Security.
+= 0.3.6.1 =
+* Fixed GeoNames API support.
 
 == Translations ==
-* *English*: by [**Art Project Group**](http://www.artprojectgroup.es/) (default language).
-* *Español*: por [**Art Project Group**](http://www.artprojectgroup.es/).
+* *English*: by [**Art Project Group**](http://artprojectgroup.es/) (default language).
+* *Español*: por [**Art Project Group**](http://artprojectgroup.es/).
 
 == Support ==
-Since **WC - APG City** is totally free, **Art Project Group** only provides payment [**Technical Support**](http://www.wcprojectgroup.es/tienda/ticket-de-soporte) service. In any case **Art Project Group** provide any kind of free technical support.
+Since **WC - APG City** is totally free, **Art Project Group** only provides payment [**Technical Support**](http://wcprojectgroup.es/tienda/ticket-de-soporte) service. In any case **Art Project Group** provide any kind of free technical support.
 
 == Donation ==
-Did you liked and you have proved useful **WC - APG City** on your website? We would appreciate a [small donation](http://www.artprojectgroup.es/tienda/donacion) that will help us to continue improving this plugin and create more plugins totally free for the entire WordPress community.
+Did you liked and you have proved useful **WC - APG City** on your website? We would appreciate a [small donation](http://artprojectgroup.es/tienda/donacion) that will help us to continue improving this plugin and create more plugins totally free for the entire WordPress community.
 
 == Thanks ==
 * To all that use it.

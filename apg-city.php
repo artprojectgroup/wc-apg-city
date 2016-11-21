@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: WC - APG City
-Version: 0.3.6
+Version: 0.3.6.1
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Add to WooCommerce an automatic city name generated from postcode.
-Author URI: http://www.artprojectgroup.es/
+Author URI: http://artprojectgroup.es/
 Author: Art Project Group
 Requires at least: 3.8
 Tested up to: 4.7
@@ -29,9 +29,9 @@ define( 'DIRECCION_apg_city', plugin_basename( __FILE__ ) );
 $apg_city = array(	
 	'plugin' 		=> 'WC - APG City', 
 	'plugin_uri' 	=> 'wc-apg-city', 
-	'donacion' 		=> 'http://www.artprojectgroup.es/tienda/donacion',
-	'soporte' 		=> 'http://www.wcprojectgroup.es/tienda/ticket-de-soporte',
-	'plugin_url' 	=> 'http://www.artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city', 
+	'donacion' 		=> 'http://artprojectgroup.es/tienda/donacion',
+	'soporte' 		=> 'http://wcprojectgroup.es/tienda/ticket-de-soporte',
+	'plugin_url' 	=> 'http://artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city', 
 	'ajustes' 		=> 'admin.php?page=apg_city', 
 	'puntuacion' 	=> 'https://wordpress.org/support/view/plugin-reviews/wc-apg-city'
 );
@@ -151,7 +151,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 		wp_die();
 	}
-	add_action( 'wp_ajax_nopriv_apg_city_geonames', 'respuesta_ajax' );
+	add_action( 'wp_ajax_nopriv_apg_city_geonames', 'apg_city_geonames' );
 	add_action( 'wp_ajax_apg_city_geonames', 'apg_city_geonames' );
 } else {
 	add_action( 'admin_notices', 'apg_city_requiere_wc' );
