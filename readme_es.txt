@@ -4,7 +4,7 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: woocommerce, commerce, e-commerce, commerce, shop, virtual shop, city, town, state, postcode, geonames, google maps
 Requires at least: 3.8
 Tested up to: 4.7
-Stable tag: 0.3.6.1
+Stable tag: 0.3.6.2
 WC requires at least: 2.1
 WC tested up to: 2.6.8
 License: GPLv3
@@ -73,6 +73,8 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 2. Captura de pantalla de WC - APG City. Formularios de facturación y envío.
 
 == Changelog ==
+= 0.3.6.2 =
+* Soporte para instalaciones multisitio.
 = 0.3.6.1 =
 * Arreglo del soporte de la API de GeoNames.
 = 0.3.6 =
@@ -102,8 +104,8 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 * Versión inicial.
 
 == Upgrade Notice ==
-= 0.3.6.1 =
-* Arreglo del soporte de la API de GeoNames.
+= 0.3.6.2 =
+* Soporte para instalaciones multisitio.
 
 ==Traducciones ==
 * *English*: by [**Art Project Group**](https://artprojectgroup.es/) (default language).
