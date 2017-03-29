@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: WC - APG City
-Version: 0.3.6.1
+Version: 0.3.6.2
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Add to WooCommerce an automatic city name generated from postcode.
-Author URI: http://artprojectgroup.es/
+Author URI: https://artprojectgroup.es/
 Author: Art Project Group
 Requires at least: 3.8
-Tested up to: 4.7
+Tested up to: 4.7.3
 
 Text Domain: apg_city
 Domain Path: /languages
@@ -29,9 +29,9 @@ define( 'DIRECCION_apg_city', plugin_basename( __FILE__ ) );
 $apg_city = array(	
 	'plugin' 		=> 'WC - APG City', 
 	'plugin_uri' 	=> 'wc-apg-city', 
-	'donacion' 		=> 'http://artprojectgroup.es/tienda/donacion',
-	'soporte' 		=> 'http://wcprojectgroup.es/tienda/ticket-de-soporte',
-	'plugin_url' 	=> 'http://artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city', 
+	'donacion' 		=> 'https://artprojectgroup.es/tienda/donacion',
+	'soporte' 		=> 'https://wcprojectgroup.es/tienda/ticket-de-soporte',
+	'plugin_url' 	=> 'https://artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city', 
 	'ajustes' 		=> 'admin.php?page=apg_city', 
 	'puntuacion' 	=> 'https://wordpress.org/support/view/plugin-reviews/wc-apg-city'
 );
@@ -75,8 +75,9 @@ function apg_city_enlace_de_ajustes( $enlaces ) {
 $plugin = DIRECCION_apg_city; 
 add_filter( "plugin_action_links_$plugin", 'apg_city_enlace_de_ajustes' );
 
+include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 //¿Está activo WooCommerce?
-if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin( 'woocommerce/woocommerce.php' ) ) {
 	//Pinta el formulario de configuración
 	function apg_city_tab() {
 		include( 'includes/formulario.php' );
@@ -173,9 +174,9 @@ function apg_city_plugin( $nombre ) {
 		'slug' => $nombre 
 	);
 	$consulta = array( 
-		'action' => 'plugin_information', 
-		'timeout' => 15, 
-		'request' => serialize( $argumentos )
+		'action'	=> 'plugin_information', 
+		'timeout'	=> 15, 
+		'request'	=> serialize( $argumentos )
 	);
 	$respuesta = get_transient( 'apg_city_plugin' );
 	if ( false === $respuesta ) {
