@@ -3,10 +3,10 @@ Contributors: artprojectgroup
 Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: woocommerce, commerce, e-commerce, commerce, shop, virtual shop, city, town, state, postcode, geonames, google maps
 Requires at least: 3.8
-Tested up to: 4.7
+Tested up to: 4.7.3
 Stable tag: 0.3.6.2
 WC requires at least: 2.1
-WC tested up to: 2.6.8
+WC tested up to: 3.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 

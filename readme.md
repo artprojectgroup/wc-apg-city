@@ -7,13 +7,13 @@ Tags: woocommerce, commerce, e-commerce, commerce, shop, virtual shop, city, tow
 
 Requires at least: 3.8
 
-Tested up to: 4.7
+Tested up to: 4.7.3
 
 Stable tag: 0.3.6.2
 
 WC requires at least: 2.1
 
-WC tested up to: 2.6.8
+WC tested up to: 3.0
 
 License: GPLv3
 
