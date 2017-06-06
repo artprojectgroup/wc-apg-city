@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce - APG NIF/CIF/NIE field\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-24 10:28+0000\n"
-"PO-Revision-Date: 2016-08-24 10:31+0000\n"
-"Last-Translator: Art Project Group <info@artprojectgroup.es>\n"
+"POT-Creation-Date: 2017-06-06 11:06+0000\n"
+"PO-Revision-Date: 2017-06-06 11:06+0000\n"
+"Last-Translator: artprojectgroup <artprojectgroup@gmail.com>\n"
 "Language-Team: Spanish (Spain)\n"
 "Language: es-ES\n"
 "Plural-Forms: nplurals=2; plural=n != 1\n"
@@ -22,6 +22,29 @@ msgstr ""
 "X-Generator: Loco - https://localise.biz/\n"
 "X-Loco-Target-Locale: es_ES"
 
+#. Author URI of the plugin
+msgid "https://artprojectgroup.es/"
+msgstr "https://artprojectgroup.es/"
+
+#: apg-city.php:49 includes/cuadro-informacion.php:7
+msgid "Make a donation by "
+msgstr "Haz una donación por "
+
+#: apg-city.php:51 apg-city.php:51 apg-city.php:51 apg-city.php:51
+#: includes/cuadro-informacion.php:19 includes/cuadro-informacion.php:19
+#: includes/cuadro-informacion.php:19 includes/cuadro-informacion.php:19
+msgid "Follow us on "
+msgstr "Síguenos en "
+
+#: apg-city.php:52 includes/cuadro-informacion.php:25
+msgid "More plugins on "
+msgstr "Más plugins en "
+
+#: apg-city.php:53 apg-city.php:53 includes/cuadro-informacion.php:33
+#: includes/cuadro-informacion.php:33
+msgid "Contact with us by "
+msgstr "Contacta con nosotros por "
+
 #: apg-city.php:66
 msgid "Settings of "
 msgstr "Ajustes de"
@@ -30,13 +53,40 @@ msgstr "Ajustes de"
 msgid "Settings"
 msgstr "Ajustes"
 
-#: apg-city.php:87
+#: apg-city.php:67
+msgid "Support of "
+msgstr "Soporte técnico de "
+
+#: apg-city.php:67 includes/cuadro-informacion.php:39
+msgid "Support"
+msgstr "Soporte técnico"
+
+#: apg-city.php:88
 msgid "APG City"
 msgstr "APG Localidad"
 
-#: apg-city.php:87
+#: apg-city.php:88
 msgid "City field"
 msgstr "Campo localidad"
+
+#: apg-city.php:110
+msgctxt "placeholder"
+msgid "Select city name"
+msgstr "Selecciona una localidad"
+
+#: apg-city.php:119
+msgid "Select city name"
+msgstr "Selecciona una localidad"
+
+#: apg-city.php:165
+msgid "This plugin require WooCommerce active to run!"
+msgstr ""
+"¡Este plugin necesita WooCommerce activo para funcionar!\n"
+
+#: apg-city.php:204 includes/cuadro-informacion.php:44
+#, php-format
+msgid "Please, rate %s:"
+msgstr "Por favor, puntúa %s:"
 
 #: includes/cuadro-informacion.php:5
 msgid "If you enjoyed and find helpful this plugin, please make a donation:"
@@ -63,6 +113,13 @@ msgstr "Documentación y ayuda:"
 msgid "APG City Options."
 msgstr "Opciones de APG Localidad"
 
+#. Description of the plugin
+#: includes/formulario.php:14
+msgid "Add to WooCommerce an automatic city name generated from postcode."
+msgstr ""
+"Añade a WooCommerce un nombre de localidad automático generado a partir del "
+"código postal."
+
 #: includes/formulario.php:23
 msgid "Select a public API"
 msgstr "Selecciona una API pública"
@@ -75,69 +132,13 @@ msgstr "Selecciona la API que quieres usar"
 msgid "Save Changes"
 msgstr "Guardar cambios"
 
-#. URI of the plugin
-msgid "https://wordpress.org/plugins/wc-apg-city/"
-msgstr "https://wordpress.org/plugins/wc-apg-city/"
-
-#. Author URI of the plugin
-msgid "http://www.artprojectgroup.es/"
-msgstr "http://www.artprojectgroup.es/"
-
-#: apg-city.php:49 includes/cuadro-informacion.php:7
-msgid "Make a donation by "
-msgstr "Haz una donación por "
-
-#: apg-city.php:51 apg-city.php:51 apg-city.php:51 apg-city.php:51 
-#: includes/cuadro-informacion.php:19 includes/cuadro-informacion.php:19 
-#: includes/cuadro-informacion.php:19 includes/cuadro-informacion.php:19
-msgid "Follow us on "
-msgstr "Síguenos en "
-
-#: apg-city.php:52 includes/cuadro-informacion.php:25
-msgid "More plugins on "
-msgstr "Más plugins en "
-
-#: apg-city.php:53 apg-city.php:53 includes/cuadro-informacion.php:33 
-#: includes/cuadro-informacion.php:33
-msgid "Contact with us by "
-msgstr "Contacta con nosotros por "
-
-#: apg-city.php:67
-msgid "Support of "
-msgstr "Soporte técnico de "
-
-#: apg-city.php:67 includes/cuadro-informacion.php:39
-msgid "Support"
-msgstr "Soporte técnico"
-
-#: apg-city.php:112
-msgctxt "placeholder"
-msgid "Select city name"
-msgstr "Selecciona una localidad"
-
-#: apg-city.php:123
-msgid "Select city name"
-msgstr "Selecciona una localidad"
-
-#: apg-city.php:170
-msgid "This plugin require WooCommerce active to run!"
-msgstr ""
-"¡Este plugin necesita WooCommerce activo para funcionar!\n"
-
-#: apg-city.php:209 includes/cuadro-informacion.php:44
-msgid "Please, rate %s:"
-msgstr "Por favor, puntúa %s:"
-
-#. Description of the plugin
-#: includes/formulario.php:14
-msgid "Add to WooCommerce an automatic city name generated from postcode."
-msgstr ""
-"Añade a WooCommerce un nombre de localidad automático generado a partir del "
-"código postal."
-
 #. Name of the plugin
 msgid "WC - APG City"
 msgstr "WC - APG Localidad"
+
+#. URI of the plugin
+msgid "https://wordpress.org/plugins/wc-apg-city/"
+msgstr "https://wordpress.org/plugins/wc-apg-city/"
 
 #. Author of the plugin
 msgid "Art Project Group"

@@ -1,15 +1,15 @@
 <?php
 /*
 Plugin Name: WC - APG City
-Version: 0.3.6.2
+Version: 0.3.6.3
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Add to WooCommerce an automatic city name generated from postcode.
 Author URI: https://artprojectgroup.es/
 Author: Art Project Group
 Requires at least: 3.8
-Tested up to: 4.7.3
+Tested up to: 4.8
 
-Text Domain: apg_city
+Text Domain: wc-apg-city
 Domain Path: /languages
 
 @package WC - APG City
@@ -38,7 +38,7 @@ $apg_city = array(
 $envios_adicionales = $limpieza = NULL;
 
 //Carga el idioma
-load_plugin_textdomain( 'apg_city', null, dirname( DIRECCION_apg_city ) . '/languages' );
+load_plugin_textdomain( 'wc-apg-city', null, dirname( DIRECCION_apg_city ) . '/languages' );
 
 //Enlaces adicionales personalizados
 function apg_city_enlaces( $enlaces, $archivo ) {
@@ -46,11 +46,11 @@ function apg_city_enlaces( $enlaces, $archivo ) {
 
 	if ( $archivo == DIRECCION_apg_city ) {
 		$plugin = apg_city_plugin( $apg_city['plugin_uri'] );
-		$enlaces[] = '<a href="' . $apg_city['donacion'] . '" target="_blank" title="' . __( 'Make a donation by ', 'apg_city' ) . 'APG"><span class="genericon genericon-cart"></span></a>';
+		$enlaces[] = '<a href="' . $apg_city['donacion'] . '" target="_blank" title="' . __( 'Make a donation by ', 'wc-apg-city' ) . 'APG"><span class="genericon genericon-cart"></span></a>';
 		$enlaces[] = '<a href="'. $apg_city['plugin_url'] . '" target="_blank" title="' . $apg_city['plugin'] . '"><strong class="artprojectgroup">APG</strong></a>';
-		$enlaces[] = '<a href="https://www.facebook.com/artprojectgroup" title="' . __( 'Follow us on ', 'apg_city' ) . 'Facebook" target="_blank"><span class="genericon genericon-facebook-alt"></span></a> <a href="https://twitter.com/artprojectgroup" title="' . __( 'Follow us on ', 'apg_city' ) . 'Twitter" target="_blank"><span class="genericon genericon-twitter"></span></a> <a href="https://plus.google.com/+ArtProjectGroupES" title="' . __( 'Follow us on ', 'apg_city' ) . 'Google+" target="_blank"><span class="genericon genericon-googleplus-alt"></span></a> <a href="http://es.linkedin.com/in/artprojectgroup" title="' . __( 'Follow us on ', 'apg_city' ) . 'LinkedIn" target="_blank"><span class="genericon genericon-linkedin"></span></a>';
-		$enlaces[] = '<a href="https://profiles.wordpress.org/artprojectgroup/" title="' . __( 'More plugins on ', 'apg_city' ) . 'WordPress" target="_blank"><span class="genericon genericon-wordpress"></span></a>';
-		$enlaces[] = '<a href="mailto:info@artprojectgroup.es" title="' . __( 'Contact with us by ', 'apg_city' ) . 'e-mail"><span class="genericon genericon-mail"></span></a> <a href="skype:artprojectgroup" title="' . __( 'Contact with us by ', 'apg_city' ) . 'Skype"><span class="genericon genericon-skype"></span></a>';
+		$enlaces[] = '<a href="https://www.facebook.com/artprojectgroup" title="' . __( 'Follow us on ', 'wc-apg-city' ) . 'Facebook" target="_blank"><span class="genericon genericon-facebook-alt"></span></a> <a href="https://twitter.com/artprojectgroup" title="' . __( 'Follow us on ', 'wc-apg-city' ) . 'Twitter" target="_blank"><span class="genericon genericon-twitter"></span></a> <a href="https://plus.google.com/+ArtProjectGroupES" title="' . __( 'Follow us on ', 'wc-apg-city' ) . 'Google+" target="_blank"><span class="genericon genericon-googleplus-alt"></span></a> <a href="http://es.linkedin.com/in/artprojectgroup" title="' . __( 'Follow us on ', 'wc-apg-city' ) . 'LinkedIn" target="_blank"><span class="genericon genericon-linkedin"></span></a>';
+		$enlaces[] = '<a href="https://profiles.wordpress.org/artprojectgroup/" title="' . __( 'More plugins on ', 'wc-apg-city' ) . 'WordPress" target="_blank"><span class="genericon genericon-wordpress"></span></a>';
+		$enlaces[] = '<a href="mailto:info@artprojectgroup.es" title="' . __( 'Contact with us by ', 'wc-apg-city' ) . 'e-mail"><span class="genericon genericon-mail"></span></a> <a href="skype:artprojectgroup" title="' . __( 'Contact with us by ', 'wc-apg-city' ) . 'Skype"><span class="genericon genericon-skype"></span></a>';
 		$enlaces[] = apg_city_plugin( $apg_city['plugin_uri'] );
 	}
 	
@@ -63,8 +63,8 @@ function apg_city_enlace_de_ajustes( $enlaces ) {
 	global $apg_city;
 
 	$enlaces_de_ajustes = array(
-		'<a href="' . $apg_city['ajustes'] . '" title="' . __( 'Settings of ', 'apg_city' ) . $apg_city['plugin'] .'">' . __( 'Settings', 'apg_city' ) . '</a>', 
-		'<a href="' . $apg_city['soporte'] . '" title="' . __( 'Support of ', 'apg_city' ) . $apg_city['plugin'] .'">' . __( 'Support', 'apg_city' ) . '</a>'
+		'<a href="' . $apg_city['ajustes'] . '" title="' . __( 'Settings of ', 'wc-apg-city' ) . $apg_city['plugin'] .'">' . __( 'Settings', 'wc-apg-city' ) . '</a>', 
+		'<a href="' . $apg_city['soporte'] . '" title="' . __( 'Support of ', 'wc-apg-city' ) . $apg_city['plugin'] .'">' . __( 'Support', 'wc-apg-city' ) . '</a>'
 	);
 	foreach ( $enlaces_de_ajustes as $enlace_de_ajustes ) {
 		array_unshift( $enlaces, $enlace_de_ajustes );
@@ -85,7 +85,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 
 	//Añade en el menú a WooCommerce
 	function apg_city_admin_menu() {
-		add_submenu_page( 'woocommerce', __( 'APG City', 'apg_city' ),  __( 'City field', 'apg_city' ) , 'manage_woocommerce', 'apg_city', 'apg_city_tab' );
+		add_submenu_page( 'woocommerce', __( 'APG City', 'wc-apg-city' ),  __( 'City field', 'wc-apg-city' ) , 'manage_woocommerce', 'wc-apg-city', 'apg_city_tab' );
 	}
 	add_action( 'admin_menu', 'apg_city_admin_menu', 15 );
 
@@ -107,7 +107,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 	function apg_city_campos_de_direccion( $campos ) {
 		$campos['city']	= array(
 			'label'         => __( 'Town / City', 'woocommerce' ),
-			'placeholder'   => _x( 'Select city name', 'placeholder', 'apg_city' ),
+			'placeholder'   => _x( 'Select city name', 'placeholder', 'wc-apg-city' ),
 			'required'		=> true,
 			'clear'       	=> ( in_array( 'form-row-last', $campos['city']['class'] ) ) ? "true" : "false",
 			'type'        	=> 'select',
@@ -116,7 +116,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 				'state_select'
 			),
 			'options'		=> array(
-				'' => __( 'Select city name', 'apg_city' ),
+				'' => __( 'Select city name', 'wc-apg-city' ),
 			),
 			'readonly'		=> 'readonly',
 			'autocomplete'	=> 'address-level2'
@@ -162,7 +162,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 function apg_city_requiere_wc() {
 	global $apg_city;
 		
-	echo '<div class="error fade" id="message"><h3>' . $apg_city['plugin'] . '</h3><h4>' . __( "This plugin require WooCommerce active to run!", 'apg_city' ) . '</h4></div>';
+	echo '<div class="error fade" id="message"><h3>' . $apg_city['plugin'] . '</h3><h4>' . __( 'This plugin require WooCommerce active to run!', 'wc-apg-city' ) . '</h4></div>';
 	deactivate_plugins( DIRECCION_apg_city );
 }
 
@@ -201,7 +201,7 @@ function apg_city_plugin( $nombre ) {
 	$estrellas = ob_get_contents();
 	ob_end_clean();
 
-	return '<a title="' . sprintf( __( 'Please, rate %s:', 'apg_city' ), $apg_city['plugin'] ) . '" href="' . $apg_city['puntuacion'] . '?rate=5#postform" class="estrellas">' . $estrellas . '</a>';
+	return '<a title="' . sprintf( __( 'Please, rate %s:', 'wc-apg-city' ), $apg_city['plugin'] ) . '" href="' . $apg_city['puntuacion'] . '?rate=5#postform" class="estrellas">' . $estrellas . '</a>';
 }
 
 //Carga la hoja de estilo

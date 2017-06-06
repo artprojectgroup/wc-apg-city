@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce - APG NIF/CIF/NIE field\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-24 10:28+0000\n"
+"POT-Creation-Date: 2017-06-06 11:06+0000\n"
 "POT-Revision-Date: Sat Aug 13 2016 00:23:19 GMT+0200 (CEST)\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
@@ -27,8 +27,8 @@ msgstr ""
 msgid "Make a donation by "
 msgstr ""
 
-#: apg-city.php:51 apg-city.php:51 apg-city.php:51 apg-city.php:51 
-#: includes/cuadro-informacion.php:19 includes/cuadro-informacion.php:19 
+#: apg-city.php:51 apg-city.php:51 apg-city.php:51 apg-city.php:51
+#: includes/cuadro-informacion.php:19 includes/cuadro-informacion.php:19
 #: includes/cuadro-informacion.php:19 includes/cuadro-informacion.php:19
 msgid "Follow us on "
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 msgid "More plugins on "
 msgstr ""
 
-#: apg-city.php:53 apg-city.php:53 includes/cuadro-informacion.php:33 
+#: apg-city.php:53 apg-city.php:53 includes/cuadro-informacion.php:33
 #: includes/cuadro-informacion.php:33
 msgid "Contact with us by "
 msgstr ""
@@ -58,28 +58,29 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: apg-city.php:87
+#: apg-city.php:88
 msgid "APG City"
 msgstr ""
 
-#: apg-city.php:87
+#: apg-city.php:88
 msgid "City field"
 msgstr ""
 
-#: apg-city.php:112
+#: apg-city.php:110
 msgctxt "placeholder"
 msgid "Select city name"
 msgstr ""
 
-#: apg-city.php:123
+#: apg-city.php:119
 msgid "Select city name"
 msgstr ""
 
-#: apg-city.php:170
+#: apg-city.php:165
 msgid "This plugin require WooCommerce active to run!"
 msgstr ""
 
-#: apg-city.php:209 includes/cuadro-informacion.php:44
+#: apg-city.php:204 includes/cuadro-informacion.php:44
+#, php-format
 msgid "Please, rate %s:"
 msgstr ""
 
@@ -137,5 +138,5 @@ msgid "Art Project Group"
 msgstr ""
 
 #. Author URI of the plugin
-msgid "http://www.artprojectgroup.es/"
+msgid "https://artprojectgroup.es/"
 msgstr ""
