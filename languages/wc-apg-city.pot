@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce - APG NIF/CIF/NIE field\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-06 11:06+0000\n"
+"POT-Creation-Date: 2017-11-08 10:44+0000\n"
 "POT-Revision-Date: Sat Aug 13 2016 00:23:19 GMT+0200 (CEST)\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
@@ -23,65 +23,78 @@ msgstr ""
 "esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
 "X-Generator: Loco - https://localise.biz/"
 
-#: apg-city.php:49 includes/cuadro-informacion.php:7
+#: apg-city.php:53 includes/cuadro-informacion.php:7
 msgid "Make a donation by "
 msgstr ""
 
-#: apg-city.php:51 apg-city.php:51 apg-city.php:51 apg-city.php:51
+#: apg-city.php:55 apg-city.php:55 apg-city.php:55 apg-city.php:55
 #: includes/cuadro-informacion.php:19 includes/cuadro-informacion.php:19
 #: includes/cuadro-informacion.php:19 includes/cuadro-informacion.php:19
 msgid "Follow us on "
 msgstr ""
 
-#: apg-city.php:52 includes/cuadro-informacion.php:25
+#: apg-city.php:56 includes/cuadro-informacion.php:25
 msgid "More plugins on "
 msgstr ""
 
-#: apg-city.php:53 apg-city.php:53 includes/cuadro-informacion.php:33
+#: apg-city.php:57 apg-city.php:57 includes/cuadro-informacion.php:33
 #: includes/cuadro-informacion.php:33
 msgid "Contact with us by "
 msgstr ""
 
-#: apg-city.php:66
+#: apg-city.php:70
 msgid "Settings of "
 msgstr ""
 
-#: apg-city.php:66
+#: apg-city.php:70 apg-city.php:221
 msgid "Settings"
 msgstr ""
 
-#: apg-city.php:67
+#: apg-city.php:71
 msgid "Support of "
 msgstr ""
 
-#: apg-city.php:67 includes/cuadro-informacion.php:39
+#: apg-city.php:71 includes/cuadro-informacion.php:39
 msgid "Support"
 msgstr ""
 
-#: apg-city.php:88
+#: apg-city.php:92
 msgid "APG City"
 msgstr ""
 
-#: apg-city.php:88
+#: apg-city.php:92
 msgid "City field"
 msgstr ""
 
-#: apg-city.php:110
+#: apg-city.php:114
 msgctxt "placeholder"
 msgid "Select city name"
 msgstr ""
 
-#: apg-city.php:119
+#: apg-city.php:123 apg-city.php:148
 msgid "Select city name"
 msgstr ""
 
-#: apg-city.php:165
+#: apg-city.php:124 apg-city.php:149
+msgid "My city isn't on the list"
+msgstr ""
+
+#: apg-city.php:175
 msgid "This plugin require WooCommerce active to run!"
 msgstr ""
 
-#: apg-city.php:204 includes/cuadro-informacion.php:44
+#: apg-city.php:214 includes/cuadro-informacion.php:44
 #, php-format
 msgid "Please, rate %s:"
+msgstr ""
+
+#: apg-city.php:221
+#, php-format
+msgid "Please, update your %s. Google Maps API Key now is required."
+msgstr ""
+
+#: apg-city.php:221
+msgid "settings"
 msgstr ""
 
 #: includes/cuadro-informacion.php:5
@@ -104,24 +117,36 @@ msgstr ""
 msgid "Documentation and Support:"
 msgstr ""
 
-#: includes/formulario.php:5
+#: includes/formulario.php:4
+msgid "Google Maps API Key is a required field."
+msgstr ""
+
+#: includes/formulario.php:10
 msgid "APG City Options."
 msgstr ""
 
 #. Description of the plugin
-#: includes/formulario.php:14
+#: includes/formulario.php:18
 msgid "Add to WooCommerce an automatic city name generated from postcode."
 msgstr ""
 
-#: includes/formulario.php:23
+#: includes/formulario.php:28
 msgid "Select a public API"
 msgstr ""
 
-#: includes/formulario.php:25
+#: includes/formulario.php:30
 msgid "Select which API would you want to use"
 msgstr ""
 
-#: includes/formulario.php:33
+#: includes/formulario.php:41
+msgid "Google Maps API Key"
+msgstr ""
+
+#: includes/formulario.php:43
+msgid "Add your own Google Maps API Key."
+msgstr ""
+
+#: includes/formulario.php:50
 msgid "Save Changes"
 msgstr ""
 

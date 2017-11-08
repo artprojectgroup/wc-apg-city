@@ -1,13 +1,15 @@
 <?php
 /*
 Plugin Name: WC - APG City
-Version: 0.3.6.3
+Version: 1.0
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Add to WooCommerce an automatic city name generated from postcode.
 Author URI: https://artprojectgroup.es/
 Author: Art Project Group
 Requires at least: 3.8
-Tested up to: 4.8
+Tested up to: 4.9
+WC requires at least: 2.1
+WC tested up to: 3.2.3
 
 Text Domain: wc-apg-city
 Domain Path: /languages
@@ -32,10 +34,12 @@ $apg_city = array(
 	'donacion' 		=> 'https://artprojectgroup.es/tienda/donacion',
 	'soporte' 		=> 'https://wcprojectgroup.es/tienda/ticket-de-soporte',
 	'plugin_url' 	=> 'https://artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city', 
-	'ajustes' 		=> 'admin.php?page=apg_city', 
+	'ajustes' 		=> 'admin.php?page=wc-apg-city', 
 	'puntuacion' 	=> 'https://wordpress.org/support/view/plugin-reviews/wc-apg-city'
 );
 $envios_adicionales = $limpieza = NULL;
+
+$apg_city_settings = get_option( 'apg_city_settings' );
 
 //Carga el idioma
 load_plugin_textdomain( 'wc-apg-city', null, dirname( DIRECCION_apg_city ) . '/languages' );
@@ -75,8 +79,8 @@ function apg_city_enlace_de_ajustes( $enlaces ) {
 $plugin = DIRECCION_apg_city; 
 add_filter( "plugin_action_links_$plugin", 'apg_city_enlace_de_ajustes' );
 
-include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 //¿Está activo WooCommerce?
+include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin( 'woocommerce/woocommerce.php' ) ) {
 	//Pinta el formulario de configuración
 	function apg_city_tab() {
@@ -97,7 +101,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 
 	//Carga los scripts y CSS de WooCommerce
 	function apg_city_screen_id( $woocommerce_screen_ids ) {
-		$woocommerce_screen_ids[] = 'woocommerce_page_apg_city';
+		$woocommerce_screen_ids[] = 'woocommerce_page_wc-apg-city';
 
 		return $woocommerce_screen_ids;
 	}
@@ -116,7 +120,8 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 				'state_select'
 			),
 			'options'		=> array(
-				'' => __( 'Select city name', 'wc-apg-city' ),
+				''				=> __( 'Select city name', 'wc-apg-city' ),
+				'carga_campo'	=> __( 'My city isn\'t on the list', 'wc-apg-city' ),
 			),
 			'readonly'		=> 'readonly',
 			'autocomplete'	=> 'address-level2'
@@ -133,12 +138,17 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 	//Añade código JavaScript a en checkout
 	function codigo_javascript_en_checkout() {
 		if ( is_checkout() || is_account_page() ) {
-			$configuracion = get_option( 'apg_city_settings' );
-			if ( isset( $configuracion['api'] ) && $configuracion['api'] == "google" ) {
+			global $apg_city_settings;
+			wp_register_script( 'apg_city_campo', plugins_url( 'assets/js/apg-city-campo.js', __FILE__ ), array( 'select2' ) );
+			wp_enqueue_script( 'apg_city_campo' );
+			if ( isset( $apg_city_settings['api'] ) && $apg_city_settings['api'] == "google" ) {
 				wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city-google.js', __FILE__ ), array( 'select2' ) );
 			} else {
 				wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city-geonames.js', __FILE__ ), array( 'select2' ) );
+				wp_localize_script( 'apg_city', 'texto_predeterminado', __( 'Select city name', 'wc-apg-city' ) );
+				wp_localize_script( 'apg_city', 'texto_carga_campo', __( 'My city isn\'t on the list', 'wc-apg-city' ) );
 				wp_localize_script( 'apg_city', 'ruta_ajax', admin_url( 'admin-ajax.php' ) );
+				wp_localize_script( 'apg_city', 'google_api', $apg_city_settings[ 'key'] );
 			}
 			wp_enqueue_script( 'apg_city' );
 		}
@@ -204,16 +214,28 @@ function apg_city_plugin( $nombre ) {
 	return '<a title="' . sprintf( __( 'Please, rate %s:', 'wc-apg-city' ), $apg_city['plugin'] ) . '" href="' . $apg_city['puntuacion'] . '?rate=5#postform" class="estrellas">' . $estrellas . '</a>';
 }
 
+//Muestra el mensaje de actualización
+function apg_city_actualizacion() {
+	global $apg_city;
+	
+	echo '<div class="notice notice-error is-dismissible" id="message"><h3>' . $apg_city['plugin'] . '</h3><h4>' . sprintf( __( "Please, update your %s. Google Maps API Key now is required.", 'wc-apg-city' ), '<a href="' . $apg_city['ajustes'] . '" title="' . __( 'Settings', 'wc-apg-city' ) . '">' . __( 'settings', 'wc-apg-city' ) . '</a>' ) . '</h4></div>';
+}
+
 //Carga la hoja de estilo
 function apg_city_muestra_mensaje() {
+	global $apg_city_settings;
+	
 	wp_register_style( 'apg_city_hoja_de_estilo', plugins_url( 'assets/css/style.css', __FILE__ ) );
 	wp_enqueue_style( 'apg_city_hoja_de_estilo' );
+	
+	if ( !isset( $apg_city_settings['key'] ) || empty( $apg_city_settings['key'] ) ) { //Comprueba si hay que mostrar el mensaje de actualización
+		add_action( 'admin_notices', 'apg_city_actualizacion' );
+	}
 }
-add_action( 'admin_init', 'apg_city_muestra_mensaje' );
+add_action( 'admin_init', 'apg_city_muestra_mensaje', 99 );
 
 //Eliminamos todo rastro del plugin al desinstalarlo
 function apg_city_desinstalar() {
 	delete_transient( 'apg_city_plugin' );
 }
 register_uninstall_hook( __FILE__, 'apg_city_desinstalar' );
-?>

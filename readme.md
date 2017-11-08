@@ -7,13 +7,13 @@ Tags: woocommerce, commerce, e-commerce, commerce, shop, virtual shop, city, tow
 
 Requires at least: 3.8
 
-Tested up to: 4.8
+Tested up to: 4.9
 
-Stable tag: 0.3.6.3
+Stable tag: 1.0
 
 WC requires at least: 2.1
 
-WC tested up to: 3.1
+WC tested up to: 3.2.3
 
 License: GPLv3
 
@@ -28,7 +28,9 @@ Añade a WooCommerce un nombre de localidad automático generado a partir del c�
 
 ### Características
 * Puedes seleccionar entre las API de GeoNames o Google Maps.
+* Debes añadir tu propia Clave de API de Google Maps.
 * En caso de que el código postal sea compartido por más de una localidad, el cliente podrá seleccionar el nombre de la localidad correcto del listado devuelto por Google Maps.
+* Si la ciudad no está en el listado o no se encuentra en ninguna de las dos APIs el cliente puede introducir manualmente el nombre de su ciudad.
 * También selecciona la provincia (estado), siempre que el nombre coincida con el obtenido de Google Maps.
 
 ### Traducciones
@@ -68,10 +70,10 @@ Puedes seguir el desarrollo de este plugin en [Github](https://github.com/artpro
 
 ## Preguntas frecuentes
 ### ¿Necesita configuración?
-Sólo necesitas seleccionar entre la API de GeoNames y Google Maps.
+Sólo necesitas seleccionar entre la API de GeoNames y Google Maps, y añadir tu propia Clave de API de Google Maps.
 
 ### ¿Qué API es mejor?
-Depende de muchos factores pero la que mejores resultados nos ha dado es la API de GeoNames.
+Depende de muchos factores pero la que mejores resultados nos ha dado es la API de GeoNames. De todas formas en caso de no encontrar ningún resultado en la API seleccionada volverá a buscar de nuevo en la otra API.
 
 ### Soporte técnico
 Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project Group** te ofrece su servicio de [**Soporte técnico**](https://wcprojectgroup.es/tienda/ticket-de-soporte). 
@@ -79,6 +81,13 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 *En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.*
 
 ## Changelog
+### 1.0
+* Añadida la Clave de API de Google Maps.
+* Añadida búsqueda automática en ambas APIs en caso de no encontrar resultados en la API seleccionada.
+* Añadido el reemplazo del campo select por un campo input en caso de no encontrar resultados en ninguna de las dos APIs.
+* Añadida opción en el campo select que lo reemplaza por un campo input para que el cliente pueda introducir manualmente su ciudad.
+* Arreglos menores.
+
 ### 0.3.6.3
 * Arreglo de localización.
 
