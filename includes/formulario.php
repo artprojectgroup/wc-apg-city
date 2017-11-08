@@ -29,7 +29,7 @@ if ( isset( $_GET[ 'settings-updated' ] ) && ( !isset( $apg_city_settings['key']
 					</label>
 					<span class="woocommerce-help-tip" data-tip="<?php _e( 'Select which API would you want to use', 'wc-apg-city' ); ?>"></span> </th>
 				<td class="forminp">
-					<select id="apg_city_settings[api]" name="apg_city_settings[api]" tabindex="<?php echo $tab++; ?>">
+					<select class="wc-enhanced-select" id="apg_city_settings[api]" name="apg_city_settings[api]" tabindex="<?php echo $tab++; ?>">
 						<option value="geonames" <?php echo ( isset( $apg_city_settings[ 'api'] ) && $apg_city_settings[ 'api'] == "geonames" ? ' selected="selected"' : '' ); ?>>GeoNames</option>
 						<option value="google" <?php echo ( isset( $apg_city_settings[ 'api'] ) && $apg_city_settings[ 'api'] == "google" ? ' selected="selected"' : '' ); ?>>Google Maps</option>
 					</select>
