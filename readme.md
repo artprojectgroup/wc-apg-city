@@ -84,7 +84,7 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 ### 1.0.1
 * Actualización de cabecera.
 * Actualización de hoja de estilo.
-* Actualización de captura de pantalla.artp
+* Actualización de captura de pantalla.
 
 ### 1.0.1
 * Arreglo menor.

@@ -78,7 +78,7 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 = 1.0.1.1 =
 * Header updated.
 * Stylesheet updated.
-* Screenshot update.
+* Screenshot updated.
 = 1.0.1 =
 * Minor fix.
 * New screenshot.
@@ -124,7 +124,7 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 = 1.0.1.1 =
 * Header updated.
 * Stylesheet updated.
-* Screenshot updatedartp.
+* Screenshot updated.
 
 == Translations ==
 * *English*: by [**Art Project Group**](https://artprojectgroup.es/) (default language).
