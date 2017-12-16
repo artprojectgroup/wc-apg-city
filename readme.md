@@ -7,13 +7,13 @@ Tags: woocommerce, commerce, e-commerce, commerce, shop, virtual shop, city, tow
 
 Requires at least: 3.8
 
-Tested up to: 4.9
+Tested up to: 4.9.1
 
-Stable tag: 1.0.1
+Stable tag: 1.0.1.1
 
 WC requires at least: 2.1
 
-WC tested up to: 3.2.3
+WC tested up to: 3.3
 
 License: GPLv3
 
@@ -81,6 +81,11 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 *En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.*
 
 ## Changelog
+### 1.0.1
+* Actualización de cabecera.
+* Actualización de hoja de estilo.
+* Actualización de captura de pantalla.
+
 ### 1.0.1
 * Arreglo menor.
 * Nueva captura de pantalla.
