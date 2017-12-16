@@ -38,7 +38,7 @@ Añade a WooCommerce un nombre de localidad automático generado a partir del c�
 * English ([**Art Project Group**](https://artprojectgroup.es/)).
 
 ### Soporte técnico
-**Art Project Group** te ofrece [**Soporte técnico**](https://wcprojectgroup.es/tienda/ticket-de-soporte) para configurar o instalar ***WC - APG City***.
+**Art Project Group** te ofrece [**Soporte técnico**](https://artprojectgroup.es/tienda/ticket-de-soporte) para configurar o instalar ***WC - APG City***.
 
 ### Origen
 **WC - APG City** ha sido programado a partir de petición de [Thekla Kurpjuweit](https://www.facebook.com/profile.php?id=100010011270290) para añadir a WooCommerce la introducción automática del nombre de la localidad a partir del código postal de la dirección.
@@ -76,7 +76,7 @@ Sólo necesitas seleccionar entre la API de GeoNames y Google Maps, y añadir tu
 Depende de muchos factores pero la que mejores resultados nos ha dado es la API de GeoNames. De todas formas en caso de no encontrar ningún resultado en la API seleccionada volverá a buscar de nuevo en la otra API.
 
 ### Soporte técnico
-Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project Group** te ofrece su servicio de [**Soporte técnico**](https://wcprojectgroup.es/tienda/ticket-de-soporte). 
+Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project Group** te ofrece su servicio de [**Soporte técnico**](https://artprojectgroup.es/tienda/ticket-de-soporte). 
 
 *En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.*
 
@@ -84,7 +84,7 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 ### 1.0.1
 * Actualización de cabecera.
 * Actualización de hoja de estilo.
-* Actualización de captura de pantalla.
+* Actualización de captura de pantalla.artp
 
 ### 1.0.1
 * Arreglo menor.
@@ -147,7 +147,7 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 * *Español*: por [**Art Project Group**](https://artprojectgroup.es/).
 
 ## Soporte técnico
-Dado que **WC - APG City** es totalmente gratuito, **Art Project Group** sólo proporciona el servicio de [**Soporte técnico**](https://wcprojectgroup.es/tienda/ticket-de-soporte) previo pago. En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.
+Dado que **WC - APG City** es totalmente gratuito, **Art Project Group** sólo proporciona el servicio de [**Soporte técnico**](https://artprojectgroup.es/tienda/ticket-de-soporte) previo pago. En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.
 
 ## Donación
 ¿Te ha gustado y te ha resultado útil **WC - APG City** en tu sitio web? Te agradeceríamos una [pequeña donación](https://artprojectgroup.es/tienda/donacion) que nos ayudará a seguir mejorando este plugin y a crear más plugins totalmente gratuitos para toda la comunidad WordPress.

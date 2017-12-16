@@ -29,7 +29,7 @@ Add to WooCommerce an automatic city name generated from postcode.
 * English ([**Art Project Group**](https://artprojectgroup.es/)).
 
 = Technical support =
-**Art Project Group** offers [**Technical support**](https://wcprojectgroup.es/tienda/ticket-de-soporte) to configure or install ***WC - APG City***.
+**Art Project Group** offers [**Technical support**](https://artprojectgroup.es/tienda/ticket-de-soporte) to configure or install ***WC - APG City***.
 
 = Origin =
 **WC - APG City** has been programmed from [Thekla Kurpjuweit](https://www.facebook.com/profile.php?id=100010011270290) request to add to WooCommerce automatic city name input from the postcode.
@@ -66,7 +66,7 @@ Just select between GeoNames and Google Maps API, and add your own Google Maps A
 It depends on many factors but which has given the best results to us is GeoNames API. However, if no result is found in the selected API, it will search again in the other API.
 
 = Support =
-If you need help to configuring or installing **WC - APG City**, **Art Project Group** offers its service [**Technical Support**](https://wcprojectgroup.es/tienda/ticket-de-soporte). 
+If you need help to configuring or installing **WC - APG City**, **Art Project Group** offers its service [**Technical Support**](https://artprojectgroup.es/tienda/ticket-de-soporte). 
 
 *In any case **Art Project Group** provides any kind of free technical support.*
 
@@ -124,14 +124,14 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 = 1.0.1.1 =
 * Header updated.
 * Stylesheet updated.
-* Screenshot updated.
+* Screenshot updatedartp.
 
 == Translations ==
 * *English*: by [**Art Project Group**](https://artprojectgroup.es/) (default language).
 * *Español*: por [**Art Project Group**](https://artprojectgroup.es/).
 
 == Support ==
-Since **WC - APG City** is totally free, **Art Project Group** only provides payment [**Technical Support**](https://wcprojectgroup.es/tienda/ticket-de-soporte) service. In any case **Art Project Group** provide any kind of free technical support.
+Since **WC - APG City** is totally free, **Art Project Group** only provides payment [**Technical Support**](https://artprojectgroup.es/tienda/ticket-de-soporte) service. In any case **Art Project Group** provide any kind of free technical support.
 
 == Donation ==
 Did you liked and you have proved useful **WC - APG City** on your website? We would appreciate a [small donation](https://artprojectgroup.es/tienda/donacion) that will help us to continue improving this plugin and create more plugins totally free for the entire WordPress community.
