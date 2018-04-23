@@ -1,6 +1,7 @@
-<?php global $apg_city_settings, $apg_city;
+<?php
+global $apg_city_settings, $apg_city;
 
-if ( isset( $_GET[ 'settings-updated' ] ) && ( !isset( $apg_city_settings['key'] ) || empty( $apg_city_settings['key'] ) ) ) {
+if ( isset( $_GET[ 'settings-updated' ] ) && ( !isset( $apg_city_settings[ 'key' ] ) || empty( $apg_city_settings[ 'key' ] ) ) ) {
 	echo "<div class='notice notice-error is-dismissible'><p>" . __( 'Google Maps API Key is a required field.', 'wc-apg-city' ) . "</p></div>";
 }
 ?>
@@ -26,12 +27,13 @@ if ( isset( $_GET[ 'settings-updated' ] ) && ( !isset( $apg_city_settings['key']
 				<th scope="row" class="titledesc">
 					<label for="apg_city_settings[api]">
 						<?php _e( 'Select a public API', 'wc-apg-city' ); ?>
+						<span class="woocommerce-help-tip" data-tip="<?php _e( 'Select which API would you want to use', 'wc-apg-city' ); ?>"></span>
 					</label>
-					<span class="woocommerce-help-tip" data-tip="<?php _e( 'Select which API would you want to use', 'wc-apg-city' ); ?>"></span> </th>
+				</th>
 				<td class="forminp">
 					<select class="wc-enhanced-select" id="apg_city_settings[api]" name="apg_city_settings[api]" tabindex="<?php echo $tab++; ?>">
-						<option value="geonames" <?php echo ( isset( $apg_city_settings[ 'api'] ) && $apg_city_settings[ 'api'] == "geonames" ? ' selected="selected"' : '' ); ?>>GeoNames</option>
-						<option value="google" <?php echo ( isset( $apg_city_settings[ 'api'] ) && $apg_city_settings[ 'api'] == "google" ? ' selected="selected"' : '' ); ?>>Google Maps</option>
+						<option value="geonames" <?php echo ( isset( $apg_city_settings[ 'api'] ) && $apg_city_settings[ 'api']=="geonames" ? ' selected="selected"' : '' ); ?>>GeoNames</option>
+						<option value="google" <?php echo ( isset( $apg_city_settings[ 'api'] ) && $apg_city_settings[ 'api']=="google" ? ' selected="selected"' : '' ); ?>>Google Maps</option>
 					</select>
 				</td>
 			</tr>
@@ -39,10 +41,11 @@ if ( isset( $_GET[ 'settings-updated' ] ) && ( !isset( $apg_city_settings['key']
 				<th scope="row" class="titledesc">
 					<label for="apg_city_settings[key]">
 						<?php _e( 'Google Maps API Key', 'wc-apg-city' ); ?>
+						<span class="woocommerce-help-tip" data-tip="<?php _e( 'Add your own Google Maps API Key.', 'wc-apg-city' ); ?>"></span>
 					</label>
-					<span class="woocommerce-help-tip" data-tip="<?php _e( 'Add your own Google Maps API Key.', 'wc-apg-city' ); ?>"></span> </th>
+				</th>
 				<td class="forminp forminp-text">
-					<input type="text" id="apg_city_settings[key]" name="apg_city_settings[key]" tabindex="<?php echo $tab++; ?>" value="<?php echo ( isset( $apg_city_settings[ 'key'] ) ? $apg_city_settings[ 'key'] : '' ); ?>" />
+					<input type="text" id="apg_city_settings[key]" name="apg_city_settings[key]" tabindex="<?php echo $tab++; ?>" value="<?php echo ( isset( $apg_city_settings[ 'key'] ) ? $apg_city_settings[ 'key'] : '' ); ?>"/>
 				</td>
 			</tr>
 		</table>

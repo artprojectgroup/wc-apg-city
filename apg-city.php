@@ -1,15 +1,15 @@
 <?php
 /*
 Plugin Name: WC - APG City
-Version: 1.0.1.1
+Version: 1.0.1.2
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Add to WooCommerce an automatic city name generated from postcode.
 Author URI: https://artprojectgroup.es/
 Author: Art Project Group
 Requires at least: 3.8
-Tested up to: 4.9.1
+Tested up to: 5.0
 WC requires at least: 2.1
-WC tested up to: 3.3
+WC tested up to: 3.4
 
 Text Domain: wc-apg-city
 Domain Path: /languages
@@ -52,7 +52,7 @@ function apg_city_enlaces( $enlaces, $archivo ) {
 		$plugin = apg_city_plugin( $apg_city['plugin_uri'] );
 		$enlaces[] = '<a href="' . $apg_city['donacion'] . '" target="_blank" title="' . __( 'Make a donation by ', 'wc-apg-city' ) . 'APG"><span class="genericon genericon-cart"></span></a>';
 		$enlaces[] = '<a href="'. $apg_city['plugin_url'] . '" target="_blank" title="' . $apg_city['plugin'] . '"><strong class="artprojectgroup">APG</strong></a>';
-		$enlaces[] = '<a href="https://www.facebook.com/artprojectgroup" title="' . __( 'Follow us on ', 'wc-apg-city' ) . 'Facebook" target="_blank"><span class="genericon genericon-facebook-alt"></span></a> <a href="https://twitter.com/artprojectgroup" title="' . __( 'Follow us on ', 'wc-apg-city' ) . 'Twitter" target="_blank"><span class="genericon genericon-twitter"></span></a> <a href="https://plus.google.com/+ArtProjectGroupES" title="' . __( 'Follow us on ', 'wc-apg-city' ) . 'Google+" target="_blank"><span class="genericon genericon-googleplus-alt"></span></a> <a href="http://es.linkedin.com/in/artprojectgroup" title="' . __( 'Follow us on ', 'wc-apg-city' ) . 'LinkedIn" target="_blank"><span class="genericon genericon-linkedin"></span></a>';
+		$enlaces[] = '<a href="https://www.facebook.com/artprojectgroup" title="' . __( 'Follow us on ', 'wc-apg-city' ) . 'Facebook" target="_blank"><span class="genericon genericon-facebook-alt"></span></a> <a href="https://twitter.com/artprojectgroup" title="' . __( 'Follow us on ', 'wc-apg-city' ) . 'Twitter" target="_blank"><span class="genericon genericon-twitter"></span></a> <a href="https://plus.google.com/+ArtProjectGroupES" title="' . __( 'Follow us on ', 'wc-apg-city' ) . 'Google+" target="_blank"><span class="genericon genericon-googleplus-alt"></span></a> <a href="https://es.linkedin.com/in/artprojectgroup" title="' . __( 'Follow us on ', 'wc-apg-city' ) . 'LinkedIn" target="_blank"><span class="genericon genericon-linkedin"></span></a>';
 		$enlaces[] = '<a href="https://profiles.wordpress.org/artprojectgroup/" title="' . __( 'More plugins on ', 'wc-apg-city' ) . 'WordPress" target="_blank"><span class="genericon genericon-wordpress"></span></a>';
 		$enlaces[] = '<a href="mailto:info@artprojectgroup.es" title="' . __( 'Contact with us by ', 'wc-apg-city' ) . 'e-mail"><span class="genericon genericon-mail"></span></a> <a href="skype:artprojectgroup" title="' . __( 'Contact with us by ', 'wc-apg-city' ) . 'Skype"><span class="genericon genericon-skype"></span></a>';
 		$enlaces[] = apg_city_plugin( $apg_city['plugin_uri'] );
@@ -158,7 +158,9 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 	function apg_city_geonames() {
 		$respuesta = wp_remote_get( "http://www.geonames.org/postalCodeLookupJSON?postalcode=" . $_REQUEST['codigo_postal'] . "&country=" . $_REQUEST['pais'] );
 
-		echo $respuesta['body'];
+		if ( !is_wp_error( $respuesta ) && is_array( $respuesta ) ) {
+			echo $respuesta['body'];
+		}
 
 		wp_die();
 	}
@@ -190,7 +192,7 @@ function apg_city_plugin( $nombre ) {
 	);
 	$respuesta = get_transient( 'apg_city_plugin' );
 	if ( false === $respuesta ) {
-		$respuesta = wp_remote_post( 'http://api.wordpress.org/plugins/info/1.0/', array( 
+		$respuesta = wp_remote_post( 'https://api.wordpress.org/plugins/info/1.0/', array( 
 			'body' => $consulta)
 		);
 		set_transient( 'apg_city_plugin', $respuesta, 24 * HOUR_IN_SECONDS );
