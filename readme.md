@@ -9,11 +9,11 @@ Requires at least: 3.8
 
 Tested up to: 5.0
 
-Stable tag: 1.0.1.2
+Stable tag: 1.0.1.3
 
 WC requires at least: 2.1
 
-WC tested up to: 3.4
+WC tested up to: 3.5
 
 License: GPLv3
 
@@ -44,18 +44,18 @@ Añade a WooCommerce un nombre de localidad automático generado a partir del c�
 **WC - APG City** ha sido programado a partir de petición de [Thekla Kurpjuweit](https://www.facebook.com/profile.php?id=100010011270290) para añadir a WooCommerce la introducción automática del nombre de la localidad a partir del código postal de la dirección.
 
 ### Más información
-En nuestro sitio web oficial puede obtener más información sobre [**WC - APG City**](https://artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city). 
+En nuestro sitio web oficial puede obtener más información sobre [**WC - APG City**](https://artprojectgroup.es/plugins-para-woocommerce/wc-apg-city). 
 
 ### Comentarios
 No olvides dejarnos tu comentario en:
 
-* [WC - APG City](https://artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city) en Art Project Group.
+* [WC - APG City](https://artprojectgroup.es/plugins-para-woocommerce/wc-apg-city) en Art Project Group.
 * [Art Project Group](https://www.facebook.com/artprojectgroup) en Facebook.
 * [@artprojectgroup](https://twitter.com/artprojectgroup) en Twitter.
 * [+ArtProjectGroupES](https://plus.google.com/+ArtProjectGroupES/) en Google+.
 
 ### Más plugins
-Recuerda que puedes encontrar más [plugins para WordPress](https://artprojectgroup.es/plugins-para-wordpress) y más [plugins para WooCommerce](https://artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce) en [Art Project Group](https://artprojectgroup.es) y en nuestro perfil en [WordPress](http://profiles.wordpress.org/artprojectgroup/).
+Recuerda que puedes encontrar más [plugins para WordPress](https://artprojectgroup.es/plugins-para-wordpress) y más [plugins para WooCommerce](https://artprojectgroup.es/plugins-para-woocommerce) en [Art Project Group](https://artprojectgroup.es) y en nuestro perfil en [WordPress](http://profiles.wordpress.org/artprojectgroup/).
 
 ### GitHub
 Puedes seguir el desarrollo de este plugin en [Github](https://github.com/artprojectgroup/wc-apg-city).
@@ -81,6 +81,9 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 *En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.*
 
 ## Changelog
+### 1.0.1.3
+* Arreglo menor.
+
 ### 1.0.1.2
 * Añadida compatibilidad con WooCommerce 3.4.
 

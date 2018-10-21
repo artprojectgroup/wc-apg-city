@@ -4,9 +4,9 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: woocommerce, commerce, e-commerce, commerce, shop, virtual shop, city, town, state, postcode, geonames, google maps
 Requires at least: 3.8
 Tested up to: 5.0
-Stable tag: 1.0.1.2
+Stable tag: 1.0.1.3
 WC requires at least: 2.1
-WC tested up to: 3.4
+WC tested up to: 3.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -35,18 +35,18 @@ Add to WooCommerce an automatic city name generated from postcode.
 **WC - APG City** has been programmed from [Thekla Kurpjuweit](https://www.facebook.com/profile.php?id=100010011270290) request to add to WooCommerce automatic city name input from the postcode.
 
 = More information =
-On our official website you can learn more about [**WC - APG City**](https://artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city).
+On our official website you can learn more about [**WC - APG City**](https://artprojectgroup.es/plugins-para-woocommerce/wc-apg-city).
 
 = Comments =
 Don’t forget to leave us your comment on:
 
-* [WC - APG City](https://artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce/wc-apg-city) on Art Project Group.
+* [WC - APG City](https://artprojectgroup.es/plugins-para-woocommerce/wc-apg-city) on Art Project Group.
 * [Art Project Group](https://www.facebook.com/artprojectgroup) on Facebook.
 * [@artprojectgroup](https://twitter.com/artprojectgroup) on Twitter.
 * [+ArtProjectGroupES](https://plus.google.com/+ArtProjectGroupES/) on Google+.
 
 = More plugins =
-Remember that you can find more [plugins for WordPress](https://artprojectgroup.es/plugins-para-wordpress) and more [plugins for WooCommerce](https://artprojectgroup.es/plugins-para-wordpress/plugins-para-woocommerce) on [Art Project Group](https://artprojectgroup.es) and our profile on [WordPress](http://profiles.wordpress.org/artprojectgroup/).
+Remember that you can find more [plugins for WordPress](https://artprojectgroup.es/plugins-para-wordpress) and more [plugins for WooCommerce](https://artprojectgroup.es/plugins-para-woocommerce) on [Art Project Group](https://artprojectgroup.es) and our profile on [WordPress](http://profiles.wordpress.org/artprojectgroup/).
 
 = GitHub =
 You can follow the development of this plugin on [Github](https://github.com/artprojectgroup/wc-apg-city).
@@ -75,6 +75,8 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 2. Screenshot of WC - APG City. Billing and shipping forms.
 
 == Changelog ==
+= 1.0.1.3 =
+* Minor fix.
 = 1.0.1.2 =
 * Added WooCommerce 3.4 compatibility.
 = 1.0.1.1 =
@@ -123,8 +125,8 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 * Initial version.
 
 == Upgrade Notice ==
-= 1.0.1.2 =
-* Added WooCommerce 3.4 compatibility.
+= 1.0.1.3 =
+* Minor fix.
 
 == Translations ==
 * *English*: by [**Art Project Group**](https://artprojectgroup.es/) (default language).
