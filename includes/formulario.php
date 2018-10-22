@@ -46,7 +46,7 @@ if ( isset( $_GET[ 'settings-updated' ] ) && ( !isset( $apg_city_settings[ 'key'
 				</th>
 				<td class="forminp forminp-text">
 					<input type="text" id="apg_city_settings[key]" name="apg_city_settings[key]" tabindex="<?php echo $tab++; ?>" value="<?php echo ( isset( $apg_city_settings[ 'key'] ) ? $apg_city_settings[ 'key'] : '' ); ?>"/>
-					<p class="description"><?php _e( sprintf( 'Get your own API Key from %s.', '<a href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend,geocoding_backend,directions_backend,distance_matrix_backend,elevation_backend,places_backend&reusekey=true&hl=' . strtoupper( substr( get_bloginfo ( 'language' ), 0, 2 ) ) . '" target="_blank">Google API Console</a>' ), 'wc-apg-city' ); ?></p>
+					<p class="description"><?php echo sprintf( __( 'Get your own API Key from %s.', 'wc-apg-city' ), '<a href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend,geocoding_backend,directions_backend,distance_matrix_backend,elevation_backend,places_backend&reusekey=true&hl=' . strtoupper( substr( get_bloginfo ( 'language' ), 0, 2 ) ) . '" target="_blank">Google API Console</a>' ); ?></p>
 				</td>
 			</tr>
 		</table>
