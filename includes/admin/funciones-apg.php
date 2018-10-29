@@ -90,7 +90,7 @@ function apg_city_plugin( $nombre ) {
 function apg_city_muestra_mensaje() {
 	global $apg_city_settings;
 	
-	wp_register_style( 'apg_city_hoja_de_estilo', plugins_url( 'assets/css/style.css', __FILE__ ) );
+	wp_register_style( 'apg_city_hoja_de_estilo', plugins_url( 'assets/css/style.css', DIRECCION_apg_city ) );
 	wp_enqueue_style( 'apg_city_hoja_de_estilo' );
 	
 	if ( !isset( $apg_city_settings['key'] ) || empty( $apg_city_settings['key'] ) ) { //Comprueba si hay que mostrar el mensaje de actualización
