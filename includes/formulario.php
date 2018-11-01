@@ -4,16 +4,17 @@ global $apg_city_settings, $apg_city;
 if ( isset( $_GET[ 'settings-updated' ] ) && ( !isset( $apg_city_settings[ 'key' ] ) || empty( $apg_city_settings[ 'key' ] ) ) ) {
 	echo "<div class='notice notice-error is-dismissible'><p>" . __( 'Google Maps API Key is a required field.', 'wc-apg-city' ) . "</p></div>";
 }
+
+settings_errors(); 
+
+//Variables
+$tab = 1;
 ?>
 
 <div class="wrap woocommerce">
 	<h2>
 		<?php _e( 'APG City Options.', 'wc-apg-city' ); ?>
 	</h2>
-	<?php 
-	settings_errors(); 
-	$tab = 1;
-	?>
 	<h3><a href="<?php echo $apg_city['plugin_url']; ?>" title="Art Project Group"><?php echo $apg_city['plugin']; ?></a></h3>
 	<p>
 		<?php _e( 'Add to WooCommerce an automatic city name generated from postcode.', 'wc-apg-city' ); ?>
@@ -50,8 +51,6 @@ if ( isset( $_GET[ 'settings-updated' ] ) && ( !isset( $apg_city_settings[ 'key'
 				</td>
 			</tr>
 		</table>
-		<p class="submit">
-			<input class="button-primary" type="submit" value="<?php _e( 'Save Changes', 'wc-apg-city' ); ?>" name="submit" id="submit" tabindex="<?php echo $tab++; ?>"/>
-		</p>
+		<?php submit_button(); ?>
 	</form>
 </div>

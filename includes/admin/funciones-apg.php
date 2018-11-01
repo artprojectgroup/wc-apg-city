@@ -102,5 +102,6 @@ add_action( 'admin_init', 'apg_city_muestra_mensaje', 99 );
 //Eliminamos todo rastro del plugin al desinstalarlo
 function apg_city_desinstalar() {
 	delete_transient( 'apg_city_plugin' );
+	delete_option( 'apg_city_settings' );
 }
 register_uninstall_hook( __FILE__, 'apg_city_desinstalar' );

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce - APG NIF/CIF/NIE field\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-26 09:53+0000\n"
+"POT-Creation-Date: 2018-11-01 13:44+0000\n"
 "POT-Revision-Date: Sat Aug 13 2016 00:23:19 GMT+0200 (CEST)\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
@@ -36,40 +36,40 @@ msgctxt "placeholder"
 msgid "Select city name"
 msgstr ""
 
-#: apg-city.php:76 apg-city.php:98
+#: apg-city.php:76 apg-city.php:99
 msgid "Select city name"
 msgstr ""
 
-#: apg-city.php:77 apg-city.php:99
+#: apg-city.php:77 apg-city.php:100
 msgid "My city isn't on the list"
 msgstr ""
 
-#: apg-city.php:114
+#: apg-city.php:115
 msgid ""
 "Please enter a valid <strong>billing Town / City</strong>. JavaScript is "
 "required."
 msgstr ""
 
-#: apg-city.php:114
+#: apg-city.php:115
 msgid ""
 "Please enter a valid <strong>shipping Town / City</strong>. JavaScript is "
 "required."
 msgstr ""
 
-#: apg-city.php:140
+#: apg-city.php:141
 msgid "This plugin require WooCommerce active to run!"
 msgstr ""
 
-#: apg-city.php:148
+#: apg-city.php:149
 #, php-format
 msgid "Please, update your %s. Google Maps API Key now is required."
 msgstr ""
 
-#: apg-city.php:148 includes/admin/funciones-apg.php:39
+#: apg-city.php:149 includes/admin/funciones-apg.php:39
 msgid "Settings"
 msgstr ""
 
-#: apg-city.php:148
+#: apg-city.php:149
 msgid "settings"
 msgstr ""
 
@@ -125,38 +125,34 @@ msgstr ""
 msgid "Google Maps API Key is a required field."
 msgstr ""
 
-#: includes/formulario.php:11
+#: includes/formulario.php:16
 msgid "APG City Options."
 msgstr ""
 
 #. Description of the plugin
-#: includes/formulario.php:19
+#: includes/formulario.php:20
 msgid "Add to WooCommerce an automatic city name generated from postcode."
 msgstr ""
 
-#: includes/formulario.php:29
+#: includes/formulario.php:30
 msgid "Select a public API"
 msgstr ""
 
-#: includes/formulario.php:30
+#: includes/formulario.php:31
 msgid "Select which API would you want to use"
 msgstr ""
 
-#: includes/formulario.php:43
+#: includes/formulario.php:44
 msgid "Google Maps API Key"
 msgstr ""
 
-#: includes/formulario.php:44
+#: includes/formulario.php:45
 msgid "Add your own Google Maps API Key."
 msgstr ""
 
-#: includes/formulario.php:49
+#: includes/formulario.php:50
 #, php-format
 msgid "Get your own API Key from %s."
-msgstr ""
-
-#: includes/formulario.php:54
-msgid "Save Changes"
 msgstr ""
 
 #: includes/admin/funciones-apg.php:39
