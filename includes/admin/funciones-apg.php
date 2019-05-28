@@ -97,11 +97,11 @@ function apg_city_muestra_mensaje() {
 add_action( 'admin_init', 'apg_city_muestra_mensaje', 99 );
 
 //Hoja de estilo
-function apg_free_shipping_estilo() {
+function apg_city_estilo() {
 	wp_register_style( 'apg_city_hoja_de_estilo', plugins_url( 'assets/css/style.css', DIRECCION_apg_city ) );
 	wp_enqueue_style( 'apg_city_hoja_de_estilo' );
 }
-add_action( 'admin_enqueue_scripts', 'apg_free_shipping_estilo' );
+add_action( 'admin_enqueue_scripts', 'apg_city_estilo' );
 
 //Eliminamos todo rastro del plugin al desinstalarlo
 function apg_city_desinstalar() {
