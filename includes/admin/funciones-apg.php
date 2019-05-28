@@ -86,18 +86,22 @@ function apg_city_plugin( $nombre ) {
 	return '<a title="' . sprintf( __( 'Please, rate %s:', 'wc-apg-nifcifnie-field' ), $apg_city['plugin'] ) . '" href="' . $apg_city['puntuacion'] . '?rate=5#postform" class="estrellas">' . $estrellas . '</a>';
 }
 
-//Carga la hoja de estilo
+//Muestra el mensaje de actualización
 function apg_city_muestra_mensaje() {
 	global $apg_city_settings;
-	
-	wp_register_style( 'apg_city_hoja_de_estilo', plugins_url( 'assets/css/style.css', DIRECCION_apg_city ) );
-	wp_enqueue_style( 'apg_city_hoja_de_estilo' );
 	
 	if ( !isset( $apg_city_settings['key'] ) || empty( $apg_city_settings['key'] ) ) { //Comprueba si hay que mostrar el mensaje de actualización
 		add_action( 'admin_notices', 'apg_city_actualizacion' );
 	}
 }
 add_action( 'admin_init', 'apg_city_muestra_mensaje', 99 );
+
+//Hoja de estilo
+function apg_free_shipping_estilo() {
+	wp_register_style( 'apg_city_hoja_de_estilo', plugins_url( 'assets/css/style.css', DIRECCION_apg_city ) );
+	wp_enqueue_style( 'apg_city_hoja_de_estilo' );
+}
+add_action( 'admin_enqueue_scripts', 'apg_free_shipping_estilo' );
 
 //Eliminamos todo rastro del plugin al desinstalarlo
 function apg_city_desinstalar() {
