@@ -143,14 +143,14 @@ var comprueba_google = function( formulario, geonames = false ) {
 
 jQuery( document ).ready( function() {
 	//Comprueba el formulario de facturación
-	jQuery( '#billing_city' ).live( 'change', function() {
+	jQuery( '#billing_city' ).on( 'change', function() {
 		if ( jQuery( '#billing_city' ).val() ) {
 			comprueba_campo( 'billing' );
 		}
 	} );
 	
 	//Comprueba el formulario de envío
-	jQuery( '#shipping_city' ).live( 'change', function() {
+	jQuery( '#shipping_city' ).on( 'change', function() {
 		if ( jQuery( '#shipping_city' ).val() ) {
 			comprueba_campo( 'shipping' );
 		}

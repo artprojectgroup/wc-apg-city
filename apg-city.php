@@ -1,15 +1,15 @@
 <?php
 /*
 Plugin Name: WC - APG City
-Version: 1.0.1.6
+Version: 1.0.2
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Add to WooCommerce an automatic city name generated from postcode.
 Author URI: https://artprojectgroup.es/
 Author: Art Project Group
 Requires at least: 3.8
-Tested up to: 5.2
+Tested up to: 5.5
 WC requires at least: 2.1
-WC tested up to: 3.6
+WC tested up to: 4.2
 
 Text Domain: wc-apg-city
 Domain Path: /languages
@@ -20,9 +20,7 @@ Domain Path: /languages
 */
 
 //Igual no deberías poder abrirme
-if ( !defined( 'ABSPATH' ) ) {
-    exit();
-}
+defined( 'ABSPATH' ) || exit;
 
 //Definimos constantes
 define( 'DIRECCION_apg_city', plugin_basename( __FILE__ ) );
@@ -62,44 +60,49 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 	
 	//Modifica el campo Localidad
 	function apg_city_campos_de_direccion( $campos ) {
-		$campos['city']	= array(
+		$campos['city']	= [
 			'label'         => __( 'Town / City', 'woocommerce' ),
 			'placeholder'   => _x( 'Select city name', 'placeholder', 'wc-apg-city' ),
 			'required'		=> true,
 			'clear'       	=> ( in_array( 'form-row-last', $campos['city']['class'] ) ) ? "true" : "false",
 			'type'        	=> 'select',
 			'class'       	=> $campos['city']['class'],
-			'input_class'	=> array(
+			'input_class'	=> [
 				'state_select'
-			),
-			'options'		=> array(
+			],
+			'options'		=> [
 				''				=> __( 'Select city name', 'wc-apg-city' ),
 				'carga_campo'	=> __( 'My city isn\'t on the list', 'wc-apg-city' ),
-			),
+			],
 			'readonly'		=> 'readonly',
 			'autocomplete'	=> 'address-level2',
 			'priority'      => $campos['city']['priority'],
-        );
+        ];
 
 		return $campos;
 	}
 	
-	//Añade código JavaScript a en checkout
+	//Añade código JavaScript al checkout
 	function apg_city_codigo_javascript_en_checkout() {
 		if ( is_checkout() || is_account_page() ) {
 			global $apg_city_settings;
 			
-			wp_register_script( 'apg_city_campo', plugins_url( 'assets/js/apg-city-campo.js', __FILE__ ), array( 'select2' ) );
+			wp_register_script( 'apg_city_campo', plugins_url( 'assets/js/apg-city-campo.js', __FILE__ ), [ 'select2' ] );
 			wp_enqueue_script( 'apg_city_campo' );
 			if ( isset( $apg_city_settings['api'] ) && $apg_city_settings['api'] == "google" ) {
-				wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city-google.js', __FILE__ ), array( 'select2' ) );
+				wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city-google.js', __FILE__ ), [ 'select2' ] );
 			} else {
-				wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city-geonames.js', __FILE__ ), array( 'select2' ) );
+				wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city-geonames.js', __FILE__ ), [ 'select2' ] );
 			}
 			wp_localize_script( 'apg_city', 'texto_predeterminado', __( 'Select city name', 'wc-apg-city' ) );
 			wp_localize_script( 'apg_city', 'texto_carga_campo', __( 'My city isn\'t on the list', 'wc-apg-city' ) );
 			wp_localize_script( 'apg_city', 'ruta_ajax', admin_url( 'admin-ajax.php' ) );
-			wp_localize_script( 'apg_city', 'google_api', $apg_city_settings[ 'key'] );
+            $usuario = wp_get_current_user();
+			wp_localize_script( 'apg_city', 'billing_city', get_user_meta( $usuario->ID, 'billing_city', true ) );
+			wp_localize_script( 'apg_city', 'shipping_city', get_user_meta( $usuario->ID, 'shipping_city', true ) );
+            if ( isset( $apg_city_settings[ 'key'] ) && !empty( $apg_city_settings[ 'key'] ) ) {
+                wp_localize_script( 'apg_city', 'google_api', $apg_city_settings[ 'key'] );
+            }
 			wp_enqueue_script( 'apg_city' );
 		}
 	}
@@ -120,7 +123,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 
 	//Obtiene los resultados de la API de Geonames
 	function apg_city_geonames() {
-		$respuesta = wp_remote_get( "http://www.geonames.org/postalCodeLookupJSON?postalcode=" . $_REQUEST['codigo_postal'] . "&country=" . $_REQUEST['pais'] );
+		$respuesta = wp_remote_get( "https://www.geonames.org/postalCodeLookupJSON?postalcode=" . $_REQUEST['codigo_postal'] . "&country=" . $_REQUEST['pais'] );
 
 		if ( !is_wp_error( $respuesta ) && is_array( $respuesta ) ) {
 			echo $respuesta['body'];
@@ -148,3 +151,10 @@ function apg_city_actualizacion() {
 	
 	echo '<div class="notice notice-error is-dismissible" id="message"><h3>' . $apg_city['plugin'] . '</h3><h4>' . sprintf( __( "Please, update your %s. Google Maps API Key now is required.", 'wc-apg-city' ), '<a href="' . $apg_city['ajustes'] . '" title="' . __( 'Settings', 'wc-apg-city' ) . '">' . __( 'settings', 'wc-apg-city' ) . '</a>' ) . '</h4></div>';
 }
+
+//Eliminamos todo rastro del plugin al desinstalarlo
+function apg_city_desinstalar() {
+	delete_transient( 'apg_city_plugin' );
+	delete_option( 'apg_city_settings' );
+}
+register_uninstall_hook( __FILE__, 'apg_city_desinstalar' );

@@ -1,14 +1,14 @@
 <?php
 //Definimos las variables
-$apg_city = array(	
+$apg_city = [	
 	'plugin' 		=> 'WC - APG City', 
 	'plugin_uri' 	=> 'wc-apg-city', 
 	'donacion' 		=> 'https://artprojectgroup.es/tienda/donacion',
-	'soporte' 		=> 'https://artprojectgroup.es/tienda/ticket-de-soporte',
+	'soporte' 		=> 'https://artprojectgroup.es/tienda/soporte-tecnico',
 	'plugin_url' 	=> 'https://artprojectgroup.es/plugins-para-woocommerce/wc-apg-city', 
 	'ajustes' 		=> 'admin.php?page=wc-apg-city', 
 	'puntuacion' 	=> 'https://wordpress.org/support/view/plugin-reviews/wc-apg-city'
-);
+];
 
 //Carga el idioma
 load_plugin_textdomain( 'wc-apg-city', null, dirname( DIRECCION_apg_city ) . '/languages' );
@@ -35,10 +35,10 @@ add_filter( 'plugin_row_meta', 'apg_city_enlaces', 10, 2 );
 function apg_city_enlace_de_ajustes( $enlaces ) { 
 	global $apg_city;
 
-	$enlaces_de_ajustes = array(
+	$enlaces_de_ajustes = [
 		'<a href="' . $apg_city['ajustes'] . '" title="' . __( 'Settings of ', 'wc-apg-city' ) . $apg_city['plugin'] .'">' . __( 'Settings', 'wc-apg-city' ) . '</a>', 
 		'<a href="' . $apg_city['soporte'] . '" title="' . __( 'Support of ', 'wc-apg-city' ) . $apg_city['plugin'] .'">' . __( 'Support', 'wc-apg-city' ) . '</a>'
-	);
+	];
 	foreach ( $enlaces_de_ajustes as $enlace_de_ajustes ) {
 		array_unshift( $enlaces, $enlace_de_ajustes );
 	}
@@ -52,19 +52,17 @@ add_filter( "plugin_action_links_$plugin", 'apg_city_enlace_de_ajustes' );
 function apg_city_plugin( $nombre ) {
 	global $apg_city;
 
-	$argumentos = ( object ) array( 
+	$argumentos = ( object ) [ 
 		'slug'		=> $nombre 
-	);
-	$consulta = array( 
+	];
+	$consulta = [ 
 		'action'	=> 'plugin_information', 
 		'timeout'	=> 15, 
 		'request'	=> serialize( $argumentos )
-	);
+	];
 	$respuesta = get_transient( 'apg_city_plugin' );
 	if ( false === $respuesta ) {
-		$respuesta = wp_remote_post( 'https://api.wordpress.org/plugins/info/1.0/', array( 
-			'body' => $consulta)
-		);
+		$respuesta = wp_remote_post( 'https://api.wordpress.org/plugins/info/1.0/', [ 'body' => $consulta ] );
 		set_transient( 'apg_city_plugin', $respuesta, 24 * HOUR_IN_SECONDS );
 	}
 	if ( !is_wp_error( $respuesta ) ) {
@@ -73,11 +71,11 @@ function apg_city_plugin( $nombre ) {
 		$plugin['rating'] = 100;
 	}
 	
-	$rating = array(
+	$rating = [
 	   'rating'		=> $plugin['rating'],
 	   'type'		=> 'percent',
 	   'number'		=> $plugin['num_ratings'],
-	);
+	];
 	ob_start();
 	wp_star_rating( $rating );
 	$estrellas = ob_get_contents();
@@ -98,14 +96,9 @@ add_action( 'admin_init', 'apg_city_muestra_mensaje', 99 );
 
 //Hoja de estilo
 function apg_city_estilo() {
-	wp_register_style( 'apg_city_hoja_de_estilo', plugins_url( 'assets/css/style.css', DIRECCION_apg_city ) );
-	wp_enqueue_style( 'apg_city_hoja_de_estilo' );
+	if ( strpos( $_SERVER[ 'REQUEST_URI' ], 'wc-apg-city' ) !== false || strpos( $_SERVER[ 'REQUEST_URI' ], 'plugins.php' ) !== false ) {
+		wp_register_style( 'apg_city_hoja_de_estilo', plugins_url( 'assets/css/style.css', DIRECCION_apg_city ) );
+		wp_enqueue_style( 'apg_city_hoja_de_estilo' );
+	}
 }
 add_action( 'admin_enqueue_scripts', 'apg_city_estilo' );
-
-//Eliminamos todo rastro del plugin al desinstalarlo
-function apg_city_desinstalar() {
-	delete_transient( 'apg_city_plugin' );
-	delete_option( 'apg_city_settings' );
-}
-register_uninstall_hook( __FILE__, 'apg_city_desinstalar' );
