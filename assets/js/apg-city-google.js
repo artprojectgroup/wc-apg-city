@@ -1,14 +1,10 @@
 jQuery( document ).ready( function() {
 	//Actualiza los dos formularios
 	if ( jQuery( '#billing_country' ).val() && jQuery( '#billing_postcode' ).val() ) {
-        jQuery( '#billing_city' ).append( 
-		  jQuery( "<option></option>" ).attr( "value", billing_city ).text( billing_city ).attr( 'selected', true )
-		);
+		comprueba_google( 'billing' );
 	}
 	if ( jQuery( '#shipping_country' ).val() && jQuery( '#shipping_postcode' ).val() ) {
-        jQuery( '#shipping_city' ).append( 
-		  jQuery( "<option></option>" ).attr( "value", shipping_city ).text( shipping_city ).attr( 'selected', true )
-		);
+		comprueba_google( 'shipping' );
 	}
 
 	//Actualiza el formulario de facturación
