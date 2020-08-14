@@ -7,9 +7,9 @@ Description: Add to WooCommerce an automatic city name generated from postcode.
 Author URI: https://artprojectgroup.es/
 Author: Art Project Group
 Requires at least: 3.8
-Tested up to: 5.5
+Tested up to: 5.6
 WC requires at least: 2.1
-WC tested up to: 4.2
+WC tested up to: 4.4
 
 Text Domain: wc-apg-city
 Domain Path: /languages
