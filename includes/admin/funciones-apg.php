@@ -1,4 +1,7 @@
 <?php
+//Igual no deberías poder abrirme
+defined( 'ABSPATH' ) || exit;
+
 //Definimos las variables
 $apg_city = [	
 	'plugin' 		=> 'WC - APG City', 
@@ -18,13 +21,13 @@ function apg_city_enlaces( $enlaces, $archivo ) {
 	global $apg_city;
 
 	if ( $archivo == DIRECCION_apg_city ) {
-		$plugin = apg_city_plugin( $apg_city['plugin_uri'] );
-		$enlaces[] = '<a href="' . $apg_city['donacion'] . '" target="_blank" title="' . __( 'Make a donation by ', 'wc-apg-city' ) . 'APG"><span class="genericon genericon-cart"></span></a>';
-		$enlaces[] = '<a href="'. $apg_city['plugin_url'] . '" target="_blank" title="' . $apg_city['plugin'] . '"><strong class="artprojectgroup">APG</strong></a>';
+		$plugin = apg_city_plugin( $apg_city[ 'plugin_uri' ] );
+		$enlaces[] = '<a href="' . $apg_city[ 'donacion' ] . '" target="_blank" title="' . __( 'Make a donation by ', 'wc-apg-city' ) . 'APG"><span class="genericon genericon-cart"></span></a>';
+		$enlaces[] = '<a href="'. $apg_city[ 'plugin_url' ] . '" target="_blank" title="' . $apg_city[ 'plugin' ] . '"><strong class="artprojectgroup">APG</strong></a>';
 		$enlaces[] = '<a href="https://www.facebook.com/artprojectgroup" title="' . __( 'Follow us on ', 'wc-apg-city' ) . 'Facebook" target="_blank"><span class="genericon genericon-facebook-alt"></span></a> <a href="https://twitter.com/artprojectgroup" title="' . __( 'Follow us on ', 'wc-apg-city' ) . 'Twitter" target="_blank"><span class="genericon genericon-twitter"></span></a> <a href="https://plus.google.com/+ArtProjectGroupES" title="' . __( 'Follow us on ', 'wc-apg-city' ) . 'Google+" target="_blank"><span class="genericon genericon-googleplus-alt"></span></a> <a href="https://es.linkedin.com/in/artprojectgroup" title="' . __( 'Follow us on ', 'wc-apg-city' ) . 'LinkedIn" target="_blank"><span class="genericon genericon-linkedin"></span></a>';
 		$enlaces[] = '<a href="https://profiles.wordpress.org/artprojectgroup/" title="' . __( 'More plugins on ', 'wc-apg-city' ) . 'WordPress" target="_blank"><span class="genericon genericon-wordpress"></span></a>';
 		$enlaces[] = '<a href="mailto:info@artprojectgroup.es" title="' . __( 'Contact with us by ', 'wc-apg-city' ) . 'e-mail"><span class="genericon genericon-mail"></span></a> <a href="skype:artprojectgroup" title="' . __( 'Contact with us by ', 'wc-apg-city' ) . 'Skype"><span class="genericon genericon-skype"></span></a>';
-		$enlaces[] = apg_city_plugin( $apg_city['plugin_uri'] );
+		$enlaces[] = apg_city_plugin( $apg_city[ 'plugin_uri' ] );
 	}
 	
 	return $enlaces;
@@ -36,8 +39,8 @@ function apg_city_enlace_de_ajustes( $enlaces ) {
 	global $apg_city;
 
 	$enlaces_de_ajustes = [
-		'<a href="' . $apg_city['ajustes'] . '" title="' . __( 'Settings of ', 'wc-apg-city' ) . $apg_city['plugin'] .'">' . __( 'Settings', 'wc-apg-city' ) . '</a>', 
-		'<a href="' . $apg_city['soporte'] . '" title="' . __( 'Support of ', 'wc-apg-city' ) . $apg_city['plugin'] .'">' . __( 'Support', 'wc-apg-city' ) . '</a>'
+		'<a href="' . $apg_city[ 'ajustes' ] . '" title="' . __( 'Settings of ', 'wc-apg-city' ) . $apg_city[ 'plugin' ] .'">' . __( 'Settings', 'wc-apg-city' ) . '</a>', 
+		'<a href="' . $apg_city[ 'soporte' ] . '" title="' . __( 'Support of ', 'wc-apg-city' ) . $apg_city[ 'plugin' ] .'">' . __( 'Support', 'wc-apg-city' ) . '</a>'
 	];
 	foreach ( $enlaces_de_ajustes as $enlace_de_ajustes ) {
 		array_unshift( $enlaces, $enlace_de_ajustes );
@@ -66,29 +69,29 @@ function apg_city_plugin( $nombre ) {
 		set_transient( 'apg_city_plugin', $respuesta, 24 * HOUR_IN_SECONDS );
 	}
 	if ( !is_wp_error( $respuesta ) ) {
-		$plugin = get_object_vars( unserialize( $respuesta['body'] ) );
+		$plugin = get_object_vars( unserialize( $respuesta[ 'body' ] ) );
 	} else {
-		$plugin['rating'] = 100;
+		$plugin[ 'rating' ] = 100;
 	}
 	
 	$rating = [
-	   'rating'		=> $plugin['rating'],
+	   'rating'		=> $plugin[ 'rating' ],
 	   'type'		=> 'percent',
-	   'number'		=> $plugin['num_ratings'],
+	   'number'		=> ( isset( $plugin[ 'num_ratings' ] ) ) ? $plugin[ 'num_ratings' ] : 0,
 	];
 	ob_start();
 	wp_star_rating( $rating );
 	$estrellas = ob_get_contents();
 	ob_end_clean();
 
-	return '<a title="' . sprintf( __( 'Please, rate %s:', 'wc-apg-nifcifnie-field' ), $apg_city['plugin'] ) . '" href="' . $apg_city['puntuacion'] . '?rate=5#postform" class="estrellas">' . $estrellas . '</a>';
+	return '<a title="' . sprintf( __( 'Please, rate %s:', 'wc-apg-nifcifnie-field' ), $apg_city[ 'plugin' ] ) . '" href="' . $apg_city[ 'puntuacion' ] . '?rate=5#postform" class="estrellas">' . $estrellas . '</a>';
 }
 
 //Muestra el mensaje de actualización
 function apg_city_muestra_mensaje() {
 	global $apg_city_settings;
 	
-	if ( !isset( $apg_city_settings['key'] ) || empty( $apg_city_settings['key'] ) ) { //Comprueba si hay que mostrar el mensaje de actualización
+	if ( !isset( $apg_city_settings[ 'key' ] ) || empty( $apg_city_settings[ 'key' ] ) ) { //Comprueba si hay que mostrar el mensaje de actualización
 		add_action( 'admin_notices', 'apg_city_actualizacion' );
 	}
 }

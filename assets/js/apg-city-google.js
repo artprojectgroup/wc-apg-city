@@ -8,14 +8,14 @@ jQuery( document ).ready( function() {
 	}
 
 	//Actualiza el formulario de facturación
-	jQuery( '#billing_postcode, #billing_country' ).live( 'change', function() {
+	jQuery( '#billing_postcode, #billing_country' ).on( 'change', function() {
 		if ( jQuery( '#billing_country' ).val() && jQuery( '#billing_postcode' ).val() ) {
 			comprueba_google( 'billing' );
 		}
 	} );
 	
 	//Actualiza el formulario de envío
-	jQuery( '#shipping_postcode, #shipping_country' ).live( 'change', function() {
+	jQuery( '#shipping_postcode, #shipping_country' ).on( 'change', function() {
 		if ( jQuery( '#shipping_country' ).val() && jQuery( '#shipping_postcode' ).val() ) {
 			comprueba_google( 'shipping' );
 		}

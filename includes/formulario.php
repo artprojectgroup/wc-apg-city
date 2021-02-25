@@ -1,4 +1,7 @@
 <?php
+//Igual no deberías poder abrirme
+defined( 'ABSPATH' ) || exit;
+
 global $apg_city_settings, $apg_city;
 
 if ( isset( $_GET[ 'settings-updated' ] ) && ( !isset( $apg_city_settings[ 'key' ] ) || empty( $apg_city_settings[ 'key' ] ) ) ) {
@@ -15,14 +18,14 @@ $tab = 1;
 	<h2>
 		<?php _e( 'APG City Options.', 'wc-apg-city' ); ?>
 	</h2>
-	<h3><a href="<?php echo $apg_city['plugin_url']; ?>" title="Art Project Group"><?php echo $apg_city['plugin']; ?></a></h3>
+	<h3><a href="<?php echo $apg_city[ 'plugin_url' ]; ?>" title="Art Project Group"><?php echo $apg_city[ 'plugin' ]; ?></a></h3>
 	<p>
 		<?php _e( 'Add to WooCommerce an automatic city name generated from postcode.', 'wc-apg-city' ); ?>
 	</p>
 	<?php include( 'cuadro-informacion.php' ); ?>
 	<form method="post" action="options.php">
 		<?php settings_fields( 'apg_city_settings_group' ); ?>
-		<div class="cabecera"> <a href="<?php echo $apg_city['plugin_url']; ?>" title="<?php echo $apg_city['plugin']; ?>" target="_blank"><img src="<?php echo plugins_url( '../assets/images/cabecera.jpg', __FILE__ ); ?>" class="imagen" alt="<?php echo $apg_city['plugin']; ?>" /></a> </div>
+		<div class="cabecera"> <a href="<?php echo $apg_city[ 'plugin_url' ]; ?>" title="<?php echo $apg_city[ 'plugin' ]; ?>" target="_blank"><img src="<?php echo plugins_url( '../assets/images/cabecera.jpg', __FILE__ ); ?>" class="imagen" alt="<?php echo $apg_city[ 'plugin' ]; ?>" /></a> </div>
 		<table class="form-table apg-table">
 			<tr valign="top">
 				<th scope="row" class="titledesc">
