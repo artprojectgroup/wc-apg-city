@@ -56,7 +56,7 @@ var comprueba_geonames = function (formulario, google = false) {
                             jQuery('#' + formulario + '_city').data('select2').open();
                         }
                     }
-                    jQuery('#' + formulario + '_state option[value=' + provincia + ']').attr('selected', 'selected').trigger("change");
+                    jQuery('#' + formulario + '_state').val(provincia).attr('selected', 'selected').trigger("change");
                 } else { //No obtiene resultados con GeoNames
                     if (google == true) {
                         carga_campo(formulario); //Carga un campo input estándar
@@ -126,8 +126,8 @@ var comprueba_google = function (formulario, geonames = false) {
                                 jQuery('#' + formulario + '_city').data('select2').open();
                             }
                         }
-                        jQuery('#' + formulario + "_state option[value='" + data.results[0].address_components[provincia].short_name + "']").attr('selected', 'selected').trigger("change");
-                        jQuery('#' + formulario + "_state option:contains('" + data.results[0].address_components[provincia].long_name + "')").attr('selected', 'selected').trigger("change");
+                        var nombre = (data.results[0].address_components[provincia].short_name) ? data.results[0].address_components[provincia].short_name : jQuery('#' + formulario + '_state').find("option:contains('" + data.results[0].address_components[provincia].long_name + "')").val();
+                        jQuery('#' + formulario + '_state').val(nombre).attr('selected', 'selected').trigger("change");
                     } else { //No existe ninguna ciudad
                         if (geonames == true) {
                             carga_campo(formulario); //Carga un campo input estándar
