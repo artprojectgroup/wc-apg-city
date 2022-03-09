@@ -55,47 +55,29 @@ add_filter( "plugin_action_links_$plugin", 'apg_city_enlace_de_ajustes' );
 function apg_city_plugin( $nombre ) {
 	global $apg_city;
 
-	$argumentos = ( object ) [ 
-		'slug'		=> $nombre 
-	];
-	$consulta = [ 
-		'action'	=> 'plugin_information', 
-		'timeout'	=> 15, 
-		'request'	=> serialize( $argumentos )
-	];
-	$respuesta = get_transient( 'apg_city_plugin' );
+    $respuesta	= get_transient( 'apg_city_plugin' );
 	if ( false === $respuesta ) {
-		$respuesta = wp_remote_post( 'https://api.wordpress.org/plugins/info/1.0/', [ 'body' => $consulta ] );
+		$respuesta = wp_remote_get( 'https://api.wordpress.org/plugins/info/1.2/?action=plugin_information&request[slug]=' . $nombre  );
 		set_transient( 'apg_city_plugin', $respuesta, 24 * HOUR_IN_SECONDS );
 	}
-	if ( !is_wp_error( $respuesta ) ) {
-		$plugin = get_object_vars( unserialize( $respuesta[ 'body' ] ) );
+	if ( ! is_wp_error( $respuesta ) ) {
+		$plugin = json_decode( wp_remote_retrieve_body( $respuesta ) );
 	} else {
-		$plugin[ 'rating' ] = 100;
+	   return '<a title="' . sprintf( __( 'Please, rate %s:', 'wc-apg-city' ), $apg_city[ 'plugin' ] ) . '" href="' . $apg_city[ 'puntuacion' ] . '?rate=5#postform" class="estrellas">' . __( 'Unknown rating', 'wc-apg-city' ) . '</a>';
 	}
-	
-	$rating = [
-	   'rating'		=> $plugin[ 'rating' ],
+
+    $rating = [
+	   'rating'		=> $plugin->rating,
 	   'type'		=> 'percent',
-	   'number'		=> ( isset( $plugin[ 'num_ratings' ] ) ) ? $plugin[ 'num_ratings' ] : 0,
+	   'number'		=> $plugin->num_ratings,
 	];
 	ob_start();
 	wp_star_rating( $rating );
 	$estrellas = ob_get_contents();
 	ob_end_clean();
 
-	return '<a title="' . sprintf( __( 'Please, rate %s:', 'wc-apg-nifcifnie-field' ), $apg_city[ 'plugin' ] ) . '" href="' . $apg_city[ 'puntuacion' ] . '?rate=5#postform" class="estrellas">' . $estrellas . '</a>';
+	return '<a title="' . sprintf( __( 'Please, rate %s:', 'wc-apg-city' ), $apg_city[ 'plugin' ] ) . '" href="' . $apg_city[ 'puntuacion' ] . '?rate=5#postform" class="estrellas">' . $estrellas . '</a>';
 }
-
-//Muestra el mensaje de actualización
-function apg_city_muestra_mensaje() {
-	global $apg_city_settings;
-	
-	if ( !isset( $apg_city_settings[ 'key' ] ) || empty( $apg_city_settings[ 'key' ] ) ) { //Comprueba si hay que mostrar el mensaje de actualización
-		add_action( 'admin_notices', 'apg_city_actualizacion' );
-	}
-}
-add_action( 'admin_init', 'apg_city_muestra_mensaje', 99 );
 
 //Hoja de estilo
 function apg_city_estilo() {

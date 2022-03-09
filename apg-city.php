@@ -1,15 +1,15 @@
 <?php
 /*
 Plugin Name: WC - APG City
-Version: 1.1.0.1
+Version: 1.1.0.2
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Add to WooCommerce an automatic city name generated from postcode.
 Author URI: https://artprojectgroup.es/
 Author: Art Project Group
 Requires at least: 3.8
-Tested up to: 5.7
+Tested up to: 6.0
 WC requires at least: 2.1
-WC tested up to: 5.1
+WC tested up to: 6.3
 
 Text Domain: wc-apg-city
 Domain Path: /languages
@@ -94,16 +94,16 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			} else {
 				wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city-geonames.js', __FILE__ ), [ 'select2' ] );
 			}
-			wp_localize_script( 'apg_city', 'texto_predeterminado', __( 'Select city name', 'wc-apg-city' ) );
-			wp_localize_script( 'apg_city', 'texto_carga_campo', __( 'My city isn\'t on the list', 'wc-apg-city' ) );
-			wp_localize_script( 'apg_city', 'ruta_ajax', admin_url( 'admin-ajax.php' ) );
-            if ( isset( $apg_city_settings[ 'key' ] ) && !empty( $apg_city_settings[ 'key' ] ) ) {
-                wp_localize_script( 'apg_city', 'google_api', $apg_city_settings[ 'key' ] );
-            }
+			wp_localize_script( 'apg_city', 'texto_predeterminado', [ __( 'Select city name', 'wc-apg-city' ) ] );
+			wp_localize_script( 'apg_city', 'texto_carga_campo', [ __( 'My city isn\'t on the list', 'wc-apg-city' ) ] );
+			wp_localize_script( 'apg_city', 'ruta_ajax', [ admin_url( 'admin-ajax.php' ) ] );
+            
+            $google_api = ( isset( $apg_city_settings[ 'key' ] ) && ! empty( $apg_city_settings[ 'key' ] ) ) ? $apg_city_settings[ 'key' ] : '';
+            wp_localize_script( 'apg_city', 'google_api', [ $google_api ] );
 			wp_enqueue_script( 'apg_city' );
 		}
 	}
-    if ( !empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {
+    if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {
         $version = ( preg_match( '/Trident\/(.*)/', $_SERVER[ 'HTTP_USER_AGENT' ], $navegador ) ) ? intval( $navegador[1] ) + 4 : 11;
         if ( $version >= 11 ) { //No funciona en Microsoft Internet Explorer 11 o anterior
             add_filter( 'woocommerce_default_address_fields', 'apg_city_campos_de_direccion' );
@@ -127,15 +127,8 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 function apg_city_requiere_wc() {
 	global $apg_city;
 		
-	echo '<div class="error fade" id="message"><h3>' . $apg_city[ 'plugin' ] . '</h3><h4>' . __( 'This plugin require WooCommerce active to run!', 'wc-apg-city' ) . '</h4></div>';
+	echo '<div class="notice notice-error is-dismissible" id="wc-apg-city"><h3>' . $apg_city[ 'plugin' ] . '</h3><h4>' . __( 'This plugin require WooCommerce active to run!', 'wc-apg-city' ) . '</h4></div>';
 	deactivate_plugins( DIRECCION_apg_city );
-}
-
-//Muestra el mensaje de actualización
-function apg_city_actualizacion() {
-	global $apg_city;
-	
-	echo '<div class="notice notice-error is-dismissible" id="message"><h3>' . $apg_city[ 'plugin' ] . '</h3><h4>' . sprintf( __( "Please, update your %s. Google Maps API Key now is required.", 'wc-apg-city' ), '<a href="' . $apg_city[ 'ajustes' ] . '" title="' . __( 'Settings', 'wc-apg-city' ) . '">' . __( 'settings', 'wc-apg-city' ) . '</a>' ) . '</h4></div>';
 }
 
 //Eliminamos todo rastro del plugin al desinstalarlo

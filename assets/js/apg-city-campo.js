@@ -26,6 +26,7 @@ var comprueba_geonames = function (formulario, google = false) {
             dataType: "JSONP",
             crossDomain: true,
             success: function (data) {
+                console.log(data);
                 jQuery('#' + formulario + '_city').empty();
                 jQuery('#' + formulario + '_city').append(
                     jQuery("<option></option>").attr("value", "").text(texto_predeterminado)
