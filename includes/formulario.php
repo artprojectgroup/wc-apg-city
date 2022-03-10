@@ -4,8 +4,11 @@ defined( 'ABSPATH' ) || exit;
 
 global $apg_city_settings, $apg_city;
 
-if ( isset( $_GET[ 'settings-updated' ] ) && ( !isset( $apg_city_settings[ 'key' ] ) || empty( $apg_city_settings[ 'key' ] ) ) ) {
-	echo "<div class='notice notice-error is-dismissible'><p>" . __( 'Google Maps API Key is a required field.', 'wc-apg-city' ) . "</p></div>";
+if ( isset( $_GET[ 'settings-updated' ] ) && ( ! isset( $apg_city_settings[ 'key' ] ) || empty( $apg_city_settings[ 'key' ] ) && ( isset( $apg_city_settings[ 'api' ] ) && $apg_city_settings[ 'api' ] != 'geonames') ) ) {
+	echo "<div class='notice notice-error is-dismissible' id='wc-apg-city'><p>" . __( 'Google Maps API Key is a required field.', 'wc-apg-city' ) . "</p></div>";
+    $apg_city_settings[ 'api' ] = 'geonames';
+    update_option( 'apg_city_settings', $apg_city_settings );
+    $apg_city_settings = get_option( 'apg_city_settings' );
 }
 
 settings_errors(); 
@@ -41,7 +44,7 @@ $tab = 1;
 					</select>
 				</td>
 			</tr>
-			<tr valign="top">
+			<tr valign="top" class="api">
 				<th scope="row" class="titledesc">
 					<label for="apg_city_settings[key]">
 						<?php _e( 'Google Maps API Key', 'wc-apg-city' ); ?>
@@ -53,7 +56,38 @@ $tab = 1;
 					<p class="description"><?php echo sprintf( __( 'Get your own API Key from %s.', 'wc-apg-city' ), '<a href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend,geocoding_backend,directions_backend,distance_matrix_backend,elevation_backend,places_backend&reusekey=true&hl=' . strtoupper( substr( get_bloginfo ( 'language' ), 0, 2 ) ) . '" target="_blank">Google API Console</a>' ); ?></p>
 				</td>
 			</tr>
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<label for="apg_city_settings[predeterminado]">
+						<?php _e( 'Default option', 'wc-apg-city' ); ?>
+						<span class="woocommerce-help-tip" data-tip="<?php _e( 'Type your own default option text for the select field.', 'wc-apg-city' ); ?>"></span>
+					</label>
+				</th>
+				<td class="forminp"><input id="apg_city_settings[predeterminado]" name="apg_city_settings[predeterminado]" type="text" value="<?php echo ( isset( $apg_city_settings[ 'predeterminado'] ) && ! empty( $apg_city_settings[ 'predeterminado'] ) ? esc_attr( $apg_city_settings[ 'predeterminado'] ) : __( 'Select city name', 'wc-apg-city' ) ); ?>" tabindex="<?php echo $tab++; ?>" placeholder="<?php _e( 'Please enter a default option text for the select field.', 'wc-apg-city' ); ?>" /></td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<label for="apg_city_settings[carga]">
+						<?php _e( 'Option to switch', 'wc-apg-city' ); ?>
+						<span class="woocommerce-help-tip" data-tip="<?php _e( 'Type your own text for the option to switch to input text.', 'wc-apg-city' ); ?>"></span>
+					</label>
+				</th>
+				<td class="forminp"><input id="apg_city_settings[carga]" name="apg_city_settings[carga]" type="text" value="<?php echo ( isset( $apg_city_settings[ 'carga'] ) && ! empty( $apg_city_settings[ 'carga'] ) ? esc_attr( $apg_city_settings[ 'carga'] ) : __( 'My city isn\'t on the list', 'wc-apg-city' ) ); ?>" tabindex="<?php echo $tab++; ?>" placeholder="<?php _e( 'Please enter a text for the option to switch to input text.', 'wc-apg-city' ); ?>" /></td>
+			</tr>
 		</table>
 		<?php submit_button(); ?>
 	</form>
 </div>
+<script>
+//Oculta el campo API
+if ( jQuery('select').val() == 'geonames' ) {
+    jQuery( '.api' ).hide();        
+}    
+jQuery('select').on('change', function() {
+    if (this.value == 'google') {
+        jQuery( '.api' ).show();        
+    } else {
+        jQuery( '.api' ).hide();        
+    }
+});  
+</script>

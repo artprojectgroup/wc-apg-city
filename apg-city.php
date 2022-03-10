@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WC - APG City
-Version: 1.1.0.2
+Version: 1.2
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Add to WooCommerce an automatic city name generated from postcode.
 Author URI: https://artprojectgroup.es/
@@ -46,6 +46,18 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 
 	//Registra las opciones
 	function apg_city_registra_opciones() {
+		global $apg_city_settings;
+        
+        //Inicializa nuevos campos
+        $actualiza  = false;
+        if ( ! isset( $apg_city_settings[ 'predeterminado' ] ) || ! isset( $apg_city_settings[ 'carga' ] ) ) {
+            $apg_city_settings[ 'predeterminado' ]  = __( 'Select city name', 'wc-apg-city' );
+            $apg_city_settings[ 'carga' ]           = __( 'My city isn\'t on the list', 'wc-apg-city' );
+            $actualiza                              = true;
+        }
+        if ( $actualiza ) {
+            update_option( 'apg_city_settings', $apg_city_settings );
+        }
 		register_setting( 'apg_city_settings_group', 'apg_city_settings' );
 	}
 	add_action( 'admin_init', 'apg_city_registra_opciones' );
@@ -60,6 +72,8 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 	
 	//Modifica el campo Localidad
 	function apg_city_campos_de_direccion( $campos ) {
+		global $apg_city_settings;
+        
 		$campos[ 'city' ]	= [
 			'label'         => __( 'Town / City', 'woocommerce' ),
 			'placeholder'   => _x( 'Select city name', 'placeholder', 'wc-apg-city' ),
@@ -71,8 +85,8 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 				'state_select'
 			],
 			'options'		=> [
-				''				=> __( 'Select city name', 'wc-apg-city' ),
-				'carga_campo'	=> __( 'My city isn\'t on the list', 'wc-apg-city' ),
+				''				=> $apg_city_settings[ 'predeterminado' ],
+				'carga_campo'	=> $apg_city_settings[ 'carga' ],
 			],
 			'readonly'		=> 'readonly',
 			'autocomplete'	=> 'address-level2',
@@ -87,20 +101,23 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 		if ( is_checkout() || is_account_page() ) {
 			global $apg_city_settings;
 			
+            //Comprueba la API
+            $google_api = ( isset( $apg_city_settings[ 'key' ] ) && ! empty( $apg_city_settings[ 'key' ] ) ) ? $apg_city_settings[ 'key' ] : '';
+            //Genera los scripts
 			wp_register_script( 'apg_city_campo', plugins_url( 'assets/js/apg-city-campo.js', __FILE__ ), [ 'select2' ] );
-			wp_enqueue_script( 'apg_city_campo' );
-			if ( isset( $apg_city_settings[ 'api' ] ) && $apg_city_settings[ 'api' ] == "google" ) {
+			if ( isset( $apg_city_settings[ 'api' ] ) && $apg_city_settings[ 'api' ] == "google" && $google_api ) {
 				wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city-google.js', __FILE__ ), [ 'select2' ] );
 			} else {
 				wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city-geonames.js', __FILE__ ), [ 'select2' ] );
 			}
-			wp_localize_script( 'apg_city', 'texto_predeterminado', [ __( 'Select city name', 'wc-apg-city' ) ] );
-			wp_localize_script( 'apg_city', 'texto_carga_campo', [ __( 'My city isn\'t on the list', 'wc-apg-city' ) ] );
+            //Variables
+			wp_localize_script( 'apg_city', 'texto_predeterminado', [ $apg_city_settings[ 'predeterminado' ] ] );
+			wp_localize_script( 'apg_city', 'texto_carga_campo', [ $apg_city_settings[ 'carga' ] ] );
 			wp_localize_script( 'apg_city', 'ruta_ajax', [ admin_url( 'admin-ajax.php' ) ] );
-            
-            $google_api = ( isset( $apg_city_settings[ 'key' ] ) && ! empty( $apg_city_settings[ 'key' ] ) ) ? $apg_city_settings[ 'key' ] : '';
             wp_localize_script( 'apg_city', 'google_api', [ $google_api ] );
-			wp_enqueue_script( 'apg_city' );
+            //Carga los script
+			wp_enqueue_script( 'apg_city_campo' );
+            wp_enqueue_script( 'apg_city' );
 		}
 	}
     if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {

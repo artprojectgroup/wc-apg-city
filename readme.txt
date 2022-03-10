@@ -4,7 +4,7 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: woocommerce, commerce, e-commerce, commerce, shop, virtual shop, city, town, state, postcode, geonames, google maps
 Requires at least: 3.8
 Tested up to: 6.0
-Stable tag: 1.1.0.2
+Stable tag: 1.2
 WC requires at least: 2.1
 WC tested up to: 6.3
 License: GPLv3
@@ -20,6 +20,8 @@ Add to WooCommerce an automatic city name generated from postcode.
 = Features =
 * You can select from GeoNames or Google Maps API.
 * You must add your own Google Maps API Key.
+* You can customize the default text of the selection field.
+* You can customize the text of the option to reload a text field.
 * If postcode is shared by more than one city, the customer can select the correct city from the list returned by Google Maps.
 * If the city isn't listed or isn't found in both APIs, the customer can manually enter the name of his city. 
 * Also select the state, only when name matches with obtained from Google Maps.
@@ -75,6 +77,8 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 2. Screenshot of WC - APG City. Billing and shipping forms.
 
 == Changelog ==
+= 1.2 =
+* Two new fields have been added to customize texts.
 = 1.1.0.2 =
 * Minor fix.
 = 1.1.0.1 =
@@ -141,8 +145,8 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 * Initial version.
 
 == Upgrade Notice ==
-= 1.1.0.2 =
-* Minor fix.
+= 1.2 =
+* Two new fields have been added to customize texts.
 
 == Translations ==
 * *English*: by [**Art Project Group**](https://artprojectgroup.es/) (default language).

@@ -9,7 +9,7 @@ Requires at least: 3.8
 
 Tested up to: 6.0
 
-Stable tag: 1.1.0.2
+Stable tag: 1.2
 
 WC requires at least: 2.1
 
@@ -29,6 +29,8 @@ Añade a WooCommerce un nombre de localidad automático generado a partir del c�
 ### Características
 * Puedes seleccionar entre las API de GeoNames o Google Maps.
 * Debes añadir tu propia Clave de API de Google Maps.
+* Puedes personalizar el texto predeterminado del campo de selección.
+* Puedes personalizar el texto de la opción para cargar de nuevo un campo de texto.
 * En caso de que el código postal sea compartido por más de una localidad, el cliente podrá seleccionar el nombre de la localidad correcto del listado devuelto por Google Maps.
 * Si la ciudad no está en el listado o no se encuentra en ninguna de las dos APIs el cliente puede introducir manualmente el nombre de su ciudad.
 * También selecciona la provincia (estado), siempre que el nombre coincida con el obtenido de Google Maps.
@@ -81,6 +83,9 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 *En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.*
 
 ## Changelog
+### 1.2
+* Añadidos dos nuevos campos para poder personalizar los textos.
+
 ### 1.1.0.2
 * Arreglo menor.
 
