@@ -26,7 +26,7 @@ var comprueba_geonames = function (formulario, google = false) {
             dataType: "JSONP",
             crossDomain: true,
             success: function (data) {
-                console.log(data);
+                console.log( data);
                 jQuery('#' + formulario + '_city').empty();
                 jQuery('#' + formulario + '_city').append(
                     jQuery("<option></option>").attr("value", "").text(texto_predeterminado)
@@ -72,7 +72,7 @@ var comprueba_geonames = function (formulario, google = false) {
 
 //Función que chequea el código postal en Google Maps
 var comprueba_google = function (formulario, geonames = false) {
-    if (!jQuery('#' + formulario + '_city').is('input')) {
+    if (!jQuery('#' + formulario + '_city').is('input') && google_api != '') {
         jQuery.ajax({ //my ajax request
             url: "https://maps.googleapis.com/maps/api/geocode/json?components=country:" + jQuery('#' + formulario + '_country').val() + "|postal_code:" + jQuery('#' + formulario + '_postcode').val() + "&key=" + google_api,
             type: "GET",
@@ -80,6 +80,7 @@ var comprueba_google = function (formulario, geonames = false) {
             dataType: "JSONP",
             crossDomain: true,
             success: function (data) {
+                console.log( data);
                 ///Limpia y mete la opción inicial
                 jQuery('#' + formulario + '_city').empty();
                 jQuery('#' + formulario + '_city').append(
