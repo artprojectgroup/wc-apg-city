@@ -1,15 +1,15 @@
 <?php
 /*
 Plugin Name: WC - APG City
-Version: 1.2.0.2
+Version: 1.3
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Add to WooCommerce an automatic city name generated from postcode.
 Author URI: https://artprojectgroup.es/
 Author: Art Project Group
-Requires at least: 3.8
-Tested up to: 6.2
-WC requires at least: 2.1
-WC tested up to: 7.4
+Requires at least: 5.0
+Tested up to: 6.5
+WC requires at least: 5.6
+WC tested up to: 8.7
 
 Text Domain: wc-apg-city
 Domain Path: /languages
@@ -33,7 +33,14 @@ $apg_city_settings = get_option( 'apg_city_settings' );
 //¿Está activo WooCommerce?
 include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin( 'woocommerce/woocommerce.php' ) ) {
-	//Pinta el formulario de configuración
+    //Añade compatibilidad con HPOS
+    add_action( 'before_woocommerce_init', function() {
+        if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+            \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+        }
+    } );
+    
+    //Pinta el formulario de configuración
 	function apg_city_tab() {
 		include( 'includes/formulario.php' );
 	}
@@ -48,16 +55,6 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 	function apg_city_registra_opciones() {
 		global $apg_city_settings;
         
-        //Inicializa nuevos campos
-        $actualiza  = false;
-        if ( ! isset( $apg_city_settings[ 'predeterminado' ] ) || ! isset( $apg_city_settings[ 'carga' ] ) ) {
-            $apg_city_settings[ 'predeterminado' ]  = __( 'Select city name', 'wc-apg-city' );
-            $apg_city_settings[ 'carga' ]           = __( 'My city isn\'t on the list', 'wc-apg-city' );
-            $actualiza                              = true;
-        }
-        if ( $actualiza ) {
-            update_option( 'apg_city_settings', $apg_city_settings );
-        }
 		register_setting( 'apg_city_settings_group', 'apg_city_settings' );
 	}
 	add_action( 'admin_init', 'apg_city_registra_opciones' );
@@ -76,7 +73,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
         
 		$campos[ 'city' ]	= [
 			'label'         => __( 'Town / City', 'woocommerce' ),
-			'placeholder'   => _x( 'Select city name', 'placeholder', 'wc-apg-city' ),
+			'placeholder'   => $apg_city_settings[ 'predeterminado' ],
 			'required'		=> true,
 			'clear'       	=> ( in_array( 'form-row-last', $campos[ 'city' ][ 'class' ] ) ) ? "true" : "false",
 			'type'        	=> 'select',
@@ -92,6 +89,11 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			'autocomplete'	=> 'address-level2',
 			'priority'      => $campos[ 'city' ][ 'priority' ],
         ];
+        
+        if ( isset( $apg_city_settings[ 'bloqueo' ] ) && $apg_city_settings[ 'bloqueo' ] == "1" ) { //Bloquea los campos
+            $campos[ 'city' ][ 'custom_attributes' ] = [ 'readonly' => 'readonly' ];            
+            $campos[ 'state' ][ 'custom_attributes' ] = [ 'readonly' => 'readonly' ];            
+        }
 
 		return $campos;
 	}
@@ -103,21 +105,36 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			
             //Comprueba la API
             $google_api = ( isset( $apg_city_settings[ 'key' ] ) && ! empty( $apg_city_settings[ 'key' ] ) ) ? $apg_city_settings[ 'key' ] : '';
-            //Genera los scripts
-			wp_register_script( 'apg_city_campo', plugins_url( 'assets/js/apg-city-campo.js', __FILE__ ), [ 'select2' ] );
-			if ( isset( $apg_city_settings[ 'api' ] ) && $apg_city_settings[ 'api' ] == "google" && $google_api ) {
-				wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city-google.js', __FILE__ ), [ 'select2' ] );
-			} else {
-				wp_register_script( 'apg_city', plugins_url( 'assets/js/apg-city-geonames.js', __FILE__ ), [ 'select2' ] );
-			}
             //Variables
-			wp_localize_script( 'apg_city', 'texto_predeterminado', [ $apg_city_settings[ 'predeterminado' ] ] );
-			wp_localize_script( 'apg_city', 'texto_carga_campo', [ $apg_city_settings[ 'carga' ] ] );
-			wp_localize_script( 'apg_city', 'ruta_ajax', [ admin_url( 'admin-ajax.php' ) ] );
-            wp_localize_script( 'apg_city', 'google_api', [ $google_api ] );
+			wp_register_script( 'apg_city_campo', plugins_url( 'assets/js/apg-city-campo.js', __FILE__ ), [ 'select2' ] );
+            $script     = ( isset( $apg_city_settings[ 'api' ] ) && $apg_city_settings[ 'api' ] == "google" && $google_api ) ? 'comprueba_google' : 'comprueba_geonames';
+            $bloqueo    = ( isset( $apg_city_settings[ 'bloqueo' ] ) && $apg_city_settings[ 'bloqueo' ] == "1" ) ? true : false;
+            wp_localize_script( 'apg_city_campo', 'funcion', [ $script ] );
+            wp_localize_script( 'apg_city_campo', 'bloqueo', [ $bloqueo ] );
+			wp_localize_script( 'apg_city_campo', 'texto_predeterminado', [ $apg_city_settings[ 'predeterminado' ] ] );
+			wp_localize_script( 'apg_city_campo', 'texto_carga_campo', [ $apg_city_settings[ 'carga' ] ] );
+			wp_localize_script( 'apg_city_campo', 'ruta_ajax', [ admin_url( 'admin-ajax.php' ) ] );
+            wp_localize_script( 'apg_city_campo', 'google_api', [ $google_api ] );
             //Carga los script
 			wp_enqueue_script( 'apg_city_campo' );
-            wp_enqueue_script( 'apg_city' );
+
+            if ( isset( $apg_city_settings[ 'bloqueo' ] ) && $apg_city_settings[ 'bloqueo' ] == "1" ) { //Bloquea los campos
+?>
+<style>
+select[readonly].select2-hidden-accessible + .select2-container {
+	pointer-events: none;
+	touch-action: none;
+}
+select[readonly].select2-hidden-accessible + .select2-container .select2-selection {
+	background: #eee;
+	box-shadow: none;
+}
+select[readonly].select2-hidden-accessible + .select2-container .select2-selection__arrow, select[readonly].select2-hidden-accessible + .select2-container .select2-selection__clear {
+	display: none;
+}
+</style>
+<?php
+            }
 		}
 	}
     if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {

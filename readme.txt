@@ -2,11 +2,11 @@
 Contributors: artprojectgroup
 Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: woocommerce, commerce, e-commerce, commerce, shop, virtual shop, city, town, state, postcode, geonames, google maps
-Requires at least: 3.8
-Tested up to: 6.2
-Stable tag: 1.2.0.2
-WC requires at least: 2.1
-WC tested up to: 7.4
+Requires at least: 5.0
+Tested up to: 6.5
+Stable tag: 1.3
+WC requires at least: 5.6
+WC tested up to: 8.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -25,6 +25,7 @@ Add to WooCommerce an automatic city name generated from postcode.
 * If postcode is shared by more than one city, the customer can select the correct city from the list returned by Google Maps.
 * If the city isn't listed or isn't found in both APIs, the customer can manually enter the name of his city. 
 * Also select the state, only when name matches with obtained from Google Maps.
+* You can block the modification of the locality and province fields.
 
 = Translations =
 * Español ([**Art Project Group**](https://artprojectgroup.es/)).
@@ -77,6 +78,10 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 2. Screenshot of WC - APG City. Billing and shipping forms.
 
 == Changelog ==
+= 1.3 =
+* Added new functionality to block fields. **Update sponsored by [Gardiun](https://gardiun.com/)**.
+* New JavaScript functions and controls
+* Screenshot updated.
 = 1.2.0.2 =
 * Header updated.
 * Stylesheet updated.
@@ -151,9 +156,9 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 * Initial version.
 
 == Upgrade Notice ==
-= 1.2.0.2 =
-* Header updated.
-* Stylesheet updated.
+= 1.3 =
+* Added new functionality to block fields. **Update sponsored by [Gardiun](https://gardiun.com/)**.
+* New JavaScript functions and controls
 * Screenshot updated.
 
 == Translations ==

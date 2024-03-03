@@ -19,7 +19,7 @@ $tab = 1;
 
 <div class="wrap woocommerce">
 	<h2>
-		<?php _e( 'APG City Options.', 'wc-apg-city' ); ?>
+		<?php _e( 'WC - APG City Options.', 'wc-apg-city' ); ?>
 	</h2>
 	<h3><a href="<?php echo $apg_city[ 'plugin_url' ]; ?>" title="Art Project Group"><?php echo $apg_city[ 'plugin' ]; ?></a></h3>
 	<p>
@@ -74,7 +74,16 @@ $tab = 1;
 				</th>
 				<td class="forminp"><input id="apg_city_settings[carga]" name="apg_city_settings[carga]" type="text" value="<?php echo ( isset( $apg_city_settings[ 'carga'] ) && ! empty( $apg_city_settings[ 'carga'] ) ? esc_attr( $apg_city_settings[ 'carga'] ) : __( 'My city isn\'t on the list', 'wc-apg-city' ) ); ?>" tabindex="<?php echo $tab++; ?>" placeholder="<?php _e( 'Please enter a text for the option to switch to input text.', 'wc-apg-city' ); ?>" /></td>
 			</tr>
-		</table>
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<label for="apg_city_settings[bloqueo]">
+						<?php _e( 'Block fields', 'wc-apg-city' ); ?>
+						<span class="woocommerce-help-tip" data-tip="<?php _e( 'Mark it to lock the city and state fields so that they cannot be modified.', 'wc-apg-city' ); ?>"></span>
+					</label>
+				</th>
+				<td class="forminp"><input id="apg_city_settings[bloqueo]" name="apg_city_settings[bloqueo]" type="checkbox" value="1" <?php checked( isset( $apg_city_settings[ 'bloqueo' ] ) ? $apg_city_settings[ 'bloqueo' ] : '', 1 ); ?> tabindex="<?php echo $tab++; ?>" /></td>
+			</tr>
+        </table>
 		<?php submit_button(); ?>
 	</form>
 </div>

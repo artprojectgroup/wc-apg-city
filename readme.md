@@ -5,15 +5,15 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 
 Tags: woocommerce, commerce, e-commerce, commerce, shop, virtual shop, city, town, state, postcode, geonames, google maps 
 
-Requires at least: 3.8
+Requires at least: 5.0
 
-Tested up to: 6.2
+Tested up to: 6.5
 
-Stable tag: 1.2.0.2
+Stable tag: 1.3
 
-WC requires at least: 2.1
+WC requires at least: 5.6
 
-WC tested up to: 7.4
+WC tested up to: 8.7
 
 License: GPLv3
 
@@ -34,6 +34,7 @@ Añade a WooCommerce un nombre de localidad automático generado a partir del c�
 * En caso de que el código postal sea compartido por más de una localidad, el cliente podrá seleccionar el nombre de la localidad correcto del listado devuelto por Google Maps.
 * Si la ciudad no está en el listado o no se encuentra en ninguna de las dos APIs el cliente puede introducir manualmente el nombre de su ciudad.
 * También selecciona la provincia (estado), siempre que el nombre coincida con el obtenido de Google Maps.
+* Puedes bloquear la modificación de los campos localidad y provincia.
 
 ### Traducciones
 * Español ([**Art Project Group**](https://artprojectgroup.es/)).
@@ -82,7 +83,12 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 
 *En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.*
 
-## Changelog
+## Changeling
+### 1.3
+* Añadida nueva funcionalidad para bloquear los campos. **Actualización patrocinada por [Gardiun](https://gardiun.com/)**.
+* Nuevas funciones y controles JavaScript
+* Actualización de captura de pantalla.
+
 ### 1.2.0.2
 * Actualización de cabecera.
 * Actualización de hoja de estilo.

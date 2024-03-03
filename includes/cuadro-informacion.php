@@ -16,7 +16,7 @@
       <p>
         <?php _e( 'Follow us:', 'wc-apg-city' ); ?>
       </p>
-      <p><a href="https://www.facebook.com/artprojectgroup" title="<?php _e( 'Follow us on ', 'wc-apg-city' ); ?>Facebook" target="_blank"><span class="genericon genericon-facebook-alt"></span></a> <a href="https://twitter.com/artprojectgroup" title="<?php _e( 'Follow us on ', 'wc-apg-city' ); ?>Twitter" target="_blank"><span class="genericon genericon-twitter"></span></a> <a href="https://plus.google.com/+ArtProjectGroupES" title="<?php _e( 'Follow us on ', 'wc-apg-city' ); ?>Google+" target="_blank"><span class="genericon genericon-googleplus-alt"></span></a> <a href="http://es.linkedin.com/in/artprojectgroup" title="<?php _e( 'Follow us on ', 'wc-apg-city' ); ?>LinkedIn" target="_blank"><span class="genericon genericon-linkedin"></span></a></p>
+      <p><a href="https://www.facebook.com/artprojectgroup" title="<?php _e( 'Follow us on ', 'wc-apg-city' ); ?>Facebook" target="_blank"><span class="genericon genericon-facebook-alt"></span></a> <a href="https://twitter.com/artprojectgroup" title="<?php _e( 'Follow us on ', 'wc-apg-city' ); ?>Twitter" target="_blank"><span class="genericon genericon-twitter"></span></a> <a href="http://es.linkedin.com/in/artprojectgroup" title="<?php _e( 'Follow us on ', 'wc-apg-city' ); ?>LinkedIn" target="_blank"><span class="genericon genericon-linkedin"></span></a></p>
     </div>
     <div class="columna">
       <p>
