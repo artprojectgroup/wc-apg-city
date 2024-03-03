@@ -25,7 +25,7 @@ Add to WooCommerce an automatic city name generated from postcode.
 * If postcode is shared by more than one city, the customer can select the correct city from the list returned by Google Maps.
 * If the city isn't listed or isn't found in both APIs, the customer can manually enter the name of his city. 
 * Also select the state, only when name matches with obtained from Google Maps.
-* You can block the modification of the locality and province fields.
+* You can block the modification of the city and province fields.
 
 = Translations =
 * Español ([**Art Project Group**](https://artprojectgroup.es/)).
@@ -79,7 +79,7 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 == Changelog ==
 = 1.3 =
 * Added new functionality to block fields. **Update sponsored by [Gardiun](https://gardiun.com/)**.
-* New JavaScript functions and controls
+* New JavaScript functions and controls.
 * Screenshot updated.
 = 1.2.0.2 =
 * Header updated.
