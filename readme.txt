@@ -1,7 +1,7 @@
 === WC - APG City ===
 Contributors: artprojectgroup
 Donate link: https://artprojectgroup.es/tienda/donacion
-Tags: woocommerce, commerce, e-commerce, commerce, shop, virtual shop, city, town, state, postcode, geonames, google maps
+Tags: woocommerce, city, town, state, postcode, geonames, google maps
 Requires at least: 5.0
 Tested up to: 6.5
 Stable tag: 1.3
@@ -46,7 +46,6 @@ Don’t forget to leave us your comment on:
 * [WC - APG City](https://artprojectgroup.es/plugins-para-woocommerce/wc-apg-city) on Art Project Group.
 * [Art Project Group](https://www.facebook.com/artprojectgroup) on Facebook.
 * [@artprojectgroup](https://twitter.com/artprojectgroup) on Twitter.
-* [+ArtProjectGroupES](https://plus.google.com/+ArtProjectGroupES/) on Google+.
 
 = More plugins =
 Remember that you can find more [plugins for WordPress](https://artprojectgroup.es/plugins-para-wordpress) and more [plugins for WooCommerce](https://artprojectgroup.es/plugins-para-woocommerce) on [Art Project Group](https://artprojectgroup.es) and our profile on [WordPress](http://profiles.wordpress.org/artprojectgroup/).
