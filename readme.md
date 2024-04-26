@@ -7,13 +7,13 @@ Tags: woocommerce, city, town, state, postcode, geonames, google maps
 
 Requires at least: 5.0
 
-Tested up to: 6.5
+Tested up to: 6.6
 
-Stable tag: 1.3
+Stable tag: 1.3.0.1
 
 WC requires at least: 5.6
 
-WC tested up to: 8.7
+WC tested up to: 8.8.2
 
 License: GPLv3
 
@@ -83,6 +83,9 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 *En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.*
 
 ## Changeling
+### 1.3.0.1
+* Arreglo menor.
+
 ### 1.3
 * Añadida nueva funcionalidad para bloquear los campos. **Actualización patrocinada por [Gardiun](https://gardiun.com/)**.
 * Nuevas funciones y controles JavaScript

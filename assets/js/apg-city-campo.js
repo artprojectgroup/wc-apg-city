@@ -1,5 +1,5 @@
 //Función que cambia el campo select por un campo input
-var carga_campo = function (formulario) {
+var carga_campo = function (formulario, bloquea = false ) {
     //Elimina select2 o selectWoo
     if (jQuery('#' + formulario + '_city').data('selectWoo')) {
         jQuery('#' + formulario + '_city').selectWoo('destroy');
@@ -10,6 +10,10 @@ var carga_campo = function (formulario) {
     jQuery('#' + formulario + '_city_field,#' + formulario + '_state_field').unblock();
     //Cambia el campo
     jQuery('#' + formulario + '_city').replaceWith('<input class="input-text " name="' + formulario + '_city" id="' + formulario + '_city" autocomplete="address-level2" type="text" placeholder="" />');
+    //Desbloquea el campo ciudad
+    if ( bloquea ) {
+        jQuery('#' + formulario + '_state').attr("readonly", false); 
+    }
 }
 
 //Función que cambia el campo input por un capo select
@@ -47,7 +51,6 @@ var comprueba_geonames = function (formulario, google = false) {
         dataType: "JSONP",
         crossDomain: true,
         success: function (data) {
-            console.log( data);
             if (jQuery('#' + formulario + '_city').is('input')) { //Carga un campo select
                 carga_select(formulario);
             }
@@ -62,6 +65,11 @@ var comprueba_geonames = function (formulario, google = false) {
             jQuery('#' + formulario + '_city_field,#' + formulario + '_state_field').unblock();                    
 
             if (data.postalcodes.length > 0) { //Obtiene resultados
+                console.log( data);
+                //Bloquea el campo provincia
+                if (bloqueo) {
+                    jQuery('#' + formulario + '_state').attr("readonly", true); 
+                }
                 if (data.postalcodes.length > 1) { //Es un código postal con múltiples localidades
                     jQuery.each(data.postalcodes, function (key, value) {
                         jQuery('#' + formulario + '_city').append(
@@ -93,13 +101,13 @@ var comprueba_geonames = function (formulario, google = false) {
                     provincia = data.postalcodes[0][ paises[ data.postalcodes[0].countryCode ] ];
                     jQuery('#' + formulario + "_state option:contains('" + provincia + "')").filter(function(i){
                         return jQuery(this).text() === provincia;
-                    }).attr("selected", true).trigger("change");
+                    }).attr('selected', 'selected').trigger("change");
                 } else {
                     jQuery('#' + formulario + '_state').val(provincia).attr('selected', 'selected').trigger("change");                        
                 }
             } else { //No obtiene resultados con GeoNames
                 if (google == true) {
-                    carga_campo(formulario); //Carga un campo input estándar
+                    carga_campo(formulario, true); //Carga un campo input estándar
                 } else {
                     comprueba_google(formulario, true); //Prueba con Google Maps
                 }
@@ -126,7 +134,6 @@ var comprueba_google = function (formulario, geonames = false) {
         dataType: "JSON",
         crossDomain: true,
         success: function (data) {
-            console.log( data);
             if (jQuery('#' + formulario + '_city').is('input')) { //Carga un campo select
                 carga_select(formulario);
             }
@@ -142,10 +149,19 @@ var comprueba_google = function (formulario, geonames = false) {
             jQuery('#' + formulario + '_city_field,#' + formulario + '_state_field').unblock();                    
 
             if (data.status !== 'ZERO_RESULTS') { //Obtiene resultados
+                console.log( data);
+                //Bloquea el campo provincia
+                if (bloqueo) {
+                    jQuery('#' + formulario + '_state').attr("readonly", true); 
+                }
                 //Controla el orden de los campos
                 for (var i = 0; i < data.results[0].address_components.length; i++) {
                     if (jQuery.inArray("locality", data.results[0].address_components[i].types) !== -1) {
                         var ciudad = i;
+                    }
+                    
+                    if (jQuery.inArray("country", data.results[0].address_components[i].types) !== -1) {
+                        var pais = data.results[0].address_components[i].short_name;
                     }
 
                     if (jQuery.inArray("administrative_area_level_2", data.results[0].address_components[i].types) !== -1) {
@@ -180,17 +196,28 @@ var comprueba_google = function (formulario, geonames = false) {
                         }
                     }
                     var nombre = (data.results[0].address_components[provincia].short_name) ? data.results[0].address_components[provincia].short_name : jQuery('#' + formulario + '_state').find("option:contains('" + data.results[0].address_components[provincia].long_name + "')").val();
-                    jQuery('#' + formulario + '_state').val(nombre).attr('selected', 'selected').trigger("change");
+                    const paises  = { //Países especiales
+                        "AT": "adminName1", //Austria
+                        "FR": "adminName2", //Francia
+                        "PT": "adminName1", //Portugal
+                    };
+                    if ( paises[ pais ] ) {
+                        jQuery('#' + formulario + "_state option:contains('" + nombre + "')").filter(function(i){
+                            return jQuery(this).text() === nombre;
+                        }).attr('selected', 'selected').trigger("change");
+                    } else {
+                        jQuery('#' + formulario + '_state').val(provincia).attr('selected', 'selected').trigger("change");                        
+                    }
                 } else { //No existe ninguna ciudad
                     if (geonames == true) {
-                        carga_campo(formulario); //Carga un campo input estándar
+                        carga_campo(formulario, true); //Carga un campo input estándar
                     } else {
                         comprueba_geonames(formulario, true); //Prueba con GeoNames
                     }
                 }
             } else { //No obtiene resultados con Google Maps
                 if (geonames == true) {
-                    carga_campo(formulario); //Carga un campo input estándar
+                    carga_campo(formulario, true); //Carga un campo input estándar
                 } else {
                     comprueba_geonames(formulario, true); //Prueba con GeoNames
                 }

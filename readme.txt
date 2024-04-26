@@ -3,10 +3,10 @@ Contributors: artprojectgroup
 Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: woocommerce, city, town, state, postcode, geonames, google maps
 Requires at least: 5.0
-Tested up to: 6.5
-Stable tag: 1.3
+Tested up to: 6.6
+Stable tag: 1.3.0.1
 WC requires at least: 5.6
-WC tested up to: 8.7
+WC tested up to: 8.8.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -77,6 +77,8 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 2. Screenshot of WC - APG City. Billing and shipping forms.
 
 == Changelog ==
+= 1.3.0.1 =
+* Minor fix.
 = 1.3 =
 * Added new functionality to block fields. **Update sponsored by [Gardiun](https://gardiun.com/)**.
 * New JavaScript functions and controls.
@@ -155,10 +157,8 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 * Initial version.
 
 == Upgrade Notice ==
-= 1.3 =
-* Added new functionality to block fields. **Update sponsored by [Gardiun](https://gardiun.com/)**.
-* New JavaScript functions and controls
-* Screenshot updated.
+= 1.3.0.1 =
+* Minor fix.
 
 == Translations ==
 * *English*: by [**Art Project Group**](https://artprojectgroup.es/) (default language).
