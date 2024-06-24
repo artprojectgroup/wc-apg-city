@@ -99,6 +99,9 @@ var comprueba_geonames = function (formulario, google = false) {
                 };
                 if ( paises[ data.postalcodes[0].countryCode ] ) {
                     provincia = data.postalcodes[0][ paises[ data.postalcodes[0].countryCode ] ];
+                    if ( provincia == 'Azores' ) {
+                        provincia = 'Açores';
+                    }
                     jQuery('#' + formulario + "_state option:contains('" + provincia + "')").filter(function(i){
                         return jQuery(this).text() === provincia;
                     }).attr('selected', 'selected').trigger("change");
@@ -128,7 +131,7 @@ var comprueba_google = function (formulario, geonames = false) {
     });
     //Consulta en Google
     jQuery.ajax({
-        url: "https://maps.googleapis.com/maps/api/geocode/json?components=country:" + jQuery('#' + formulario + '_country').val() + "|postal_code:" + jQuery('#' + formulario + '_postcode').val() + "&key=" + google_api,
+        url: "https://maps.googleapis.com/maps/api/geocode/json?components=country:" + jQuery('#' + formulario + '_country').val() + "|postal_code:" + jQuery('#' + formulario + '_postcode').val() + "&key=" + google_api + "&language=" + jQuery('html')[0].lang,
         type: "GET",
         cache: false,
         dataType: "JSON",
@@ -149,7 +152,7 @@ var comprueba_google = function (formulario, geonames = false) {
             jQuery('#' + formulario + '_city_field,#' + formulario + '_state_field').unblock();                    
 
             if (data.status !== 'ZERO_RESULTS') { //Obtiene resultados
-                console.log( data);
+                console.log( data );
                 //Bloquea el campo provincia
                 if (bloqueo) {
                     jQuery('#' + formulario + '_state').attr("readonly", true); 
