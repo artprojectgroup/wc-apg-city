@@ -99,6 +99,7 @@ var comprueba_geonames = function (formulario, google = false) {
                 };
                 if ( paises[ data.postalcodes[0].countryCode ] ) {
                     provincia = data.postalcodes[0][ paises[ data.postalcodes[0].countryCode ] ];
+                    //Ajustes personalizados
                     if ( provincia == 'Azores' ) {
                         provincia = 'Açores';
                     }
