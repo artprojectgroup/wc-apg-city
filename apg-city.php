@@ -2,15 +2,15 @@
 /*
 Plugin Name: WC - APG City
 Requires Plugins: woocommerce
-Version: 1.3.0.2
+Version: 1.3.0.3
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Add to WooCommerce an automatic city name generated from postcode.
 Author URI: https://artprojectgroup.es/
 Author: Art Project Group
 Requires at least: 5.0
-Tested up to: 6.6
+Tested up to: 6.8
 WC requires at least: 5.6
-WC tested up to: 9.1
+WC tested up to: 9.5
 
 Text Domain: wc-apg-city
 Domain Path: /languages

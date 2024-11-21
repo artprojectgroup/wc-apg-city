@@ -14,7 +14,10 @@ $apg_city = [
 ];
 
 //Carga el idioma
-load_plugin_textdomain( 'wc-apg-city', null, dirname( DIRECCION_apg_city ) . '/languages' );
+function apg_city_inicia_idioma() {
+    load_plugin_textdomain( 'wc-apg-city', null, dirname( DIRECCION_apg_city ) . '/languages' );
+}
+add_action( 'after_setup_theme', 'apg_city_inicia_idioma' );
 
 //Enlaces adicionales personalizados
 function apg_city_enlaces( $enlaces, $archivo ) {
