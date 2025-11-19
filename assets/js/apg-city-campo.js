@@ -33,10 +33,23 @@ var comprueba_campo = function (formulario) {
     }
 }
 
+var usuarioGeonames = '';
+if ( typeof geonames_user !== 'undefined' && geonames_user ) {
+    usuarioGeonames = Array.isArray( geonames_user ) ? geonames_user[0] : geonames_user;
+}
+
 //Función que chequea el código postal en GeoNames
 var comprueba_geonames = function (formulario, google = false) {
+    if ( ! usuarioGeonames ) {
+        if ( google == true ) {
+            carga_campo(formulario, true);
+        } else {
+            comprueba_google(formulario, true);
+        }
+        return;
+    }
     //Bloquea los campos
-    jQuery('#' + formulario + '_city_field,#' + formulario + '_state_field').block({ 
+    jQuery('#' + formulario + '_city_field,#' + formulario + '_state_field').block({
         message: null,
         overlayCSS: {
             background: "#fff",
@@ -45,7 +58,7 @@ var comprueba_geonames = function (formulario, google = false) {
     });
     //Consulta en GeoNames
     jQuery.ajax({
-        url: "https://www.geonames.org/postalCodeLookupJSON?postalcode=" + jQuery('#' + formulario + '_postcode').val() + "&country=" + jQuery('#' + formulario + '_country').val(),
+        url: "https://www.geonames.org/postalCodeLookupJSON?postalcode=" + jQuery('#' + formulario + '_postcode').val() + "&country=" + jQuery('#' + formulario + '_country').val() + "&username=" + encodeURIComponent( usuarioGeonames ),
         type: "GET",
         cache: false,
         dataType: "JSONP",
