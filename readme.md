@@ -19,22 +19,22 @@ License: GPLv3
 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Añade a WooCommerce un nombre de localidad automático generado a partir del código postal.
+Añade a WooCommerce un nombre de población automático generado a partir del código postal.
 
 ## Description
 **IMPORTANTE: *WC - APG City* no es compatible con Microsoft Internet Explorer 11 y anteriores.**
 
-**WC - APG City** añade a tu tienda WooCommerce un nuevo campo localidad automático generado a partir del código postal a través de la API de GeoNames o Google Maps.
+**WC - APG City** añade a tu tienda WooCommerce un nuevo campo población automático generado a partir del código postal a través de la API de GeoNames o Google Maps.
 
 ### Características
 * Puedes seleccionar entre las API de GeoNames o Google Maps.
 * Debes añadir tu propia Clave de API de Google Maps o usuario de GeoNames.
 * Puedes personalizar el texto predeterminado del campo de selección.
 * Puedes personalizar el texto de la opción para cargar de nuevo un campo de texto.
-* En caso de que el código postal sea compartido por más de una localidad, el cliente podrá seleccionar el nombre de la localidad correcto del listado devuelto por Google Maps.
-* Si la ciudad no está en el listado o no se encuentra en ninguna de las dos APIs el cliente puede introducir manualmente el nombre de su ciudad.
+* En caso de que el código postal sea compartido por más de una población, el cliente podrá seleccionar el nombre de la población correcto del listado devuelto por Google Maps.
+* Si la población no está en el listado o no se encuentra en ninguna de las dos APIs el cliente puede introducir manualmente el nombre de su población.
 * También selecciona la provincia (estado), siempre que el nombre coincida con el obtenido de Google Maps.
-* Puedes bloquear la modificación de los campos localidad y provincia.
+* Puedes bloquear la modificación de los campos población y provincia.
 
 ### Traducciones
 * Español ([**Art Project Group**](https://artprojectgroup.es/)).
@@ -44,7 +44,7 @@ Añade a WooCommerce un nombre de localidad automático generado a partir del c�
 **Art Project Group** te ofrece [**Soporte técnico**](https://artprojectgroup.es/tienda/ticket-de-soporte) para configurar o instalar ***WC - APG City***.
 
 ### Origen
-**WC - APG City** ha sido programado a partir de petición de [Thekla Kurpjuweit](https://www.facebook.com/profile.php?id=100010011270290) para añadir a WooCommerce la introducción automática del nombre de la localidad a partir del código postal de la dirección.
+**WC - APG City** ha sido programado a partir de petición de [Thekla Kurpjuweit](https://www.facebook.com/profile.php?id=100010011270290) para añadir a WooCommerce la introducción automática del nombre de la población a partir del código postal de la dirección.
 
 ### Más información
 En nuestro sitio web oficial puede obtener más información sobre [**WC - APG City**](https://artprojectgroup.es/plugins-para-woocommerce/wc-apg-city). 
@@ -156,7 +156,7 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 * Añadida la Clave de API de Google Maps.
 * Añadida búsqueda automática en ambas APIs en caso de no encontrar resultados en la API seleccionada.
 * Añadido el reemplazo del campo select por un campo input en caso de no encontrar resultados en ninguna de las dos APIs.
-* Añadida opción en el campo select que lo reemplaza por un campo input para que el cliente pueda introducir manualmente su ciudad.
+* Añadida opción en el campo select que lo reemplaza por un campo input para que el cliente pueda introducir manualmente su población.
 * Arreglos menores.
 
 ### 0.3.6.3
@@ -178,7 +178,7 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 * Añadido JavaScript a los campos de formulario de Mi cuenta.
 
 ### 0.3.4
-* Añadida autoapertura del campo de selección con múltiples ciudades.
+* Añadida autoapertura del campo de selección con múltiples poblaciones.
 
 ### 0.3.3
 * Se han corregido errores de JavaScript.
