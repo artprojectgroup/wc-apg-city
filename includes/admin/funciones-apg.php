@@ -52,13 +52,13 @@ function apg_city_enlaces( $enlaces, $archivo ) {
 	global $apg_city;
 
 	if ( $archivo == DIRECCION_apg_city ) {
-		$plugin		= apg_nif_plugin( $apg_nif[ 'plugin_uri' ] );
-		$enlaces[]	= '<a href="' . $apg_nif[ 'donacion' ] . '" target="_blank" title="' . esc_attr__( 'Make a donation by ', 'wc-apg-city' ) . 'APG"><span class="genericon genericon-cart"></span></a>';
-		$enlaces[]	= '<a href="'. $apg_nif[ 'plugin_url' ] . '" target="_blank" title="' . $apg_nif[ 'plugin' ] . '"><strong class="artprojectgroup">APG</strong></a>';
+		$plugin		= apg_city_plugin( $apg_city[ 'plugin_uri' ] );
+		$enlaces[]	= '<a href="' . $apg_city[ 'donacion' ] . '" target="_blank" title="' . esc_attr__( 'Make a donation by ', 'wc-apg-city' ) . 'APG"><span class="genericon genericon-cart"></span></a>';
+		$enlaces[]	= '<a href="'. $apg_city[ 'plugin_url' ] . '" target="_blank" title="' . $apg_city[ 'plugin' ] . '"><strong class="artprojectgroup">APG</strong></a>';
 		$enlaces[]	= '<a href="https://www.facebook.com/artprojectgroup" title="' . esc_attr__( 'Follow us on ', 'wc-apg-city' ) . 'Facebook" target="_blank"><span class="genericon genericon-facebook-alt"></span></a> <a href="https://twitter.com/artprojectgroup" title="' . esc_attr__( 'Follow us on ', 'wc-apg-city' ) . 'Twitter" target="_blank"><span class="genericon genericon-twitter"></span></a> <a href="https://es.linkedin.com/in/artprojectgroup" title="' . esc_attr__( 'Follow us on ', 'wc-apg-city' ) . 'LinkedIn" target="_blank"><span class="genericon genericon-linkedin"></span></a>';
 		$enlaces[]	= '<a href="https://profiles.wordpress.org/artprojectgroup/" title="' . esc_attr__( 'More plugins on ', 'wc-apg-city' ) . 'WordPress" target="_blank"><span class="genericon genericon-wordpress"></span></a>';
 		$enlaces[]	= '<a href="mailto:info@artprojectgroup.es" title="' . esc_attr__( 'Contact with us by ', 'wc-apg-city' ) . 'e-mail"><span class="genericon genericon-mail"></span></a>';
-		$enlaces[]	= apg_nif_plugin( $apg_nif[ 'plugin_uri' ] );
+		$enlaces[]	= apg_city_plugin( $apg_city[ 'plugin_uri' ] );
 	}
 	
 	return $enlaces;
@@ -119,7 +119,7 @@ function apg_city_plugin( $nombre ) {
 	if ( ! is_wp_error( $respuesta ) ) {
 		$plugin = json_decode( wp_remote_retrieve_body( $respuesta ) );
 	} else {
-        // translators: %s is the plugin name (e.g., WC – APG Campo NIF/CIF/NIE)
+        // translators: %s is the plugin name (e.g., WC – APG City)
         return '<a title="' . sprintf( esc_attr__( 'Please, rate %s:', 'wc-apg-city' ), $apg_city[ 'plugin' ] ) . '" href="' . $apg_city[ 'puntuacion' ] . '?rate=5#postform" class="estrellas">' . esc_attr__( 'Unknown rating', 'wc-apg-city' ) . '</a>';
 	}
 
@@ -133,7 +133,7 @@ function apg_city_plugin( $nombre ) {
 	$estrellas = ob_get_contents();
 	ob_end_clean();
 
-    // translators: %s is the plugin name (e.g., WC – APG Campo NIF/CIF/NIE)
+    // translators: %s is the plugin name (e.g., WC – APG Campo City)
 	return '<a title="' . sprintf( esc_attr__( 'Please, rate %s:', 'wc-apg-city' ), $apg_city[ 'plugin' ] ) . '" href="' . $apg_city[ 'puntuacion' ] . '?rate=5#postform" class="estrellas">' . $estrellas . '</a>';
 }	
 

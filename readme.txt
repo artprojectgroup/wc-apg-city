@@ -1,12 +1,12 @@
 === WC - APG City ===
 Contributors: artprojectgroup
 Donate link: https://artprojectgroup.es/tienda/donacion
-Tags: woocommerce, city, town, state, postcode, geonames, google maps
+Tags: city, state, postcode, geonames, google maps
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.4.0
+Stable tag: 1.4.0.1
 WC requires at least: 5.6
-WC tested up to: 10.3.5
+WC tested up to: 10.4.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -77,6 +77,8 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 2. Screenshot of WC - APG City. Billing and shipping forms.
 
 == Changelog ==
+= 1.4.0.1 =
+* Minor fix.
 = 1.4.0 =
 * Added a new field to enter the GeoNames username.
 * Complete code adaptation to the security standards required by WordPress.
@@ -165,9 +167,7 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 * Initial version.
 
 == Upgrade Notice ==
-= 1.4.0 =
-* Added a new field to enter the GeoNames username.
-* Complete code adaptation to the security standards required by WordPress.
+= 1.4.0.1 =
 * Minor fix.
 
 == Translations ==
