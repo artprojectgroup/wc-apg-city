@@ -119,6 +119,20 @@
 		return $select;
 	};
 
+	const openSelectIfMultiple = function( select, count ) {
+		if ( ! select || ! select.length || count <= 1 || select.prop( 'disabled' ) ) {
+			return;
+		}
+		setTimeout( function() {
+			try {
+				select.trigger( 'focus' );
+				select[0].dispatchEvent( new MouseEvent( 'mousedown', { bubbles: true, cancelable: true } ) );
+				select[0].dispatchEvent( new MouseEvent( 'mouseup', { bubbles: true, cancelable: true } ) );
+				select[0].dispatchEvent( new MouseEvent( 'click', { bubbles: true, cancelable: true } ) );
+			} catch ( e ) {}
+		}, 50 );
+	};
+
 	const applyPostalData = function( type, postalcodes ) {
 		postalcodes = postalcodes || [];
 		const cityId = type === 'shipping' ? 'shipping-city' : 'billing-city';
@@ -154,6 +168,7 @@
 		select.val( firstVal );
 		$input.val( firstVal );
 		select.trigger( 'change' );
+		openSelectIfMultiple( select, postalcodes.length );
 	};
 
 	const lookupLocal = function( type, postcode, country, cb, onFail ) {
