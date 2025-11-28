@@ -2,7 +2,7 @@
 /*
 Plugin Name: WC - APG City
 Requires Plugins: woocommerce
-Version: 1.4.0.1
+Version: 2.0.0
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Add to WooCommerce an automatic city name generated from postcode.
 Author URI: https://artprojectgroup.es/
@@ -35,12 +35,28 @@ define( 'DIRECCION_apg_city', plugin_basename( __FILE__ ) );
  * Constante con la versión actual del plugin.
  * @var string
  */
-define( 'VERSION_apg_city', '1.4.0.1' );
+define( 'VERSION_apg_city', '2.0.0' );
 
 // Funciones generales de APG.
 include_once( 'includes/admin/funciones-apg.php' );
+// Gestión local GeoNames.
+include_once( 'includes/geonames-local.php' );
+// Compatibilidad con Checkout Blocks.
+include_once( 'includes/bloques.php' );
 
 $apg_city_settings = get_option( 'apg_city_settings' );
+
+// Hooks de la capa local GeoNames.
+add_filter( 'cron_schedules', 'apg_city_cron_schedules' );
+add_action( APG_CITY_CRON_HOOK, 'apg_city_refresh_data' );
+add_action( 'init', 'apg_city_schedule_updates' );
+register_activation_hook( __FILE__, 'apg_city_activate' );
+register_deactivation_hook( __FILE__, 'apg_city_unschedule_updates' );
+register_uninstall_hook( __FILE__, 'apg_city_desinstalar' );
+add_action( 'wp_ajax_apg_city_lookup', 'apg_city_ajax_lookup' );
+add_action( 'wp_ajax_nopriv_apg_city_lookup', 'apg_city_ajax_lookup' );
+add_action( 'wp_ajax_apg_city_api_lookup', 'apg_city_api_lookup' );
+add_action( 'wp_ajax_nopriv_apg_city_api_lookup', 'apg_city_api_lookup' );
 
 // ¿Está activo WooCommerce?
 include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
@@ -76,10 +92,46 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 	 *
 	 * @return void
 	 */
+	function apg_city_sanitize_settings( $settings ) {
+		$sanitized = [];
+
+		if ( isset( $settings[ 'api' ] ) ) {
+			$sanitized[ 'api' ] = in_array( $settings[ 'api' ], [ 'geonames', 'google' ], true ) ? $settings[ 'api' ] : 'geonames';
+		}
+
+		if ( isset( $settings[ 'key' ] ) ) {
+			$sanitized[ 'key' ] = sanitize_text_field( $settings[ 'key' ] );
+		}
+
+		if ( isset( $settings[ 'geonames_user' ] ) ) {
+			$sanitized[ 'geonames_user' ] = sanitize_text_field( $settings[ 'geonames_user' ] );
+		}
+
+		if ( isset( $settings[ 'predeterminado' ] ) ) {
+			$sanitized[ 'predeterminado' ] = sanitize_text_field( $settings[ 'predeterminado' ] );
+		}
+
+		if ( isset( $settings[ 'carga' ] ) ) {
+			$sanitized[ 'carga' ] = sanitize_text_field( $settings[ 'carga' ] );
+		}
+
+		$sanitized[ 'bloqueo' ] = ( isset( $settings[ 'bloqueo' ] ) && '1' === (string) $settings[ 'bloqueo' ] ) ? 1 : 0;
+
+		return $sanitized;
+	}
+
 	function apg_city_registra_opciones() {
 		global $apg_city_settings;
-        
-		register_setting( 'apg_city_settings_group', 'apg_city_settings' );
+
+		register_setting(
+			'apg_city_settings_group',
+			'apg_city_settings',
+			[
+				'type'              => 'array',
+				'sanitize_callback' => 'apg_city_sanitize_settings',
+				'show_in_rest'      => false,
+			]
+		);
 	}
 	add_action( 'admin_init', 'apg_city_registra_opciones' );
 
@@ -145,10 +197,11 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 		if ( is_checkout() || is_account_page() ) {
 			global $apg_city_settings;
 			
-            // Comprueba la API.
+			// Comprueba la API.
             $google_api     = ( isset( $apg_city_settings[ 'key' ] ) && ! empty( $apg_city_settings[ 'key' ] ) ) ? sanitize_text_field( $apg_city_settings[ 'key' ] ) : '';
             $geonames_user  = ( isset( $apg_city_settings[ 'geonames_user' ] ) && ! empty( $apg_city_settings[ 'geonames_user' ] ) ) ? sanitize_text_field( $apg_city_settings[ 'geonames_user' ] ) : '';
-            $script = '';
+            $script         = '';
+			$has_local_data = apg_city_local_data_available();
             if ( isset( $apg_city_settings[ 'api' ] ) ) {
                 if ( 'google' === $apg_city_settings[ 'api' ] && $google_api ) {
                     $script = 'comprueba_google';
@@ -156,11 +209,12 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
                     $script = 'comprueba_geonames';
                 }
             }
-			if ( empty( $script ) ) { // No hay API seleccionada o incompleta.
+			if ( empty( $script ) && ! $has_local_data ) { // No hay API seleccionada o incompleta y tampoco datos locales.
 				return;
-			}
+            }
             // Variables.
 			wp_register_script( 'apg_city_campo', plugins_url( 'assets/js/apg-city-campo.js', __FILE__ ), [ 'select2' ], VERSION_apg_city, 'all' );
+			wp_register_style( 'apg_city_front_style', plugins_url( 'assets/css/apg-city-frontend.css', __FILE__ ), [], VERSION_apg_city );
             $bloqueo = ( isset( $apg_city_settings[ 'bloqueo' ] ) && $apg_city_settings[ 'bloqueo' ] == "1" ) ? true : false;
 			wp_localize_script( 'apg_city_campo', 'funcion', [ $script ] );
 			wp_localize_script( 'apg_city_campo', 'bloqueo', [ $bloqueo ] );
@@ -168,41 +222,36 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			wp_localize_script( 'apg_city_campo', 'texto_carga_campo', [ $apg_city_settings[ 'carga' ] ] );
 			wp_localize_script( 'apg_city_campo', 'ruta_ajax', [ admin_url( 'admin-ajax.php' ) ] );
 			wp_localize_script( 'apg_city_campo', 'google_api', [ $google_api ] );
-            wp_localize_script( 'apg_city_campo', 'geonames_user', [ $geonames_user ] );
+			wp_localize_script( 'apg_city_campo', 'geonames_user', [ $geonames_user ] );
+			wp_localize_script(
+				'apg_city_campo',
+				'apg_city_lookup_settings',
+				[
+					'ajax_url'  => admin_url( 'admin-ajax.php' ),
+					'nonce'     => wp_create_nonce( 'apg_city_lookup' ),
+					'has_local' => $has_local_data,
+					'fallback'  => $script,
+				]
+			);
             // Carga los scripts.
 			wp_enqueue_script( 'apg_city_campo' );
-
-            if ( isset( $apg_city_settings[ 'bloqueo' ] ) && $apg_city_settings[ 'bloqueo' ] == "1" ) { // Bloquea los campos.
-?>
-<style>
-select[readonly].select2-hidden-accessible + .select2-container {
-	pointer-events: none;
-	touch-action: none;
-}
-select[readonly].select2-hidden-accessible + .select2-container .select2-selection {
-	background: #eee;
-	box-shadow: none;
-}
-select[readonly].select2-hidden-accessible + .select2-container .select2-selection__arrow, select[readonly].select2-hidden-accessible + .select2-container .select2-selection__clear {
-	display: none;
-}
-</style>
-<?php
-            }
+			if ( $bloqueo && ! wp_script_is( 'apg-city-blocks', 'enqueued' ) ) {
+				wp_enqueue_style( 'apg_city_front_style' );
+			}
 		}
 	}
-    $user_agent = '';
-    if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {
-        $user_agent = sanitize_text_field( wp_unslash( $_SERVER[ 'HTTP_USER_AGENT' ] ) );
-    }
+	$apg_city_user_agent = '';
+	if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {
+		$apg_city_user_agent = sanitize_text_field( wp_unslash( $_SERVER[ 'HTTP_USER_AGENT' ] ) );
+	}
 
-    if ( ! empty( $user_agent ) ) {
-        $version = ( preg_match( '/Trident\/(.*)/', $user_agent, $navegador ) ) ? intval( $navegador[1] ) + 4 : 11;
-        if ( $version >= 11 ) { // No funciona en Microsoft Internet Explorer 10 o anterior.
-            add_filter( 'woocommerce_default_address_fields', 'apg_city_campos_de_direccion' );
-            add_action( 'wp_footer', 'apg_city_codigo_javascript_en_checkout' );
-        }
-    }
+	if ( ! empty( $apg_city_user_agent ) ) {
+		$apg_city_version_ie = ( preg_match( '/Trident\/(.*)/', $apg_city_user_agent, $apg_city_navegador ) ) ? intval( $apg_city_navegador[1] ) + 4 : 11;
+		if ( $apg_city_version_ie >= 11 ) { // No funciona en Microsoft Internet Explorer 10 o anterior.
+			add_filter( 'woocommerce_default_address_fields', 'apg_city_campos_de_direccion' );
+			add_action( 'wp_footer', 'apg_city_codigo_javascript_en_checkout' );
+		}
+	}
 	
 	/**
 	 * Valida el campo de ciudad para evitar fallos cuando no se ejecuta JavaScript.
@@ -249,5 +298,18 @@ function apg_city_requiere_wc() {
 function apg_city_desinstalar() {
 	delete_transient( 'apg_city_plugin' );
 	delete_option( 'apg_city_settings' );
+	delete_option( 'apg_city_last_import' );
+	delete_option( 'apg_city_rows' );
+	delete_option( 'apg_city_last_hash' );
+	delete_transient( 'apg_city_seed_scheduled' );
+	apg_city_clear_import_state();
+	apg_city_unschedule_updates();
+
+	if ( apg_city_table_exists() ) {
+		global $wpdb;
+		$table_name = esc_sql( apg_city_get_table_name() );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Drop table on uninstall.
+		$wpdb->query( "DROP TABLE IF EXISTS `$table_name`" );
+	}
 }
 register_uninstall_hook( __FILE__, 'apg_city_desinstalar' );

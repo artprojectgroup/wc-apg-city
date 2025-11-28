@@ -4,11 +4,12 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: city, state, postcode, geonames, google maps
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.4.0.1
+Stable tag: 2.0.0
 WC requires at least: 5.6
 WC tested up to: 10.4.0
-License: GPLv3
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
 
 Add to WooCommerce an automatic city name generated from postcode.
 
@@ -18,6 +19,8 @@ Add to WooCommerce an automatic city name generated from postcode.
 **WC - APG City** add to your WooCommerce shop a new automatic city field generated from postcode via GeoNames API or Google Maps API.
 
 = Features =
+* Fully compatible with the End Purchase block of the WordPress block editor.
+* Includes a local GeoNames database that is downloaded and updated monthly to improve performance and reduce requests to external APIs.
 * You can select from GeoNames or Google Maps API.
 * You must add your own Google Maps API Key or GeoNames username.
 * You can customize the default text of the selection field.
@@ -77,6 +80,11 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 2. Screenshot of WC - APG City. Billing and shipping forms.
 
 == Changelog ==
+= 2.0.0 =
+* Added full compatibility with the Checkout block.
+* New local GeoNames database with monthly import. **Update sponsored by [Bestway](https://bestwaystore.es)**.
+* General performance improvements.
+* Minor fix.
 = 1.4.0.1 =
 * Minor fix.
 = 1.4.0 =
@@ -167,7 +175,10 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 * Initial version.
 
 == Upgrade Notice ==
-= 1.4.0.1 =
+= 2.0.0 =
+* Added full compatibility with the Checkout block.
+* New local GeoNames database with monthly import.
+* General performance improvements.
 * Minor fix.
 
 == Translations ==
@@ -187,3 +198,12 @@ Did you liked and you have proved useful **WC - APG City** on your website? We w
 * All that you encourage us with your comments.
 
 Thank you very much to all!
+
+== External Services ==
+1. To the GeoNames services to download and update, on a monthly basis, the full local database of cities and postcodes, as well as to perform queries to its API when there is no information in the local database.
+ - It sends the country and the postcode.
+ - More information: https://www.geonames.org/export/
+
+2. To the Google Maps API to obtain the city and state/province name from the postcode and country when this option is selected in the plugin settings.
+ - It sends the country and the postcode.
+ - More information: https://policies.google.com/privacy

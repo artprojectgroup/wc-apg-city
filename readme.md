@@ -9,15 +9,15 @@ Requires at least: 5.0
 
 Tested up to: 6.9
 
-Stable tag: 1.4.0.1
+Stable tag: 2.0.0
 
 WC requires at least: 5.6
 
 WC tested up to: 10.4.0
 
-License: GPLv3
+License: GNU General Public License v2 or later
 
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Añade a WooCommerce un nombre de población automático generado a partir del código postal.
 
@@ -27,6 +27,8 @@ Añade a WooCommerce un nombre de población automático generado a partir del c
 **WC - APG City** añade a tu tienda WooCommerce un nuevo campo población automático generado a partir del código postal a través de la API de GeoNames o Google Maps.
 
 ### Características
+* Totalmente compatible con el bloque Finalizar compra del editor de bloques de WordPress.
+* Dispone de una base de datos local de GeoNames que se descarga y actualiza mensualmente para mejorar el rendimiento y reducir las consultas a las API externas.
 * Puedes seleccionar entre las API de GeoNames o Google Maps.
 * Debes añadir tu propia Clave de API de Google Maps o usuario de GeoNames.
 * Puedes personalizar el texto predeterminado del campo de selección.
@@ -83,6 +85,12 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 *En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.*
 
 ## Changeling
+### 2.0.0
+* Añadida compatibilidad completa con el bloque de Finalizar compra.
+* Nueva base de datos local GeoNames con importación mensual.  **Actualización patrocinada por [Bestway](https://bestwaystore.es)**.
+* Mejora de rendimiento general.
+* Arreglo menor.
+
 ### 1.4.0.1
 * Arreglo menor.
 
@@ -224,3 +232,11 @@ Dado que **WC - APG City** es totalmente gratuito, **Art Project Group** sólo p
 * A todos los que nos animáis con vuestros comentarios.
 
 ¡Muchas gracias a todos!
+
+## Servicios Externos
+1. A los servicios de GeoNames para descargar y actualizar mensualmente la base de datos local completa de poblaciones y códigos postales, así como para realizar consultas a su API cuando no exista información en la base de datos local.
+ - Envía el país y el código postal.
+ - Más información: https://www.geonames.org/export/
+3. A la API de Google Maps para obtener el nombre de la población y la provincia a partir del código postal y el país cuando se selecciona esta opción en la configuración del plugin.
+ - Envía el país y el código postal.
+ - Más información: https://policies.google.com/privacy

@@ -1,0 +1,11 @@
+.wc-block-components-address-form__city input[readonly],
+.wc-blocks-components-select__select[disabled] {
+	background: #eee !important;
+	box-shadow: none;
+	pointer-events: none;
+	touch-action: none;
+}
+
+.wc-blocks-components-select__select[disabled] + .wc-blocks-components-select__expand {
+	display: none !important;
+}
