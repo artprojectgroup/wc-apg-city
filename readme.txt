@@ -19,7 +19,7 @@ Add to WooCommerce an automatic city name generated from postcode.
 **WC - APG City** add to your WooCommerce shop a new automatic city field generated from postcode via GeoNames API or Google Maps API.
 
 = Features =
-* Fully compatible with the End Purchase block of the WordPress block editor.
+* Fully compatible with the Checkout block of the WordPress block editor.
 * Includes a local GeoNames database that is downloaded and updated monthly to improve performance and reduce requests to external APIs.
 * You can select from GeoNames or Google Maps API.
 * You must add your own Google Maps API Key or GeoNames username.
