@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce - APG NIF/CIF/NIE field\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 06:35+0000\n"
+"POT-Creation-Date: 2025-11-29 07:28+0000\n"
 "POT-Revision-Date: Sat Aug 13 2016 00:23:19 GMT+0200 (CEST)\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
@@ -24,12 +24,12 @@ msgstr ""
 "1;transChoice:1,2\n"
 "X-Generator: Loco https://localise.biz/"
 
-#: includes/formulario.php:86
-msgid "Add the username that you registered in GeoNames."
+#: includes/formulario.php:44
+msgid "Add automatic city selection from postcode to WooCommerce."
 msgstr ""
 
-#: includes/formulario.php:44
-msgid "Add to WooCommerce an automatic city name generated from postcode."
+#: includes/formulario.php:86
+msgid "Add the username that you registered in GeoNames."
 msgstr ""
 
 #: includes/formulario.php:69
@@ -78,8 +78,21 @@ msgstr ""
 msgid "Documentation and Support:"
 msgstr ""
 
+#: includes/formulario.php:121
+msgid ""
+"Enable to lock the city and state fields so they cannot be modified."
+msgstr ""
+
 #: includes/formulario.php:136
 msgid "Enter the HEX/RGB value (e.g. #eeeeee) or pick a color."
+msgstr ""
+
+#: includes/formulario.php:103
+msgid "Enter your own default option text for the select field."
+msgstr ""
+
+#: includes/formulario.php:112
+msgid "Enter your own text for the option to switch to input text."
 msgstr ""
 
 #: includes/cuadro-informacion.php:42 includes/admin/funciones-apg.php:58
@@ -142,12 +155,6 @@ msgstr ""
 msgid "Make a donation by "
 msgstr ""
 
-#: includes/formulario.php:121
-msgid ""
-"Mark it to lock the city and state fields so that they cannot be "
-"modified."
-msgstr ""
-
 #: includes/geonames-local.php:433
 msgid "Missing parameters."
 msgstr ""
@@ -180,10 +187,6 @@ msgstr ""
 msgid "Option to switch"
 msgstr ""
 
-#: includes/formulario.php:106
-msgid "Please enter a default option text for the select field."
-msgstr ""
-
 #: includes/formulario.php:115
 msgid "Please enter a text for the option to switch to input text."
 msgstr ""
@@ -198,6 +201,10 @@ msgstr ""
 msgid ""
 "Please enter a valid <strong>shipping Town / City</strong>. JavaScript "
 "is required."
+msgstr ""
+
+#: includes/formulario.php:106
+msgid "Please enter default text for the select field."
 msgstr ""
 
 #. %s is the plugin name (e.g., WC – APG City).
@@ -227,7 +234,7 @@ msgid ""
 msgstr ""
 
 #: includes/formulario.php:55
-msgid "Select which API would you want to use"
+msgid "Select which API you want to use."
 msgstr ""
 
 #: includes/admin/funciones-apg.php:82
@@ -254,14 +261,6 @@ msgstr ""
 msgid "Town / City"
 msgstr ""
 
-#: includes/formulario.php:103
-msgid "Type your own default option text for the select field."
-msgstr ""
-
-#: includes/formulario.php:112
-msgid "Type your own text for the option to switch to input text."
-msgstr ""
-
 #: includes/geonames-local.php:566
 msgid "Unknown API."
 msgstr ""
@@ -275,5 +274,5 @@ msgid "WC - APG City"
 msgstr ""
 
 #: includes/formulario.php:40
-msgid "WC - APG City Options."
+msgid "WC - APG City Options"
 msgstr ""

@@ -37,11 +37,11 @@ $tab = 1;
 
 <div class="wrap woocommerce">
 	<h2>
-		<?php esc_html_e( 'WC - APG City Options.', 'wc-apg-city' ); ?>
+		<?php esc_html_e( 'WC - APG City Options', 'wc-apg-city' ); ?>
 	</h2>
 	<h3><a href="<?php echo esc_url( $apg_city[ 'plugin_url' ] ); ?>" title="Art Project Group"><?php echo esc_html( $apg_city[ 'plugin' ] ); ?></a></h3>
 	<p>
-		<?php esc_html_e( 'Add to WooCommerce an automatic city name generated from postcode.', 'wc-apg-city' ); ?>
+		<?php esc_html_e( 'Add automatic city selection from postcode to WooCommerce.', 'wc-apg-city' ); ?>
 	</p>
 	<?php include( 'cuadro-informacion.php' ); ?>
 	<form method="post" action="options.php">
@@ -52,7 +52,7 @@ $tab = 1;
 				<th scope="row" class="titledesc">
 					<label for="apg_city_settings[api]">
 						<?php esc_html_e( 'Select a public API', 'wc-apg-city' ); ?>
-						<span class="woocommerce-help-tip" data-tip="<?php esc_attr_e( 'Select which API would you want to use', 'wc-apg-city' ); ?>"></span>
+						<span class="woocommerce-help-tip" data-tip="<?php esc_attr_e( 'Select which API you want to use.', 'wc-apg-city' ); ?>"></span>
 					</label>
 				</th>
 				<td class="forminp">
@@ -100,16 +100,16 @@ $tab = 1;
 				<th scope="row" class="titledesc">
 					<label for="apg_city_settings[predeterminado]">
 						<?php esc_html_e( 'Default option', 'wc-apg-city' ); ?>
-						<span class="woocommerce-help-tip" data-tip="<?php esc_attr_e( 'Type your own default option text for the select field.', 'wc-apg-city' ); ?>"></span>
+						<span class="woocommerce-help-tip" data-tip="<?php esc_attr_e( 'Enter your own default option text for the select field.', 'wc-apg-city' ); ?>"></span>
 					</label>
 				</th>
-				<td class="forminp"><input id="apg_city_settings[predeterminado]" name="apg_city_settings[predeterminado]" type="text" value="<?php echo ( isset( $apg_city_settings[ 'predeterminado' ] ) && ! empty( $apg_city_settings[ 'predeterminado' ] ) ? esc_attr( $apg_city_settings[ 'predeterminado' ] ) : esc_attr__( 'Select city name', 'wc-apg-city' ) ); ?>" tabindex="<?php echo esc_attr( $tab++ ); ?>" placeholder="<?php esc_attr_e( 'Please enter a default option text for the select field.', 'wc-apg-city' ); ?>" /></td>
+				<td class="forminp"><input id="apg_city_settings[predeterminado]" name="apg_city_settings[predeterminado]" type="text" value="<?php echo ( isset( $apg_city_settings[ 'predeterminado' ] ) && ! empty( $apg_city_settings[ 'predeterminado' ] ) ? esc_attr( $apg_city_settings[ 'predeterminado' ] ) : esc_attr__( 'Select city name', 'wc-apg-city' ) ); ?>" tabindex="<?php echo esc_attr( $tab++ ); ?>" placeholder="<?php esc_attr_e( 'Please enter default text for the select field.', 'wc-apg-city' ); ?>" /></td>
 			</tr>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
 					<label for="apg_city_settings[carga]">
 						<?php esc_html_e( 'Option to switch', 'wc-apg-city' ); ?>
-						<span class="woocommerce-help-tip" data-tip="<?php esc_attr_e( 'Type your own text for the option to switch to input text.', 'wc-apg-city' ); ?>"></span>
+						<span class="woocommerce-help-tip" data-tip="<?php esc_attr_e( 'Enter your own text for the option to switch to input text.', 'wc-apg-city' ); ?>"></span>
 					</label>
 				</th>
 				<td class="forminp"><input id="apg_city_settings[carga]" name="apg_city_settings[carga]" type="text" value="<?php echo ( isset( $apg_city_settings[ 'carga' ] ) && ! empty( $apg_city_settings[ 'carga' ] ) ? esc_attr( $apg_city_settings[ 'carga' ] ) : esc_attr__( 'My city isn\'t on the list', 'wc-apg-city' ) ); ?>" tabindex="<?php echo esc_attr( $tab++ ); ?>" placeholder="<?php esc_attr_e( 'Please enter a text for the option to switch to input text.', 'wc-apg-city' ); ?>" /></td>
@@ -118,7 +118,7 @@ $tab = 1;
 				<th scope="row" class="titledesc">
 					<label for="apg_city_settings[bloqueo]">
 						<?php esc_html_e( 'Block fields', 'wc-apg-city' ); ?>
-						<span class="woocommerce-help-tip" data-tip="<?php esc_attr_e( 'Mark it to lock the city and state fields so that they cannot be modified.', 'wc-apg-city' ); ?>"></span>
+						<span class="woocommerce-help-tip" data-tip="<?php esc_attr_e( 'Enable to lock the city and state fields so they cannot be modified.', 'wc-apg-city' ); ?>"></span>
 					</label>
 				</th>
 				<td class="forminp"><input id="apg_city_settings[bloqueo]" name="apg_city_settings[bloqueo]" type="checkbox" value="1" <?php checked( isset( $apg_city_settings[ 'bloqueo' ] ) ? $apg_city_settings[ 'bloqueo' ] : '', 1 ); ?> tabindex="<?php echo esc_attr( $tab++ ); ?>" /></td>

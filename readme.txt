@@ -4,7 +4,7 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: city, state, postcode, geonames, google maps
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 WC requires at least: 5.6
 WC tested up to: 10.4.0
 License: GNU General Public License v2 or later
@@ -81,6 +81,8 @@ If you need help configuring or installing **WC - APG City**, **Art Project Grou
 2. Screenshot of WC - APG City. Billing and shipping forms.
 
 == Changelog ==
+= 2.0.2 =
+* Text and translation fixes.
 = 2.0.1 =
 * Added a new field to customize the background color of locked fields.
 * Minor fix.
@@ -179,9 +181,8 @@ If you need help configuring or installing **WC - APG City**, **Art Project Grou
 * Initial version.
 
 == Upgrade Notice ==
-= 2.0.1 =
-* Added a new field to customize the background color of locked fields.
-* Minor fix.
+= 2.0.2 =
+* Text and translation fixes.
 
 == Translations ==
 * *English*: by [**Art Project Group**](https://artprojectgroup.es/) (default language).
