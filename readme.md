@@ -88,6 +88,7 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 ## Changelog
 ### 2.0.2
 * Corrección de textos y traducciones.
+* Actualización de captura de pantalla.
 
 ### 2.0.1
 * Añadido un nuevo campo para personalizar el color de fondo de los campos bloqueados.

@@ -83,6 +83,7 @@ If you need help configuring or installing **WC - APG City**, **Art Project Grou
 == Changelog ==
 = 2.0.2 =
 * Text and translation fixes.
+* Screenshot updated.
 = 2.0.1 =
 * Added a new field to customize the background color of locked fields.
 * Minor fix.
