@@ -9,7 +9,7 @@ Requires at least: 5.0
 
 Tested up to: 6.9
 
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 
 WC requires at least: 5.6
 
@@ -33,10 +33,11 @@ Añade a WooCommerce un nombre de población automático generado a partir del c
 * Debes añadir tu propia Clave de API de Google Maps o usuario de GeoNames.
 * Puedes personalizar el texto predeterminado del campo de selección.
 * Puedes personalizar el texto de la opción para cargar de nuevo un campo de texto.
-* En caso de que el código postal sea compartido por más de una población, el cliente podrá seleccionar el nombre de la población correcto del listado devuelto por Google Maps.
+* Puedes bloquear la modificación de los campos población y provincia (estado).
+* Puedes personalizar el color de fondo de los campos bloqueados.
+* En caso de que el código postal sea compartido por más de una población, el cliente podrá seleccionar el nombre de la población correcto del listado devuelto por GeoNames o Google Maps.
 * Si la población no está en el listado o no se encuentra en ninguna de las dos APIs el cliente puede introducir manualmente el nombre de su población.
-* También selecciona la provincia (estado), siempre que el nombre coincida con el obtenido de Google Maps.
-* Puedes bloquear la modificación de los campos población y provincia.
+* También selecciona la provincia (estado), siempre que el nombre coincida con el obtenido de GeoNames o Google Maps.
 
 ### Traducciones
 * Español ([**Art Project Group**](https://artprojectgroup.es/)).
@@ -84,7 +85,11 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 
 *En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.*
 
-## Changeling
+## Changelog
+### 2.0.1
+* Añadido un nuevo campo para personalizar el color de fondo de los campos bloqueados.
+* Arreglo menor.
+
 ### 2.0.0
 * Añadida compatibilidad completa con el bloque de Finalizar compra.
 * Nueva base de datos local GeoNames con importación mensual.  **Actualización patrocinada por [Bestway](https://bestwaystore.es)**.

@@ -4,7 +4,7 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: city, state, postcode, geonames, google maps
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 WC requires at least: 5.6
 WC tested up to: 10.4.0
 License: GNU General Public License v2 or later
@@ -14,21 +14,22 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Add to WooCommerce an automatic city name generated from postcode.
 
 == Description ==
-**IMPORTANT: *WC - APG City* isn't compatible with Microsoft Internet Explorer 11 or previous.**
+**IMPORTANT: *WC - APG City* isn't compatible with Microsoft Internet Explorer 11 or earlier.**
 
-**WC - APG City** add to your WooCommerce shop a new automatic city field generated from postcode via GeoNames API or Google Maps API.
+**WC - APG City** adds to your WooCommerce shop a new automatic city field generated from postcode via GeoNames API or Google Maps API.
 
 = Features =
-* Fully compatible with the Checkout block of the WordPress block editor.
-* Includes a local GeoNames database that is downloaded and updated monthly to improve performance and reduce requests to external APIs.
-* You can select from GeoNames or Google Maps API.
+* Fully compatible with the Checkout block in the WordPress block editor.
+* Includes a local GeoNames database that is downloaded and updated monthly to improve performance and reduce external API queries.
+* You can choose between the GeoNames API or the Google Maps API.
 * You must add your own Google Maps API Key or GeoNames username.
-* You can customize the default text of the selection field.
-* You can customize the text of the option to reload a text field.
-* If postcode is shared by more than one city, the customer can select the correct city from the list returned by Google Maps.
-* If the city isn't listed or isn't found in both APIs, the customer can manually enter the name of his city. 
-* Also select the state, only when name matches with obtained from Google Maps.
-* You can block the modification of the city and province fields.
+* You can customize the default text of the select field.
+* You can customize the text of the option used to reload a text field.
+* You can block modifications to the city and province (state) fields.
+* You can customize the background color of the locked fields.
+* If the postal code is shared by more than one city, the customer will be able to select the correct city name from the list returned by GeoNames or Google Maps.
+* If the city is not in the list or cannot be found in either API, the customer can manually enter their city name.
+* It also selects the province (state), as long as the name matches the one obtained from GeoNames or Google Maps.
 
 = Translations =
 * Español ([**Art Project Group**](https://artprojectgroup.es/)).
@@ -38,7 +39,7 @@ Add to WooCommerce an automatic city name generated from postcode.
 **Art Project Group** offers [**Technical support**](https://artprojectgroup.es/tienda/ticket-de-soporte) to configure or install ***WC - APG City***.
 
 = Origin =
-**WC - APG City** has been programmed from [Thekla Kurpjuweit](https://www.facebook.com/profile.php?id=100010011270290) request to add to WooCommerce automatic city name input from the postcode.
+**WC - APG City** has been programmed at the request of [Thekla Kurpjuweit](https://www.facebook.com/profile.php?id=100010011270290) request to add to WooCommerce automatic city name input from the postcode.
 
 = More information =
 On our official website you can learn more about [**WC - APG City**](https://artprojectgroup.es/plugins-para-woocommerce/wc-apg-city).
@@ -62,16 +63,16 @@ You can follow the development of this plugin on [Github](https://github.com/art
  * Upload the full ZIP file via *Plugins -> Add New -> Upload* on your WordPress Administration Panel.
  * Search **WC - APG City** in the search engine available on *Plugins -> Add New* and press *Install Now* button.
 2. Activate plugin through *Plugins* menu on WordPress Administration Panel.
-3. Ready, now you can enjoy it, and if you like it and find it useful, make a [*donation*](https://artprojectgroup.es/tienda/donacion).
+3. Done! Now you can enjoy it, and if you like it and find it useful, you can make a [*donation*](https://artprojectgroup.es/tienda/donacion).
 
 == Frequently asked questions ==
-= Configuration is needed? =
+= Is configuration needed? =
 Just select between GeoNames and Google Maps API, and add your own Google Maps API Key.
 = Which API is better? =
 It depends on many factors but which has given the best results to us is GeoNames API. However, if no result is found in the selected API, it will search again in the other API.
 
 = Support =
-If you need help to configuring or installing **WC - APG City**, **Art Project Group** offers its service [**Technical Support**](https://artprojectgroup.es/tienda/ticket-de-soporte). 
+If you need help configuring or installing **WC - APG City**, **Art Project Group** offers its service [**Technical Support**](https://artprojectgroup.es/tienda/ticket-de-soporte). 
 
 *In any case **Art Project Group** provides any kind of free technical support.*
 
@@ -80,6 +81,9 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 2. Screenshot of WC - APG City. Billing and shipping forms.
 
 == Changelog ==
+= 2.0.1 =
+* Added a new field to customize the background color of locked fields.
+* Minor fix.
 = 2.0.0 =
 * Added full compatibility with the Checkout block.
 * New local GeoNames database with monthly import. **Update sponsored by [Bestway](https://bestwaystore.es)**.
@@ -175,10 +179,8 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 * Initial version.
 
 == Upgrade Notice ==
-= 2.0.0 =
-* Added full compatibility with the Checkout block.
-* New local GeoNames database with monthly import.
-* General performance improvements.
+= 2.0.1 =
+* Added a new field to customize the background color of locked fields.
 * Minor fix.
 
 == Translations ==
@@ -186,16 +188,16 @@ If you need help to configuring or installing **WC - APG City**, **Art Project G
 * *Español*: por [**Art Project Group**](https://artprojectgroup.es/).
 
 == Support ==
-Since **WC - APG City** is totally free, **Art Project Group** only provides payment [**Technical Support**](https://artprojectgroup.es/tienda/ticket-de-soporte) service. In any case **Art Project Group** provide any kind of free technical support.
+Since **WC - APG City** is totally free, **Art Project Group** only provides payment [**Technical Support**](https://artprojectgroup.es/tienda/ticket-de-soporte) service. In any case **Art Project Group** does not provide any kind of free technical support.
 
 == Donation ==
-Did you liked and you have proved useful **WC - APG City** on your website? We would appreciate a [small donation](https://artprojectgroup.es/tienda/donacion) that will help us to continue improving this plugin and create more plugins totally free for the entire WordPress community.
+Did you like and find **WC - APG City** useful on your website? We would appreciate a [small donation](https://artprojectgroup.es/tienda/donacion) that will help us to continue improving this plugin and create more plugins totally free for the entire WordPress community.
 
 == Thanks ==
 * To all that use it.
-* All that you help to improve it.
-* All you made donations.
-* All that you encourage us with your comments.
+* All those who help improve it.
+* All those who made donations.
+* All those who encourage us with their comments.
 
 Thank you very much to all!
 

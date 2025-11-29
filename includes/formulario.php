@@ -123,13 +123,30 @@ $tab = 1;
 				</th>
 				<td class="forminp"><input id="apg_city_settings[bloqueo]" name="apg_city_settings[bloqueo]" type="checkbox" value="1" <?php checked( isset( $apg_city_settings[ 'bloqueo' ] ) ? $apg_city_settings[ 'bloqueo' ] : '', 1 ); ?> tabindex="<?php echo esc_attr( $tab++ ); ?>" /></td>
 			</tr>
+			<tr valign="top" class="bloqueo-color">
+				<th scope="row" class="titledesc">
+					<label for="apg_city_settings[bloqueo_color]">
+						<?php esc_html_e( 'Locked fields background', 'wc-apg-city' ); ?>
+						<span class="woocommerce-help-tip" data-tip="<?php esc_attr_e( 'Select the background color used when the city and state fields are locked.', 'wc-apg-city' ); ?>"></span>
+					</label>
+				</th>
+				<td class="forminp forminp-text bloqueo-color-inputs">
+					<input type="text" id="apg_city_settings[bloqueo_color_text]" name="apg_city_settings[bloqueo_color_text]" value="<?php echo esc_attr( isset( $apg_city_settings[ 'bloqueo_color' ] ) ? $apg_city_settings[ 'bloqueo_color' ] : '#eeeeee' ); ?>" tabindex="<?php echo esc_attr( $tab++ ); ?>" placeholder="#rrggbb" class="regular-text" />
+					<input type="color" id="apg_city_settings[bloqueo_color]" name="apg_city_settings[bloqueo_color]" value="<?php echo esc_attr( isset( $apg_city_settings[ 'bloqueo_color' ] ) ? $apg_city_settings[ 'bloqueo_color' ] : '#eeeeee' ); ?>" tabindex="<?php echo esc_attr( $tab++ ); ?>" />
+					<p class="description"><?php esc_html_e( 'Enter the HEX/RGB value (e.g. #eeeeee) or pick a color.', 'wc-apg-city' ); ?></p>
+				</td>
+			</tr>
         </table>
 		<?php submit_button(); ?>
 	</form>
 </div>
 <script>
 ( function( $ ) {
+	// Muestra u oculta las filas según la API seleccionada.
     var $api = $( '#apg_city_settings\\[api\\]' );
+    var $bloqueo = $( '#apg_city_settings\\[bloqueo\\]' );
+    var $bloqueoColor = $( '#apg_city_settings\\[bloqueo_color\\]' );
+    var $bloqueoColorText = $( '#apg_city_settings\\[bloqueo_color_text\\]' );
     var toggleRows = function( value ) {
         if ( value === 'google' ) {
             $( '.api' ).show();
@@ -139,11 +156,45 @@ $tab = 1;
             $( '.geonames' ).show();
         }
     };
+	// Muestra u oculta las opciones de color de bloqueo.
+    var toggleBloqueoColor = function( checked ) {
+        $( '.bloqueo-color' ).toggle( !! checked );
+    };
+	// Sincroniza los campos de color.
+    var syncColorInputs = function( value, fromText ) {
+        var hex = ( value || '' ).trim();
+        if ( ! hex ) {
+            return;
+        }
+        if ( fromText && hex.charAt(0) !== '#' ) {
+            hex = '#' + hex;
+        }
+        var match = hex.match( /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/ );
+        if ( ! match ) {
+            return;
+        }
+        if ( match[1].length === 3 ) { // Expande formato #rgb a #rrggbb.
+            hex = '#' + match[1].split( '' ).map( function( c ) { return c + c; } ).join( '' );
+        }
+        $bloqueoColor.val( hex );
+        $bloqueoColorText.val( hex );
+    };
 
     toggleRows( $api.val() );
+    toggleBloqueoColor( $bloqueo.is( ':checked' ) );
+    syncColorInputs( $bloqueoColor.val() );
 
     $api.on( 'change', function() {
         toggleRows( this.value );
+    } );
+    $bloqueo.on( 'change', function() {
+        toggleBloqueoColor( this.checked );
+    } );
+    $bloqueoColor.on( 'change', function() {
+        syncColorInputs( this.value );
+    } );
+    $bloqueoColorText.on( 'change keyup', function() {
+        syncColorInputs( this.value, true );
     } );
 } )( jQuery );
 </script>

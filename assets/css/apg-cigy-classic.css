@@ -1,10 +1,14 @@
+:root {
+	--apg-city-locked-bg: #eee;
+}
+
 select[readonly].select2-hidden-accessible + .select2-container {
 	pointer-events: none;
 	touch-action: none;
 }
 
 select[readonly].select2-hidden-accessible + .select2-container .select2-selection {
-	background: #eee;
+	background: var(--apg-city-locked-bg, #eee);
 	box-shadow: none;
 }
 

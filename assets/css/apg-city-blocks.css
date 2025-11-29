@@ -1,6 +1,10 @@
+:root {
+	--apg-city-locked-bg: #eee;
+}
+
 .wc-block-components-address-form__city input[readonly],
 .wc-blocks-components-select__select[disabled] {
-	background: #eee !important;
+	background: var(--apg-city-locked-bg, #eee) !important;
 	box-shadow: none;
 	pointer-events: none;
 	touch-action: none;

@@ -2,9 +2,9 @@
 /*
 Plugin Name: WC - APG City
 Requires Plugins: woocommerce
-Version: 2.0.0
+Version: 2.0.1
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
-Description: Add to WooCommerce an automatic city name generated from postcode.
+Description: Adds automatic city detection from postcode to WooCommerce.
 Author URI: https://artprojectgroup.es/
 Author: Art Project Group
 License: GNU General Public License v2 or later
@@ -35,7 +35,7 @@ define( 'DIRECCION_apg_city', plugin_basename( __FILE__ ) );
  * Constante con la versión actual del plugin.
  * @var string
  */
-define( 'VERSION_apg_city', '2.0.0' );
+define( 'VERSION_apg_city', '2.0.1' );
 
 // Funciones generales de APG.
 include_once( 'includes/admin/funciones-apg.php' );
@@ -94,6 +94,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 	 */
 	function apg_city_sanitize_settings( $settings ) {
 		$sanitized = [];
+		$default_lock_color = '#eeeeee';
 
 		if ( isset( $settings[ 'api' ] ) ) {
 			$sanitized[ 'api' ] = in_array( $settings[ 'api' ], [ 'geonames', 'google' ], true ) ? $settings[ 'api' ] : 'geonames';
@@ -116,6 +117,10 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 		}
 
 		$sanitized[ 'bloqueo' ] = ( isset( $settings[ 'bloqueo' ] ) && '1' === (string) $settings[ 'bloqueo' ] ) ? 1 : 0;
+		if ( $sanitized[ 'bloqueo' ] && isset( $settings[ 'bloqueo_color' ] ) ) {
+			$color = sanitize_hex_color( $settings[ 'bloqueo_color' ] );
+			$sanitized[ 'bloqueo_color' ] = $color ? $color : $default_lock_color;
+		}
 
 		return $sanitized;
 	}
@@ -213,8 +218,15 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 				return;
             }
             // Variables.
+			$bloqueo_color = '#eeeeee';
+			if ( isset( $apg_city_settings[ 'bloqueo_color' ] ) ) {
+				$color = sanitize_hex_color( $apg_city_settings[ 'bloqueo_color' ] );
+				if ( $color ) {
+					$bloqueo_color = $color;
+				}
+			}
 			wp_register_script( 'apg_city_campo', plugins_url( 'assets/js/apg-city-campo.js', __FILE__ ), [ 'select2' ], VERSION_apg_city, 'all' );
-			wp_register_style( 'apg_city_front_style', plugins_url( 'assets/css/apg-city-frontend.css', __FILE__ ), [], VERSION_apg_city );
+			wp_register_style( 'apg_city_front_style', plugins_url( 'assets/css/apg-cigy-classic.css', __FILE__ ), [], VERSION_apg_city );
             $bloqueo = ( isset( $apg_city_settings[ 'bloqueo' ] ) && $apg_city_settings[ 'bloqueo' ] == "1" ) ? true : false;
 			wp_localize_script( 'apg_city_campo', 'funcion', [ $script ] );
 			wp_localize_script( 'apg_city_campo', 'bloqueo', [ $bloqueo ] );
@@ -237,6 +249,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			wp_enqueue_script( 'apg_city_campo' );
 			if ( $bloqueo && ! wp_script_is( 'apg-city-blocks', 'enqueued' ) ) {
 				wp_enqueue_style( 'apg_city_front_style' );
+				wp_add_inline_style( 'apg_city_front_style', ':root{--apg-city-locked-bg:' . esc_attr( $bloqueo_color ) . ';}' );
 			}
 		}
 	}

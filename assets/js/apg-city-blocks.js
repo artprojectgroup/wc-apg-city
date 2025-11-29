@@ -17,6 +17,17 @@
 		}
 	};
 
+	const syncCityValue = function( $input, value ) {
+		if ( ! $input || ! $input.length ) {
+			return;
+		}
+		setNativeValue( $input[0], value );
+		try {
+			$input[0].dispatchEvent( new Event( 'input', { bubbles: true } ) );
+			$input[0].dispatchEvent( new Event( 'change', { bubbles: true } ) );
+		} catch ( e ) {}
+	};
+
 	const destroyCitySelect = function( type ) {
 		const cityId  = type === 'shipping' ? 'shipping-city' : 'billing-city';
 		const $input  = $( '#' + cityId );
@@ -108,12 +119,12 @@
 					return;
 				}
 				$select.data( 'lastCity', this.value );
-				setNativeValue( $input[0], this.value );
-				try {
-					$input[0].dispatchEvent( new Event( 'input', { bubbles: true } ) );
-					$input[0].dispatchEvent( new Event( 'change', { bubbles: true } ) );
-				} catch ( e ) {}
+				syncCityValue( $input, this.value );
 			} );
+		}
+
+		if ( settings.bloqueo ) {
+			$select.prop( 'disabled', true );
 		}
 
 		return $select;
@@ -132,6 +143,60 @@
 			} catch ( e ) {}
 		}, 50 );
 	};
+
+	function applyStateFromPostalData( type, postalcodes ) {
+		if ( ! postalcodes || ! postalcodes.length ) {
+			return;
+		}
+		const row     = postalcodes[0];
+		const stateId = type === 'shipping' ? 'shipping-state' : 'billing-state';
+		const $state  = $( '#' + stateId );
+		if ( ! $state.length ) {
+			return;
+		}
+
+		const specialCountries = {
+			AT: 'adminName1',
+			FR: 'adminName2',
+			PT: 'adminName1',
+		};
+
+		let province = $.isNumeric( row.adminCode2 ) ? row.adminCode1 : row.adminCode2;
+		const country = row.countryCode || $( '#' + ( type === 'shipping' ? 'shipping-country' : 'billing-country' ) ).val();
+
+		if ( specialCountries[ country ] && row[ specialCountries[ country ] ] ) {
+			province = row[ specialCountries[ country ] ];
+			if ( province === 'Azores' ) {
+				province = 'Açores';
+			}
+		}
+
+		if ( ! province && row.adminCode1 ) {
+			province = row.adminCode1;
+		}
+
+		if ( ! province ) {
+			return;
+		}
+
+		const setStateValue = function( value ) {
+			$state.val( value );
+			if ( ! $state.val() ) {
+				const match = $state.find( 'option' ).filter( function() {
+					return $( this ).text() === value;
+				} ).first();
+				if ( match.length ) {
+					$state.val( match.val() );
+				}
+			}
+			try {
+				$state[0].dispatchEvent( new Event( 'input', { bubbles: true } ) );
+				$state[0].dispatchEvent( new Event( 'change', { bubbles: true } ) );
+			} catch ( e ) {}
+		};
+
+		setStateValue( province );
+	}
 
 	const applyPostalData = function( type, postalcodes ) {
 		postalcodes = postalcodes || [];
@@ -166,8 +231,9 @@
 
 		const firstVal = postalcodes[0] ? postalcodes[0].placeName : '';
 		select.val( firstVal );
-		$input.val( firstVal );
+		syncCityValue( $input, firstVal );
 		select.trigger( 'change' );
+		applyStateFromPostalData( type, postalcodes );
 		openSelectIfMultiple( select, postalcodes.length );
 	};
 

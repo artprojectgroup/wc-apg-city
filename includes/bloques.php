@@ -30,6 +30,7 @@ function apg_city_enqueue_blocks_assets() {
 	$bloqueo        = ( isset( $apg_city_settings[ 'bloqueo' ] ) && $apg_city_settings[ 'bloqueo' ] == "1" ) ? true : false;
 	$has_local_data = apg_city_local_data_available();
 	$fallback       = '';
+	$bloqueo_color  = '#eeeeee';
 
 	if ( isset( $apg_city_settings[ 'api' ] ) ) {
 		if ( 'google' === $apg_city_settings[ 'api' ] && $google_api ) {
@@ -41,6 +42,13 @@ function apg_city_enqueue_blocks_assets() {
 
 	if ( ! $has_local_data && '' === $fallback ) {
 		return;
+	}
+
+	if ( isset( $apg_city_settings[ 'bloqueo_color' ] ) ) {
+		$color = sanitize_hex_color( $apg_city_settings[ 'bloqueo_color' ] );
+		if ( $color ) {
+			$bloqueo_color = $color;
+		}
 	}
 
 	wp_register_script(
@@ -76,6 +84,7 @@ function apg_city_enqueue_blocks_assets() {
 	wp_register_style( 'apg_city_blocks_position', plugins_url( '../assets/css/apg-city-blocks-position.css', __FILE__ ), [], VERSION_apg_city );
 
 	if ( $bloqueo ) {
+		wp_add_inline_style( 'apg_city_blocks_style', ':root{--apg-city-locked-bg:' . esc_attr( $bloqueo_color ) . ';}' );
 		wp_enqueue_style( 'apg_city_blocks_style' );
 	}
 	wp_enqueue_style( 'apg_city_blocks_position' );
