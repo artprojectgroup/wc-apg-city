@@ -9,7 +9,7 @@ Requires at least: 5.0
 
 Tested up to: 6.9
 
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 
 WC requires at least: 5.6
 
@@ -86,6 +86,9 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 *En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.*
 
 ## Changelog
+### 2.0.3
+* Arreglo menor.
+
 ### 2.0.2
 * Corrección de textos y traducciones.
 * Actualización de captura de pantalla.

@@ -237,6 +237,28 @@
 		openSelectIfMultiple( select, postalcodes.length );
 	};
 
+	const isVisible = function( $el ) {
+		return !! ( $el && $el.length && $el.is( ':visible' ) && $el.closest( '.wc-block-components-address-form' ).is( ':visible' ) );
+	};
+
+	const tryInitialLookup = function( type ) {
+		const $postcode = $( '#' + type + '-postcode' );
+		const $country  = $( '#' + type + '-country' );
+		if ( ! $postcode.length || ! $country.length ) {
+			return;
+		}
+		if ( $postcode.data( 'apg-init' ) ) {
+			return;
+		}
+		if ( ! isVisible( $postcode ) ) {
+			return;
+		}
+		if ( $postcode.val() && $country.val() ) {
+			handleChange.call( $postcode[0] );
+		}
+		$postcode.data( 'apg-init', true );
+	};
+
 	const lookupLocal = function( type, postcode, country, cb, onFail ) {
 		const data = {
 			action: 'apg_city_lookup',
@@ -292,7 +314,8 @@
 		if ( ! postcode || ! country ) {
 			return;
 		}
-		var $blockTarget  = $( '.wc-block-components-address-form__city, .wc-block-components-address-form__state' );
+		const $form = $( this ).closest( '.wc-block-components-address-form' );
+		var $blockTarget  = $form.find( '.wc-block-components-address-form__city, .wc-block-components-address-form__state' );
 		if ( $blockTarget.length && $.fn.block ) {
 			$blockTarget.block( { message: null, overlayCSS: { background: '#fff', opacity: 0.6 } } );
 		}
@@ -326,6 +349,23 @@
 
 	$( document ).on( 'change', '#shipping-postcode, #billing-postcode', handleChange );
 
+	$( document ).on( 'click', '.wc-block-components-address-card__edit, .wc-block-components-checkout-step__edit', function() {
+		var controls = $( this ).attr( 'aria-controls' );
+		var targetType = 'shipping';
+		if ( controls === 'billing' || controls === 'shipping' ) {
+			targetType = controls;
+		}
+		setTimeout( function() {
+			tryInitialLookup( targetType );
+		}, 50 );
+	} );
+
+	$( document ).on( 'change', '.wc-block-checkout__use-address-for-billing input[type=\"checkbox\"]', function() {
+		setTimeout( function() {
+			tryInitialLookup( 'billing' );
+		}, 50 );
+	} );
+
 	// Estado inicial: convierte city en select y aplica bloqueo si procede.
 	$( document ).ready( function() {
 		[ 'billing', 'shipping' ].forEach( function( type ) {
@@ -348,5 +388,7 @@
 		if ( settings.bloqueo ) {
 			$( '#billing-state, #shipping-state' ).prop( 'disabled', true );
 		}
+
+		// La búsqueda inicial se ejecuta al abrir el formulario (botón Edit).
 	} );
 } )( jQuery );
