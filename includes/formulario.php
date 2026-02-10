@@ -2,7 +2,7 @@
 /**
  * Formulario de ajustes del plugin WC - APG City.
  *
- * Muestra el panel de configuración dentro de WooCommerce 
+ * Muestra el panel de configuración dentro de WooCommerce
  * para seleccionar API, claves y opciones relacionadas.
  *
  * @package WC_APG_City
@@ -16,20 +16,20 @@ defined( 'ABSPATH' ) || exit;
 global $apg_city_settings, $apg_city;
 
 // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Options page is already protected by WordPress nonces.
-if ( isset( $_GET[ 'settings-updated' ] ) ) {
-	if ( ( ! isset( $apg_city_settings[ 'key' ] ) || '' === $apg_city_settings[ 'key' ] ) && isset( $apg_city_settings[ 'api' ] ) && 'geonames' !== $apg_city_settings[ 'api' ] ) {
+if ( isset( $_GET['page'] ) ) {
+	if ( ( ! isset( $apg_city_settings['key'] ) || '' === $apg_city_settings['key'] ) && isset( $apg_city_settings['api'] ) && 'geonames' !== $apg_city_settings['api'] ) {
 		echo '<div class="notice notice-error is-dismissible" id="wc-apg-city"><p>' . esc_html__( 'Google Maps API Key is a required field.', 'wc-apg-city' ) . '</p></div>';
-		$apg_city_settings[ 'api' ] = 'geonames';
+		$apg_city_settings['api'] = 'geonames';
 		update_option( 'apg_city_settings', $apg_city_settings );
 		$apg_city_settings = get_option( 'apg_city_settings' );
 	}
 
-	if ( ( ! isset( $apg_city_settings[ 'geonames_user' ] ) || '' === $apg_city_settings[ 'geonames_user' ] ) && isset( $apg_city_settings[ 'api' ] ) && 'geonames' === $apg_city_settings[ 'api' ] ) {
+	if ( ( ! isset( $apg_city_settings['geonames_user'] ) || '' === $apg_city_settings['geonames_user'] ) && isset( $apg_city_settings['api'] ) && 'geonames' === $apg_city_settings['api'] ) {
 		echo '<div class="notice notice-error is-dismissible" id="wc-apg-city"><p>' . esc_html__( 'GeoNames username is a required field.', 'wc-apg-city' ) . '</p></div>';
 	}
 }
 
-settings_errors(); 
+settings_errors();
 
 // Variables.
 $tab = 1;
@@ -39,14 +39,14 @@ $tab = 1;
 	<h2>
 		<?php esc_html_e( 'WC - APG City Options', 'wc-apg-city' ); ?>
 	</h2>
-	<h3><a href="<?php echo esc_url( $apg_city[ 'plugin_url' ] ); ?>" title="Art Project Group"><?php echo esc_html( $apg_city[ 'plugin' ] ); ?></a></h3>
+	<h3><a href="<?php echo esc_url( $apg_city['plugin_url'] ); ?>" title="Art Project Group"><?php echo esc_html( $apg_city['plugin'] ); ?></a></h3>
 	<p>
 		<?php esc_html_e( 'Add automatic city selection from postcode to WooCommerce.', 'wc-apg-city' ); ?>
 	</p>
 	<?php include( 'cuadro-informacion.php' ); ?>
-	<form method="post" action="options.php">
+	<form id="formulario" method="post" action="options.php">
 		<?php settings_fields( 'apg_city_settings_group' ); ?>
-		<div class="cabecera"> <a href="<?php echo esc_url( $apg_city[ 'plugin_url' ] ); ?>" title="<?php echo esc_attr( $apg_city[ 'plugin' ] ); ?>" target="_blank"><img src="<?php echo esc_url( plugins_url( '../assets/images/cabecera.jpg', __FILE__ ) ); ?>" class="imagen" alt="<?php echo esc_attr( $apg_city[ 'plugin' ] ); ?>" /></a> </div>
+		<div class="cabecera"> <a href="<?php echo esc_url( $apg_city['plugin_url'] ); ?>" title="<?php echo esc_attr( $apg_city['plugin'] ); ?>" target="_blank"><img src="<?php echo esc_url( plugins_url( '../assets/images/cabecera.jpg', __FILE__ ) ); ?>" class="imagen" alt="<?php echo esc_attr( $apg_city['plugin'] ); ?>" /></a> </div>
 		<table class="form-table apg-table">
 			<tr valign="top">
 				<th scope="row" class="titledesc">
@@ -57,8 +57,8 @@ $tab = 1;
 				</th>
 				<td class="forminp">
 					<select class="wc-enhanced-select" id="apg_city_settings[api]" name="apg_city_settings[api]" tabindex="<?php echo esc_attr( $tab++ ); ?>">
-						<option value="geonames" <?php echo ( isset( $apg_city_settings[ 'api' ] ) && $apg_city_settings[ 'api' ] == "geonames" ? ' selected="selected"' : '' ); ?>>GeoNames</option>
-						<option value="google" <?php echo ( isset( $apg_city_settings[ 'api' ] ) && $apg_city_settings[ 'api' ] == "google" ? ' selected="selected"' : '' ); ?>>Google Maps</option>
+						<option value="geonames" <?php echo ( isset( $apg_city_settings['api'] ) && 'geonames' === $apg_city_settings['api'] ? ' selected="selected"' : '' ); ?>>GeoNames</option>
+						<option value="google" <?php echo ( isset( $apg_city_settings['api'] ) && 'google' === $apg_city_settings['api'] ? ' selected="selected"' : '' ); ?>>Google Maps</option>
 					</select>
 				</td>
 			</tr>
@@ -70,7 +70,7 @@ $tab = 1;
 					</label>
 				</th>
 				<td class="forminp forminp-text">
-					<input type="text" id="apg_city_settings[key]" name="apg_city_settings[key]" tabindex="<?php echo esc_attr( $tab++ ); ?>" value="<?php echo isset( $apg_city_settings[ 'key' ] ) ? esc_attr( $apg_city_settings[ 'key' ] ) : ''; ?>"/>
+					<input type="text" id="apg_city_settings[key]" name="apg_city_settings[key]" tabindex="<?php echo esc_attr( $tab++ ); ?>" value="<?php echo isset( $apg_city_settings['key'] ) ? esc_attr( $apg_city_settings['key'] ) : ''; ?>"/>
 					<p class="description">
 						<?php
 						// translators: %s is a link to Google API Console.
@@ -87,7 +87,7 @@ $tab = 1;
 					</label>
 				</th>
 				<td class="forminp forminp-text">
-					<input type="text" id="apg_city_settings[geonames_user]" name="apg_city_settings[geonames_user]" tabindex="<?php echo esc_attr( $tab++ ); ?>" value="<?php echo ( isset( $apg_city_settings[ 'geonames_user' ] ) ? esc_attr( $apg_city_settings[ 'geonames_user' ] ) : '' ); ?>"/>
+					<input type="text" id="apg_city_settings[geonames_user]" name="apg_city_settings[geonames_user]" tabindex="<?php echo esc_attr( $tab++ ); ?>" value="<?php echo ( isset( $apg_city_settings['geonames_user'] ) ? esc_attr( $apg_city_settings['geonames_user'] ) : '' ); ?>"/>
 					<p class="description">
 						<?php
 						// translators: %s is a link to GeoNames website.
@@ -103,7 +103,7 @@ $tab = 1;
 						<span class="woocommerce-help-tip" data-tip="<?php esc_attr_e( 'Enter your own default option text for the select field.', 'wc-apg-city' ); ?>"></span>
 					</label>
 				</th>
-				<td class="forminp"><input id="apg_city_settings[predeterminado]" name="apg_city_settings[predeterminado]" type="text" value="<?php echo ( isset( $apg_city_settings[ 'predeterminado' ] ) && ! empty( $apg_city_settings[ 'predeterminado' ] ) ? esc_attr( $apg_city_settings[ 'predeterminado' ] ) : esc_attr__( 'Select city name', 'wc-apg-city' ) ); ?>" tabindex="<?php echo esc_attr( $tab++ ); ?>" placeholder="<?php esc_attr_e( 'Please enter default text for the select field.', 'wc-apg-city' ); ?>" /></td>
+				<td class="forminp"><input id="apg_city_settings[predeterminado]" name="apg_city_settings[predeterminado]" type="text" value="<?php echo ( isset( $apg_city_settings['predeterminado'] ) && ! empty( $apg_city_settings['predeterminado'] ) ? esc_attr( $apg_city_settings['predeterminado'] ) : esc_attr__( 'Select city name', 'wc-apg-city' ) ); ?>" tabindex="<?php echo esc_attr( $tab++ ); ?>" placeholder="<?php esc_attr_e( 'Please enter default text for the select field.', 'wc-apg-city' ); ?>" /></td>
 			</tr>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
@@ -112,7 +112,7 @@ $tab = 1;
 						<span class="woocommerce-help-tip" data-tip="<?php esc_attr_e( 'Enter your own text for the option to switch to input text.', 'wc-apg-city' ); ?>"></span>
 					</label>
 				</th>
-				<td class="forminp"><input id="apg_city_settings[carga]" name="apg_city_settings[carga]" type="text" value="<?php echo ( isset( $apg_city_settings[ 'carga' ] ) && ! empty( $apg_city_settings[ 'carga' ] ) ? esc_attr( $apg_city_settings[ 'carga' ] ) : esc_attr__( 'My city isn\'t on the list', 'wc-apg-city' ) ); ?>" tabindex="<?php echo esc_attr( $tab++ ); ?>" placeholder="<?php esc_attr_e( 'Please enter a text for the option to switch to input text.', 'wc-apg-city' ); ?>" /></td>
+				<td class="forminp"><input id="apg_city_settings[carga]" name="apg_city_settings[carga]" type="text" value="<?php echo ( isset( $apg_city_settings['carga'] ) && ! empty( $apg_city_settings['carga'] ) ? esc_attr( $apg_city_settings['carga'] ) : esc_attr__( 'My city isn\'t on the list', 'wc-apg-city' ) ); ?>" tabindex="<?php echo esc_attr( $tab++ ); ?>" placeholder="<?php esc_attr_e( 'Please enter a text for the option to switch to input text.', 'wc-apg-city' ); ?>" /></td>
 			</tr>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
@@ -121,7 +121,7 @@ $tab = 1;
 						<span class="woocommerce-help-tip" data-tip="<?php esc_attr_e( 'Enable to lock the city and state fields so they cannot be modified.', 'wc-apg-city' ); ?>"></span>
 					</label>
 				</th>
-				<td class="forminp"><input id="apg_city_settings[bloqueo]" name="apg_city_settings[bloqueo]" type="checkbox" value="1" <?php checked( isset( $apg_city_settings[ 'bloqueo' ] ) ? $apg_city_settings[ 'bloqueo' ] : '', 1 ); ?> tabindex="<?php echo esc_attr( $tab++ ); ?>" /></td>
+				<td class="forminp"><input id="apg_city_settings[bloqueo]" name="apg_city_settings[bloqueo]" type="checkbox" value="1" <?php checked( isset( $apg_city_settings['bloqueo'] ) ? $apg_city_settings['bloqueo'] : '', 1 ); ?> tabindex="<?php echo esc_attr( $tab++ ); ?>" /></td>
 			</tr>
 			<tr valign="top" class="bloqueo-color">
 				<th scope="row" class="titledesc">
@@ -131,8 +131,8 @@ $tab = 1;
 					</label>
 				</th>
 				<td class="forminp forminp-text bloqueo-color-inputs">
-					<input type="text" id="apg_city_settings[bloqueo_color_text]" name="apg_city_settings[bloqueo_color_text]" value="<?php echo esc_attr( isset( $apg_city_settings[ 'bloqueo_color' ] ) ? $apg_city_settings[ 'bloqueo_color' ] : '#eeeeee' ); ?>" tabindex="<?php echo esc_attr( $tab++ ); ?>" placeholder="#rrggbb" class="regular-text" />
-					<input type="color" id="apg_city_settings[bloqueo_color]" name="apg_city_settings[bloqueo_color]" value="<?php echo esc_attr( isset( $apg_city_settings[ 'bloqueo_color' ] ) ? $apg_city_settings[ 'bloqueo_color' ] : '#eeeeee' ); ?>" tabindex="<?php echo esc_attr( $tab++ ); ?>" />
+					<input type="text" id="apg_city_settings[bloqueo_color_text]" name="apg_city_settings[bloqueo_color_text]" value="<?php echo esc_attr( isset( $apg_city_settings['bloqueo_color'] ) ? $apg_city_settings['bloqueo_color'] : '#eeeeee' ); ?>" tabindex="<?php echo esc_attr( $tab++ ); ?>" placeholder="#rrggbb" class="regular-text" />
+					<input type="color" id="apg_city_settings[bloqueo_color]" name="apg_city_settings[bloqueo_color]" value="<?php echo esc_attr( isset( $apg_city_settings['bloqueo_color'] ) ? $apg_city_settings['bloqueo_color'] : '#eeeeee' ); ?>" tabindex="<?php echo esc_attr( $tab++ ); ?>" />
 					<p class="description"><?php esc_html_e( 'Enter the HEX/RGB value (e.g. #eeeeee) or pick a color.', 'wc-apg-city' ); ?></p>
 				</td>
 			</tr>

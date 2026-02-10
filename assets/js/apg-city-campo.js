@@ -1,32 +1,32 @@
-//Función que cambia el campo select por un campo input
+// Función que cambia el campo select por un campo input
 var carga_campo = function (formulario, bloquea = false ) {
-    //Elimina select2 o selectWoo
+    // Elimina select2 o selectWoo
     if (jQuery('#' + formulario + '_city').data('selectWoo')) {
         jQuery('#' + formulario + '_city').selectWoo('destroy');
     } else if (jQuery('#' + formulario + '_city').data('select2')) {
         jQuery('#' + formulario + '_city').select2('destroy');
     }
-    //Desbloquea los campos
+    // Desbloquea los campos
     jQuery('#' + formulario + '_city_field,#' + formulario + '_state_field').unblock();
-    //Cambia el campo
+    // Cambia el campo
     jQuery('#' + formulario + '_city').replaceWith('<input class="input-text " name="' + formulario + '_city" id="' + formulario + '_city" autocomplete="address-level2" type="text" placeholder="" />');
-    //Desbloquea el campo ciudad
+    // Desbloquea el campo ciudad
     if ( bloquea ) {
         jQuery('#' + formulario + '_state').attr("readonly", false); 
     }
 }
 
-//Función que cambia el campo input por un capo select
+// Función que cambia el campo input por un capo select
 var carga_select = function(formulario) {
-    //Desbloquea los campos
+    // Desbloquea los campos
     jQuery('#' + formulario + '_city_field,#' + formulario + '_state_field').unblock();
-    //Cambia el campo
+    // Cambia el campo
     var texto = ( bloqueo ) ? ' readonly="readonly"' : '';
     jQuery('#' + formulario + '_city').replaceWith('<select name="' + formulario + '_city" id="' + formulario + '_city" class="select state_select"' + texto + ' autocomplete="address-level2" data-allow_clear="true" data-placeholder="' + texto_predeterminado +'"><option value="">' + texto_predeterminado +'</option><option value="carga_campo">' + texto_carga_campo + '</option></select>');
     jQuery('#' + formulario + '_city').selectWoo();
 }
 
-//Función que comprueba el valor seleccionado para cambiar el campo select
+// Función que comprueba el valor seleccionado para cambiar el campo select
 var comprueba_campo = function (formulario) {
     if (jQuery('#' + formulario + '_city').val() == 'carga_campo') {
         carga_campo(formulario);
@@ -57,9 +57,9 @@ if ( Array.isArray( apg_city_fallback ) ) {
     apg_city_fallback = apg_city_fallback[0];
 }
 
-//Pinta los resultados en el select usando el formato GeoNames/local
+// Pinta los resultados en el select usando el formato GeoNames/local
 var apg_city_apply_postalcodes = function (formulario, postalcodes) {
-    if ( jQuery('#' + formulario + '_city').is('input') ) { //Carga un campo select
+    if ( jQuery('#' + formulario + '_city').is('input') ) { // Carga un campo select
         carga_select(formulario);
     }
     jQuery('#' + formulario + '_city').empty();
@@ -69,7 +69,7 @@ var apg_city_apply_postalcodes = function (formulario, postalcodes) {
     jQuery('#' + formulario + '_city').append(
         jQuery("<option></option>").attr("value", "carga_campo").text(texto_carga_campo)
     );
-    //Desbloquea los campos
+    // Desbloquea los campos
     jQuery('#' + formulario + '_city_field,#' + formulario + '_state_field').unblock();
 
     if ( ! postalcodes || postalcodes.length === 0 ) {
@@ -80,18 +80,18 @@ var apg_city_apply_postalcodes = function (formulario, postalcodes) {
         jQuery('#' + formulario + '_state').attr("readonly", true); 
     }
 
-    if (postalcodes.length > 1) { //Es un código postal con múltiples localidades
+    if (postalcodes.length > 1) { // Es un código postal con múltiples localidades
         jQuery.each(postalcodes, function (key, value) {
             jQuery('#' + formulario + '_city').append(
                 jQuery("<option></option>").attr("value", postalcodes[key].placeName).text(postalcodes[key].placeName)
             );
         });
-    } else { //Es un código postal único
+    } else { // Es un código postal único
         jQuery('#' + formulario + '_city').append(
             jQuery("<option></option>").attr("value", postalcodes[0].placeName).text(postalcodes[0].placeName)
         );
     }
-    //Actualiza los campos select
+    // Actualiza los campos select
     jQuery('#' + formulario + '_city option[value="' + postalcodes[0].placeName + '"]').attr('selected', 'selected').trigger("change");
     if (postalcodes.length > 1) {
         if (jQuery('#s2id_' + formulario + '_city').length) {
@@ -100,16 +100,16 @@ var apg_city_apply_postalcodes = function (formulario, postalcodes) {
             jQuery('#' + formulario + '_city').data('select2').open();
         }
     }
-    //Provincia
+    // Provincia
     var provincia = (jQuery.isNumeric(postalcodes[0].adminCode2)) ? postalcodes[0].adminCode1 : postalcodes[0].adminCode2;
-    const paises  = { //Países especiales
-        "AT": "adminName1", //Austria
-        "FR": "adminName2", //Francia
-        "PT": "adminName1", //Portugal
+    const paises  = { // Países especiales
+        "AT": "adminName1", // Austria
+        "FR": "adminName2", // Francia
+        "PT": "adminName1", // Portugal
     };
     if ( paises[ postalcodes[0].countryCode ] ) {
         provincia = postalcodes[0][ paises[ postalcodes[0].countryCode ] ];
-        //Ajustes personalizados
+        // Ajustes personalizados
         if ( provincia == 'Azores' ) {
             provincia = 'Açores';
         }
@@ -123,7 +123,7 @@ var apg_city_apply_postalcodes = function (formulario, postalcodes) {
     return true;
 }
 
-//Función que chequea el código postal en GeoNames
+// Función que chequea el código postal en GeoNames
 var comprueba_geonames = function (formulario, google = false) {
     if ( ! usuarioGeonames ) {
         if ( google == true ) {
@@ -133,7 +133,7 @@ var comprueba_geonames = function (formulario, google = false) {
         }
         return;
     }
-    //Bloquea los campos
+    // Bloquea los campos
     jQuery('#' + formulario + '_city_field,#' + formulario + '_state_field').block({
         message: null,
         overlayCSS: {
@@ -158,23 +158,23 @@ var comprueba_geonames = function (formulario, google = false) {
             var success = apg_city_apply_postalcodes( formulario, rows );
             if ( ! success ) {
                 if (google == true) {
-                    carga_campo(formulario, true); //Carga un campo input estándar
+                    carga_campo(formulario, true); // Carga un campo input estándar
                 } else {
-                    comprueba_google(formulario, true); //Prueba con Google Maps
+                    comprueba_google(formulario, true); // Prueba con Google Maps
                 }
             }
         },
         error: function() {
             if (google == true) {
-                carga_campo(formulario, true); //Carga un campo input estándar
+                carga_campo(formulario, true); // Carga un campo input estándar
             } else {
-                comprueba_google(formulario, true); //Prueba con Google Maps
+                comprueba_google(formulario, true); // Prueba con Google Maps
             }
         }
     });
 }
 
-//Función que gestiona la consulta local y decide cuándo pasar a la API externa
+// Función que gestiona la consulta local y decide cuándo pasar a la API externa
 var apg_city_trigger_fallback = function (formulario) {
     jQuery('#' + formulario + '_city_field,#' + formulario + '_state_field').unblock();
 
@@ -192,7 +192,7 @@ var comprueba_local = function (formulario) {
         apg_city_trigger_fallback(formulario);
         return;
     }
-    //Bloquea los campos
+    // Bloquea los campos
     jQuery('#' + formulario + '_city_field,#' + formulario + '_state_field').block({
         message: null,
         overlayCSS: {
@@ -224,9 +224,9 @@ var comprueba_local = function (formulario) {
     });
 }
 
-//Función que chequea el código postal en Google Maps
+// Función que chequea el código postal en Google Maps
 var comprueba_google = function (formulario, geonames = false) {
-    //Bloquea los campos
+    // Bloquea los campos
     jQuery('#' + formulario + '_city_field,#' + formulario + '_state_field').block({ 
         message: null,
         overlayCSS: {
@@ -248,10 +248,10 @@ var comprueba_google = function (formulario, geonames = false) {
             lang: jQuery('html')[0].lang
         },
         success: function (response) {
-            if (jQuery('#' + formulario + '_city').is('input')) { //Carga un campo select
+            if (jQuery('#' + formulario + '_city').is('input')) { // Carga un campo select
                 carga_select(formulario);
             }
-            ///Limpia y mete la opción inicial
+            // Limpia y mete la opción inicial
             jQuery('#' + formulario + '_city').empty();
             jQuery('#' + formulario + '_city').append(
                 jQuery("<option></option>").attr("value", "").text(texto_predeterminado)
@@ -259,29 +259,29 @@ var comprueba_google = function (formulario, geonames = false) {
             jQuery('#' + formulario + '_city').append(
                 jQuery("<option></option>").attr("value", "carga_campo").text(texto_carga_campo)
             );
-            //Desbloquea los campos
+            // Desbloquea los campos
             jQuery('#' + formulario + '_city_field,#' + formulario + '_state_field').unblock();                    
 
-            if (response && response.success && response.data && response.data.postalcodes) { //Obtiene resultados
+            if (response && response.success && response.data && response.data.postalcodes) { // Obtiene resultados
                 var data = { postalcodes: response.data.postalcodes, country: response.data.country };
-                //Bloquea el campo provincia
+                // Bloquea el campo provincia
                 if (bloqueo) {
                     jQuery('#' + formulario + '_state').attr("readonly", true); 
                 }
 
                 if ( data.postalcodes.length > 0 ) {
-                    if (data.postalcodes.length > 1) { //Es un código postal con múltiples localidades
+                    if (data.postalcodes.length > 1) { // Es un código postal con múltiples localidades
                         jQuery.each(data.postalcodes, function (key, value) {
                             jQuery('#' + formulario + '_city').append(
                                 jQuery("<option></option>").attr("value", data.postalcodes[key].placeName).text(data.postalcodes[key].placeName)
                             );
                         });
-                    } else { //Es un código postal único
+                    } else { // Es un código postal único
                         jQuery('#' + formulario + '_city').append(
                             jQuery("<option></option>").attr("value", data.postalcodes[0].placeName).text(data.postalcodes[0].placeName)
                         );
                     }
-                    //Actualiza el campo select
+                    // Actualiza el campo select
                     jQuery('#' + formulario + '_city option[value="' + data.postalcodes[0].placeName + '"]').attr('selected', 'selected').trigger("change");
                     if (data.postalcodes.length > 1) {
                         if (jQuery('#s2id_' + formulario + '_city').length) {
@@ -291,10 +291,10 @@ var comprueba_google = function (formulario, geonames = false) {
                         }
                     }
                     var nombre = data.postalcodes[0].adminCode2 ? data.postalcodes[0].adminCode2 : data.postalcodes[0].adminCode1;
-                    const paises  = { //Países especiales
-                        "AT": "adminName1", //Austria
-                        "FR": "adminName2", //Francia
-                        "PT": "adminName1", //Portugal
+                    const paises  = { // Países especiales
+                        "AT": "adminName1", // Austria
+                        "FR": "adminName2", // Francia
+                        "PT": "adminName1", // Portugal
                     };
                     var pais = data.postalcodes[0].countryCode;
                     if ( paises[ pais ] && data.postalcodes[0][ paises[ pais ] ] ) {
@@ -305,18 +305,18 @@ var comprueba_google = function (formulario, geonames = false) {
                     } else {
                         jQuery('#' + formulario + '_state').val(nombre).attr('selected', 'selected').trigger("change");                        
                     }
-                } else { //No existe ninguna ciudad
+                } else { // No existe ninguna ciudad
                     if (geonames == true) {
-                        carga_campo(formulario, true); //Carga un campo input estándar
+                        carga_campo(formulario, true); // Carga un campo input estándar
                     } else {
-                        comprueba_geonames(formulario, true); //Prueba con GeoNames
+                        comprueba_geonames(formulario, true); // Prueba con GeoNames
                     }
                 }
-            } else { //No obtiene resultados con Google Maps
+            } else { // No obtiene resultados con Google Maps
                 if (geonames == true) {
-                    carga_campo(formulario, true); //Carga un campo input estándar
+                    carga_campo(formulario, true); // Carga un campo input estándar
                 } else {
-                    comprueba_geonames(formulario, true); //Prueba con GeoNames
+                    comprueba_geonames(formulario, true); // Prueba con GeoNames
                 }
             }
         },
@@ -330,7 +330,7 @@ var comprueba_google = function (formulario, geonames = false) {
     });
 }
 
-//Orquesta el flujo: primero datos locales, luego APIs externas
+// Orquesta el flujo: primero datos locales, luego APIs externas
 var apg_city_lookup = function (formulario) {
     if ( apg_city_has_local ) {
         comprueba_local(formulario);
@@ -345,9 +345,9 @@ var apg_city_lookup = function (formulario) {
     }
 }
 
-//Inicializa las funciones
+// Inicializa las funciones
 jQuery( document ).ready( function() {
-	//Actualiza los dos formularios
+	// Actualiza los dos formularios
 	if ( jQuery( '#billing_country' ).val() && jQuery( '#billing_postcode' ).val() ) {
 		apg_city_lookup( 'billing' );
 	}
@@ -355,28 +355,28 @@ jQuery( document ).ready( function() {
 		apg_city_lookup( 'shipping' );
 	}
 
-    //Actualiza el formulario de facturación
+    // Actualiza el formulario de facturación
 	jQuery( '#billing_postcode, #billing_country' ).on( 'change', function() {
 		if ( jQuery( '#billing_country' ).val() && jQuery( '#billing_postcode' ).val() ) {
 			apg_city_lookup( 'billing' );
 		}
     } );
 	
-	//Actualiza el formulario de envío
+	// Actualiza el formulario de envío
 	jQuery( '#shipping_postcode, #shipping_country' ).on( 'change', function() {
 		if ( jQuery( '#shipping_country' ).val() && jQuery( '#shipping_postcode' ).val() ) {
 			apg_city_lookup( 'shipping' );
 		}
     } );
     
-    //Comprueba el formulario de facturación
+    // Comprueba el formulario de facturación
     jQuery('#billing_city').on('change', function () {
         if (jQuery('#billing_city').val()) {
             comprueba_campo('billing');
         }
     });
 
-    //Comprueba el formulario de envío
+    // Comprueba el formulario de envío
     jQuery('#shipping_city').on('change', function () {
         if (jQuery('#shipping_city').val()) {
             comprueba_campo('shipping');
@@ -384,7 +384,7 @@ jQuery( document ).ready( function() {
     });
     
     jQuery(document.body).on('country_to_state_changed', function(){
-        //Bloquea los campos
+        // Bloquea los campos
         if ( bloqueo && ! jQuery('#billing_city').is('input') ) {
             jQuery('#billing_state').attr('readonly', true);
         }

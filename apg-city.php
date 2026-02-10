@@ -2,7 +2,7 @@
 /*
 Plugin Name: WC - APG City
 Requires Plugins: woocommerce
-Version: 2.0.3
+Version: 2.0.4
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Adds automatic city detection from postcode to WooCommerce.
 Author URI: https://artprojectgroup.es/
@@ -12,7 +12,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Requires at least: 5.0
 Tested up to: 6.9
 WC requires at least: 5.6
-WC tested up to: 10.4.0
+WC tested up to: 10.5.0
 
 Text Domain: wc-apg-city
 Domain Path: /languages
@@ -35,14 +35,14 @@ define( 'DIRECCION_apg_city', plugin_basename( __FILE__ ) );
  * Constante con la versión actual del plugin.
  * @var string
  */
-define( 'VERSION_apg_city', '2.0.3' );
+define( 'VERSION_apg_city', '2.0.4' );
 
 // Funciones generales de APG.
-include_once( 'includes/admin/funciones-apg.php' );
+include_once 'includes/admin/funciones-apg.php';
 // Gestión local GeoNames.
-include_once( 'includes/geonames-local.php' );
+include_once 'includes/geonames-local.php';
 // Compatibilidad con Checkout Blocks.
-include_once( 'includes/bloques.php' );
+include_once 'includes/bloques.php';
 
 $apg_city_settings = get_option( 'apg_city_settings' );
 
@@ -59,22 +59,25 @@ add_action( 'wp_ajax_apg_city_api_lookup', 'apg_city_api_lookup' );
 add_action( 'wp_ajax_nopriv_apg_city_api_lookup', 'apg_city_api_lookup' );
 
 // ¿Está activo WooCommerce?
-include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+include_once ABSPATH . 'wp-admin/includes/plugin.php';
 if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin( 'woocommerce/woocommerce.php' ) ) {
-    // Añade compatibilidad con HPOS.
-    add_action( 'before_woocommerce_init', function() {
-        if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
-            \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
-        }
-    } );
-    
-    /**
+	// Añade compatibilidad con HPOS.
+	add_action(
+		'before_woocommerce_init',
+		function () {
+			if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+			}
+		}
+	);
+
+	/**
 	 * Renderiza la pestaña de ajustes del plugin en el área de administración.
 	 *
 	 * @return void
 	 */
 	function apg_city_tab() {
-		include( 'includes/formulario.php' );
+		include 'includes/formulario.php';
 	}
 
 	/**
@@ -83,43 +86,45 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 	 * @return void
 	 */
 	function apg_city_admin_menu() {
-		add_submenu_page( 'woocommerce', __( 'APG City', 'wc-apg-city' ),  __( 'City field', 'wc-apg-city' ) , 'manage_woocommerce', 'wc-apg-city', 'apg_city_tab' );
+		add_submenu_page( 'woocommerce', __( 'APG City', 'wc-apg-city' ), __( 'City field', 'wc-apg-city' ), 'manage_woocommerce', 'wc-apg-city', 'apg_city_tab' );
 	}
 	add_action( 'admin_menu', 'apg_city_admin_menu', 15 );
 
 	/**
 	 * Registra las opciones del plugin para la API de ajustes de WordPress.
 	 *
-	 * @return void
+	 * @param array<string,mixed> $settings Ajustes a sanear.
+	 *
+	 * @return array<string,mixed>
 	 */
 	function apg_city_sanitize_settings( $settings ) {
 		$sanitized = [];
 		$default_lock_color = '#eeeeee';
 
-		if ( isset( $settings[ 'api' ] ) ) {
-			$sanitized[ 'api' ] = in_array( $settings[ 'api' ], [ 'geonames', 'google' ], true ) ? $settings[ 'api' ] : 'geonames';
+		if ( isset( $settings['api'] ) ) {
+			$sanitized['api'] = in_array( $settings['api'], [ 'geonames', 'google' ], true ) ? $settings['api'] : 'geonames';
 		}
 
-		if ( isset( $settings[ 'key' ] ) ) {
-			$sanitized[ 'key' ] = sanitize_text_field( $settings[ 'key' ] );
+		if ( isset( $settings['key'] ) ) {
+			$sanitized['key'] = sanitize_text_field( $settings['key'] );
 		}
 
-		if ( isset( $settings[ 'geonames_user' ] ) ) {
-			$sanitized[ 'geonames_user' ] = sanitize_text_field( $settings[ 'geonames_user' ] );
+		if ( isset( $settings['geonames_user'] ) ) {
+			$sanitized['geonames_user'] = sanitize_text_field( $settings['geonames_user'] );
 		}
 
-		if ( isset( $settings[ 'predeterminado' ] ) ) {
-			$sanitized[ 'predeterminado' ] = sanitize_text_field( $settings[ 'predeterminado' ] );
+		if ( isset( $settings['predeterminado'] ) ) {
+			$sanitized['predeterminado'] = sanitize_text_field( $settings['predeterminado'] );
 		}
 
-		if ( isset( $settings[ 'carga' ] ) ) {
-			$sanitized[ 'carga' ] = sanitize_text_field( $settings[ 'carga' ] );
+		if ( isset( $settings['carga'] ) ) {
+			$sanitized['carga'] = sanitize_text_field( $settings['carga'] );
 		}
 
-		$sanitized[ 'bloqueo' ] = ( isset( $settings[ 'bloqueo' ] ) && '1' === (string) $settings[ 'bloqueo' ] ) ? 1 : 0;
-		if ( $sanitized[ 'bloqueo' ] && isset( $settings[ 'bloqueo_color' ] ) ) {
-			$color = sanitize_hex_color( $settings[ 'bloqueo_color' ] );
-			$sanitized[ 'bloqueo_color' ] = $color ? $color : $default_lock_color;
+		$sanitized['bloqueo'] = ( isset( $settings['bloqueo'] ) && '1' === (string) $settings['bloqueo'] ) ? 1 : 0;
+		if ( $sanitized['bloqueo'] && isset( $settings['bloqueo_color'] ) ) {
+			$color = sanitize_hex_color( $settings['bloqueo_color'] );
+			$sanitized['bloqueo_color'] = $color ? $color : $default_lock_color;
 		}
 
 		return $sanitized;
@@ -153,7 +158,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 		return $woocommerce_screen_ids;
 	}
 	add_filter( 'woocommerce_screen_ids', 'apg_city_screen_id' );
-	
+
 	/**
 	 * Modifica el campo de ciudad en los campos de dirección de WooCommerce.
 	 *
@@ -163,34 +168,34 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 	 */
 	function apg_city_campos_de_direccion( $campos ) {
 		global $apg_city_settings;
-        
-		$campos[ 'city' ]	= [
+
+		$campos['city'] = [
 			'label'         => __( 'Town / City', 'wc-apg-city' ),
-			'placeholder'   => $apg_city_settings[ 'predeterminado' ],
-			'required'		=> true,
-			'clear'       	=> ( in_array( 'form-row-last', $campos[ 'city' ][ 'class' ] ) ) ? "true" : "false",
-			'type'        	=> 'select',
-			'class'       	=> $campos[ 'city' ][ 'class' ],
-			'input_class'	=> [
-				'state_select'
+			'placeholder'   => $apg_city_settings['predeterminado'],
+			'required'      => true,
+			'clear'         => in_array( 'form-row-last', $campos['city']['class'], true ) ? 'true' : 'false',
+			'type'          => 'select',
+			'class'         => $campos['city']['class'],
+			'input_class'   => [
+				'state_select',
 			],
-			'options'		=> [
-				''				=> $apg_city_settings[ 'predeterminado' ],
-				'carga_campo'	=> $apg_city_settings[ 'carga' ],
+			'options'       => [
+				''            => $apg_city_settings['predeterminado'],
+				'carga_campo' => $apg_city_settings['carga'],
 			],
-			'readonly'		=> 'readonly',
-			'autocomplete'	=> 'address-level2',
-			'priority'      => $campos[ 'city' ][ 'priority' ],
-        ];
-        
-        if ( isset( $apg_city_settings[ 'bloqueo' ] ) && $apg_city_settings[ 'bloqueo' ] == "1" ) { // Bloquea los campos.
-            $campos[ 'city' ][ 'custom_attributes' ] = [ 'readonly' => 'readonly' ];            
-            $campos[ 'state' ][ 'custom_attributes' ] = [ 'readonly' => 'readonly' ];            
-        }
+			'readonly'      => 'readonly',
+			'autocomplete'  => 'address-level2',
+			'priority'      => $campos['city']['priority'],
+		];
+
+		if ( isset( $apg_city_settings['bloqueo'] ) && '1' === (string) $apg_city_settings['bloqueo'] ) { // Bloquea los campos.
+			$campos['city']['custom_attributes']  = [ 'readonly' => 'readonly' ];
+			$campos['state']['custom_attributes'] = [ 'readonly' => 'readonly' ];
+		}
 
 		return $campos;
 	}
-	
+
 	/**
 	 * Encola y localiza el JavaScript necesario para el checkout y la página de cuenta.
 	 *
@@ -201,37 +206,37 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 	function apg_city_codigo_javascript_en_checkout() {
 		if ( is_checkout() || is_account_page() ) {
 			global $apg_city_settings;
-			
+
 			// Comprueba la API.
-            $google_api     = ( isset( $apg_city_settings[ 'key' ] ) && ! empty( $apg_city_settings[ 'key' ] ) ) ? sanitize_text_field( $apg_city_settings[ 'key' ] ) : '';
-            $geonames_user  = ( isset( $apg_city_settings[ 'geonames_user' ] ) && ! empty( $apg_city_settings[ 'geonames_user' ] ) ) ? sanitize_text_field( $apg_city_settings[ 'geonames_user' ] ) : '';
-            $script         = '';
+			$google_api     = ( isset( $apg_city_settings['key'] ) && ! empty( $apg_city_settings['key'] ) ) ? sanitize_text_field( $apg_city_settings['key'] ) : '';
+			$geonames_user  = ( isset( $apg_city_settings['geonames_user'] ) && ! empty( $apg_city_settings['geonames_user'] ) ) ? sanitize_text_field( $apg_city_settings['geonames_user'] ) : '';
+			$script         = '';
 			$has_local_data = apg_city_local_data_available();
-            if ( isset( $apg_city_settings[ 'api' ] ) ) {
-                if ( 'google' === $apg_city_settings[ 'api' ] && $google_api ) {
-                    $script = 'comprueba_google';
-                } elseif ( 'geonames' === $apg_city_settings[ 'api' ] && $geonames_user ) {
-                    $script = 'comprueba_geonames';
-                }
-            }
+			if ( isset( $apg_city_settings['api'] ) ) {
+				if ( 'google' === $apg_city_settings['api'] && $google_api ) {
+					$script = 'comprueba_google';
+				} elseif ( 'geonames' === $apg_city_settings['api'] && $geonames_user ) {
+					$script = 'comprueba_geonames';
+				}
+			}
 			if ( empty( $script ) && ! $has_local_data ) { // No hay API seleccionada o incompleta y tampoco datos locales.
 				return;
-            }
-            // Variables.
+			}
+			// Variables.
 			$bloqueo_color = '#eeeeee';
-			if ( isset( $apg_city_settings[ 'bloqueo_color' ] ) ) {
-				$color = sanitize_hex_color( $apg_city_settings[ 'bloqueo_color' ] );
+			if ( isset( $apg_city_settings['bloqueo_color'] ) ) {
+				$color = sanitize_hex_color( $apg_city_settings['bloqueo_color'] );
 				if ( $color ) {
 					$bloqueo_color = $color;
 				}
 			}
-			wp_register_script( 'apg_city_campo', plugins_url( 'assets/js/apg-city-campo.js', __FILE__ ), [ 'select2' ], VERSION_apg_city, 'all' );
+			wp_register_script( 'apg_city_campo', plugins_url( 'assets/js/apg-city-campo.js', __FILE__ ), [ 'jquery' ], VERSION_apg_city, true );
 			wp_register_style( 'apg_city_front_style', plugins_url( 'assets/css/apg-cigy-classic.css', __FILE__ ), [], VERSION_apg_city );
-            $bloqueo = ( isset( $apg_city_settings[ 'bloqueo' ] ) && $apg_city_settings[ 'bloqueo' ] == "1" ) ? true : false;
+			$bloqueo = ( isset( $apg_city_settings['bloqueo'] ) && '1' === (string) $apg_city_settings['bloqueo'] ) ? true : false;
 			wp_localize_script( 'apg_city_campo', 'funcion', [ $script ] );
 			wp_localize_script( 'apg_city_campo', 'bloqueo', [ $bloqueo ] );
-			wp_localize_script( 'apg_city_campo', 'texto_predeterminado', [ $apg_city_settings[ 'predeterminado' ] ] );
-			wp_localize_script( 'apg_city_campo', 'texto_carga_campo', [ $apg_city_settings[ 'carga' ] ] );
+			wp_localize_script( 'apg_city_campo', 'texto_predeterminado', [ $apg_city_settings['predeterminado'] ] );
+			wp_localize_script( 'apg_city_campo', 'texto_carga_campo', [ $apg_city_settings['carga'] ] );
 			wp_localize_script( 'apg_city_campo', 'ruta_ajax', [ admin_url( 'admin-ajax.php' ) ] );
 			wp_localize_script( 'apg_city_campo', 'google_api', [ $google_api ] );
 			wp_localize_script( 'apg_city_campo', 'geonames_user', [ $geonames_user ] );
@@ -245,7 +250,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 					'fallback'  => $script,
 				]
 			);
-            // Carga los scripts.
+			// Carga los scripts.
 			wp_enqueue_script( 'apg_city_campo' );
 			if ( $bloqueo && ! wp_script_is( 'apg-city-blocks', 'enqueued' ) ) {
 				wp_enqueue_style( 'apg_city_front_style' );
@@ -254,8 +259,8 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 		}
 	}
 	$apg_city_user_agent = '';
-	if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {
-		$apg_city_user_agent = sanitize_text_field( wp_unslash( $_SERVER[ 'HTTP_USER_AGENT' ] ) );
+	if ( ! empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
+		$apg_city_user_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
 	}
 
 	if ( ! empty( $apg_city_user_agent ) ) {
@@ -273,9 +278,9 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 	 */
 	function apg_city_validacion_de_campo() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$billing_city  = isset( $_POST[ 'billing_city' ] ) ? wc_clean( wp_unslash( $_POST[ 'billing_city' ] ) ) : '';
+		$billing_city  = isset( $_POST['billing_city'] ) ? wc_clean( wp_unslash( $_POST['billing_city'] ) ) : '';
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$shipping_city = isset( $_POST[ 'shipping_city' ] ) ? wc_clean( wp_unslash( $_POST[ 'shipping_city' ] ) ) : '';
+		$shipping_city = isset( $_POST['shipping_city'] ) ? wc_clean( wp_unslash( $_POST['shipping_city'] ) ) : '';
 
 		if ( 'carga_campo' === $billing_city || 'carga_campo' === $shipping_city ) {
 			$campo = ( 'carga_campo' === $billing_city )
@@ -299,7 +304,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 function apg_city_requiere_wc() {
 	global $apg_city;
 
-	echo '<div class="notice notice-error is-dismissible" id="wc-apg-city"><h3>' . esc_html( $apg_city[ 'plugin' ] ) . '</h3><h4>' . esc_html__( 'This plugin requires WooCommerce to be active in order to run!', 'wc-apg-city' ) . '</h4></div>';
+	echo '<div class="notice notice-error is-dismissible" id="wc-apg-city"><h3>' . esc_html( $apg_city['plugin'] ) . '</h3><h4>' . esc_html__( 'This plugin requires WooCommerce to be active in order to run!', 'wc-apg-city' ) . '</h4></div>';
 	deactivate_plugins( DIRECCION_apg_city );
 }
 

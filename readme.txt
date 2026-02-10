@@ -4,9 +4,9 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: city, state, postcode, geonames, google maps
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 WC requires at least: 5.6
-WC tested up to: 10.4.0
+WC tested up to: 10.5.0
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,7 +49,7 @@ Don’t forget to leave us your comment on:
 
 * [WC - APG City](https://artprojectgroup.es/plugins-para-woocommerce/wc-apg-city) on Art Project Group.
 * [Art Project Group](https://www.facebook.com/artprojectgroup) on Facebook.
-* [@artprojectgroup](https://twitter.com/artprojectgroup) on Twitter.
+* [@artprojectgroup](https://x.com/artprojectgroup) on X.
 
 = More plugins =
 Remember that you can find more [plugins for WordPress](https://artprojectgroup.es/plugins-para-wordpress) and more [plugins for WooCommerce](https://artprojectgroup.es/plugins-para-woocommerce) on [Art Project Group](https://artprojectgroup.es) and our profile on [WordPress](http://profiles.wordpress.org/artprojectgroup/).
@@ -82,6 +82,8 @@ If you need help configuring or installing **WC - APG City**, **Art Project Grou
 3. Screenshot of WC – APG City. Billing and shipping forms. Checkout block.
 
 == Changelog ==
+= 2.0.4 =
+* Minor fix.
 = 2.0.3 =
 * Minor fix.
 = 2.0.2 =
@@ -185,7 +187,7 @@ If you need help configuring or installing **WC - APG City**, **Art Project Grou
 * Initial version.
 
 == Upgrade Notice ==
-= 2.0.3 =
+= 2.0.4 =
 * Minor fix.
 
 == Translations ==

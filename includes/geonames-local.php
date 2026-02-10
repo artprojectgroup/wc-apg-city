@@ -77,8 +77,8 @@ function apg_city_local_data_available() {
  * @return array<string,mixed>
  */
 function apg_city_cron_schedules( $schedules ) {
-	if ( ! isset( $schedules[ 'monthly' ] ) ) {
-		$schedules[ 'monthly' ] = [
+	if ( ! isset( $schedules['monthly'] ) ) {
+		$schedules['monthly'] = [
 			'interval' => MONTH_IN_SECONDS,
 			'display'  => __( 'Once Monthly', 'wc-apg-city' ),
 		];
@@ -153,8 +153,8 @@ function apg_city_set_import_state( $state ) {
 function apg_city_clear_import_state() {
 	$state = apg_city_get_import_state();
 
-	if ( isset( $state[ 'file' ] ) && is_string( $state[ 'file' ] ) && file_exists( $state[ 'file' ] ) ) {
-		wp_delete_file( $state[ 'file' ] );
+	if ( isset( $state['file'] ) && is_string( $state['file'] ) && file_exists( $state['file'] ) ) {
+		wp_delete_file( $state['file'] );
 	}
 
 	delete_option( 'apg_city_import_state' );
@@ -187,7 +187,7 @@ function apg_city_prepare_import_file() {
 	wp_raise_memory_limit( 'admin' );
 
 	$upload_dir = wp_upload_dir();
-	$target_dir = trailingslashit( $upload_dir[ 'basedir' ] ) . 'apg-city';
+	$target_dir = trailingslashit( $upload_dir['basedir'] ) . 'apg-city';
 
 	$txt_file = trailingslashit( $target_dir ) . 'allCountries.txt';
 
@@ -260,21 +260,21 @@ function apg_city_process_import_chunk( $state ) {
 		'state'    => $state,
 	];
 
-	if ( empty( $state[ 'file' ] ) || ! file_exists( $state[ 'file' ] ) ) {
+	if ( empty( $state['file'] ) || ! file_exists( $state['file'] ) ) {
 		return $result;
 	}
 
 	$table_name = esc_sql( apg_city_get_table_name() );
 
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen, WordPress.WP.AlternativeFunctions.file_system_operations_fopen
-	$handle = fopen( $state[ 'file' ], 'r' );
+	$handle = fopen( $state['file'], 'r' );
 
 	if ( ! $handle ) {
 		return $result;
 	}
 
-	if ( isset( $state[ 'offset' ] ) && $state[ 'offset' ] > 0 ) {
-		fseek( $handle, (int) $state[ 'offset' ] );
+	if ( isset( $state['offset'] ) && $state['offset'] > 0 ) {
+		fseek( $handle, (int) $state['offset'] );
 	}
 
 	$placeholders = [];
@@ -332,7 +332,7 @@ function apg_city_process_import_chunk( $state ) {
 	}
 	// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 
-	$state[ 'offset' ] = ftell( $handle );
+	$state['offset'] = ftell( $handle );
 
 	$at_end = feof( $handle );
 
@@ -340,10 +340,10 @@ function apg_city_process_import_chunk( $state ) {
 	fclose( $handle );
 
 	if ( $at_end || $rows_this_run === 0 ) {
-		$result[ 'finished' ] = true;
+		$result['finished'] = true;
 	}
 
-	$result[ 'state' ] = $state;
+	$result['state'] = $state;
 
 	return $result;
 }
@@ -364,7 +364,7 @@ function apg_city_refresh_data() {
 
 	$state = apg_city_get_import_state();
 
-	if ( empty( $state ) || empty( $state[ 'file' ] ) || ! file_exists( $state[ 'file' ] ) ) {
+	if ( empty( $state ) || empty( $state['file'] ) || ! file_exists( $state['file'] ) ) {
 		$state = apg_city_prepare_import_file();
 		if ( empty( $state ) ) {
 			delete_transient( 'apg_city_import_lock' );
@@ -372,13 +372,13 @@ function apg_city_refresh_data() {
 		}
 	}
 
-	if ( empty( $state[ 'hash' ] ) && ! empty( $state[ 'file' ] ) && file_exists( $state[ 'file' ] ) ) {
-		$state[ 'hash' ] = md5_file( $state[ 'file' ] );
+	if ( empty( $state['hash'] ) && ! empty( $state['file'] ) && file_exists( $state['file'] ) ) {
+		$state['hash'] = md5_file( $state['file'] );
 	}
 
 	$last_hash = get_option( 'apg_city_last_hash' );
 
-	if ( $last_hash && ! empty( $state[ 'hash' ] ) && $last_hash === $state[ 'hash' ] && apg_city_local_data_available() ) {
+	if ( $last_hash && ! empty( $state['hash'] ) && $last_hash === $state['hash'] && apg_city_local_data_available() ) {
 		apg_city_clear_import_state();
 		update_option( 'apg_city_last_import', time() );
 		delete_transient( 'apg_city_seed_scheduled' );
@@ -388,13 +388,13 @@ function apg_city_refresh_data() {
 
 	$result = apg_city_process_import_chunk( $state );
 
-	if ( $result[ 'finished' ] ) {
-		if ( isset( $result[ 'state' ][ 'file' ] ) && file_exists( $result[ 'state' ][ 'file' ] ) ) {
-			wp_delete_file( $result[ 'state' ][ 'file' ] );
+	if ( $result['finished'] ) {
+		if ( isset( $result['state']['file'] ) && file_exists( $result['state']['file'] ) ) {
+			wp_delete_file( $result['state']['file'] );
 		}
 		apg_city_clear_import_state();
 		update_option( 'apg_city_last_import', time() );
-		update_option( 'apg_city_last_hash', isset( $result[ 'state' ][ 'hash' ] ) ? $result[ 'state' ][ 'hash' ] : '' );
+		update_option( 'apg_city_last_hash', isset( $result['state']['hash'] ) ? $result['state']['hash'] : '' );
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- count for status.
 		global $wpdb;
 		$table_name = esc_sql( apg_city_get_table_name() );
@@ -403,7 +403,7 @@ function apg_city_refresh_data() {
 		update_option( 'apg_city_rows', $count );
 		delete_transient( 'apg_city_seed_scheduled' );
 	} else {
-		apg_city_set_import_state( $result[ 'state' ] );
+		apg_city_set_import_state( $result['state'] );
 		wp_schedule_single_event( time() + MINUTE_IN_SECONDS, APG_CITY_CRON_HOOK );
 	}
 
@@ -419,13 +419,13 @@ function apg_city_api_lookup() {
 	check_ajax_referer( 'apg_city_lookup', 'nonce' );
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$api      = isset( $_POST[ 'api' ] ) ? sanitize_key( wp_unslash( $_POST[ 'api' ] ) ) : '';
+	$api      = isset( $_POST['api'] ) ? sanitize_key( wp_unslash( $_POST['api'] ) ) : '';
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$postcode = isset( $_POST[ 'postcode' ] ) ? strtoupper( sanitize_text_field( wp_unslash( $_POST[ 'postcode' ] ) ) ) : '';
+	$postcode = isset( $_POST['postcode'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_POST['postcode'] ) ) ) : '';
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$country  = isset( $_POST[ 'country' ] ) ? strtoupper( sanitize_text_field( wp_unslash( $_POST[ 'country' ] ) ) ) : '';
+	$country  = isset( $_POST['country'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_POST['country'] ) ) ) : '';
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$lang     = isset( $_POST[ 'lang' ] ) ? sanitize_text_field( wp_unslash( $_POST[ 'lang' ] ) ) : '';
+	$lang     = isset( $_POST['lang'] ) ? sanitize_text_field( wp_unslash( $_POST['lang'] ) ) : '';
 
 	if ( empty( $api ) || empty( $postcode ) || empty( $country ) ) {
 		wp_send_json_error(
@@ -450,7 +450,7 @@ function apg_city_api_lookup() {
 	$settings = get_option( 'apg_city_settings', [] );
 
 	if ( 'geonames' === $api ) {
-		$username = isset( $settings[ 'geonames_user' ] ) ? sanitize_text_field( $settings[ 'geonames_user' ] ) : '';
+		$username = isset( $settings['geonames_user'] ) ? sanitize_text_field( $settings['geonames_user'] ) : '';
 		if ( ! $username ) {
 			wp_send_json_error(
 				[
@@ -465,26 +465,26 @@ function apg_city_api_lookup() {
 		}
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 		$rows = [];
-		if ( isset( $body[ 'postalcodes' ] ) && is_array( $body[ 'postalcodes' ] ) ) {
-			foreach ( $body[ 'postalcodes' ] as $row ) {
+		if ( isset( $body['postalcodes'] ) && is_array( $body['postalcodes'] ) ) {
+			foreach ( $body['postalcodes'] as $row ) {
 				$rows[] = [
-					'countryCode' => isset( $row[ 'countryCode' ] ) ? $row[ 'countryCode' ] : $country,
-					'postalCode'  => isset( $row[ 'postalCode' ] ) ? $row[ 'postalCode' ] : $postcode,
-					'placeName'   => isset( $row[ 'placeName' ] ) ? $row[ 'placeName' ] : '',
-					'adminName1'  => isset( $row[ 'adminName1' ] ) ? $row[ 'adminName1' ] : '',
-					'adminCode1'  => isset( $row[ 'adminCode1' ] ) ? $row[ 'adminCode1' ] : '',
-					'adminName2'  => isset( $row[ 'adminName2' ] ) ? $row[ 'adminName2' ] : '',
-					'adminCode2'  => isset( $row[ 'adminCode2' ] ) ? $row[ 'adminCode2' ] : '',
-					'adminName3'  => isset( $row[ 'adminName3' ] ) ? $row[ 'adminName3' ] : '',
-					'adminCode3'  => isset( $row[ 'adminCode3' ] ) ? $row[ 'adminCode3' ] : '',
-					'latitude'    => isset( $row[ 'lat' ] ) ? $row[ 'lat' ] : '',
-					'longitude'   => isset( $row[ 'lng' ] ) ? $row[ 'lng' ] : '',
-					'accuracy'    => isset( $row[ 'accuracy' ] ) ? $row[ 'accuracy' ] : '',
+					'countryCode' => isset( $row['countryCode'] ) ? $row['countryCode'] : $country,
+					'postalCode'  => isset( $row['postalCode'] ) ? $row['postalCode'] : $postcode,
+					'placeName'   => isset( $row['placeName'] ) ? $row['placeName'] : '',
+					'adminName1'  => isset( $row['adminName1'] ) ? $row['adminName1'] : '',
+					'adminCode1'  => isset( $row['adminCode1'] ) ? $row['adminCode1'] : '',
+					'adminName2'  => isset( $row['adminName2'] ) ? $row['adminName2'] : '',
+					'adminCode2'  => isset( $row['adminCode2'] ) ? $row['adminCode2'] : '',
+					'adminName3'  => isset( $row['adminName3'] ) ? $row['adminName3'] : '',
+					'adminCode3'  => isset( $row['adminCode3'] ) ? $row['adminCode3'] : '',
+					'lat'         => isset( $row['lat'] ) ? $row['lat'] : '',
+					'lng'         => isset( $row['lng'] ) ? $row['lng'] : '',
+					'accuracy'    => isset( $row['accuracy'] ) ? $row['accuracy'] : '',
 				];
 			}
 		}
 	} elseif ( 'google' === $api ) {
-		$api_key = isset( $settings[ 'key' ] ) ? sanitize_text_field( $settings[ 'key' ] ) : '';
+		$api_key = isset( $settings['key'] ) ? sanitize_text_field( $settings['key'] ) : '';
 		if ( ! $api_key ) {
 			wp_send_json_error(
 				[
@@ -507,13 +507,13 @@ function apg_city_api_lookup() {
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 		$rows = [];
 
-		if ( isset( $body[ 'status' ] ) && 'OK' === $body[ 'status' ] && ! empty( $body[ 'results' ] ) ) {
-			$result = $body[ 'results' ][0];
+		if ( isset( $body['status'] ) && 'OK' === $body['status'] && ! empty( $body['results'] ) ) {
+			$result = $body['results'][0];
 			$city   = '';
 			$state  = '';
 			$pais   = '';
 
-			foreach ( $result[ 'address_components' ] as $component ) {
+			foreach ( $result['address_components'] as $component ) {
 				if ( in_array( 'locality', $component['types'], true ) || in_array( 'postal_town', $component['types'], true ) ) {
 					$city = $component['long_name'];
 				}
@@ -528,8 +528,8 @@ function apg_city_api_lookup() {
 				}
 			}
 
-			if ( isset( $result[ 'postcode_localities' ] ) && is_array( $result[ 'postcode_localities' ] ) && count( $result[ 'postcode_localities' ] ) > 0 ) {
-				foreach ( $result[ 'postcode_localities' ] as $loc ) {
+			if ( isset( $result['postcode_localities'] ) && is_array( $result['postcode_localities'] ) && count( $result['postcode_localities'] ) > 0 ) {
+				foreach ( $result['postcode_localities'] as $loc ) {
 					$rows[] = [
 						'countryCode' => $pais ? $pais : $country,
 						'postalCode'  => $postcode,
@@ -625,9 +625,9 @@ function apg_city_ajax_lookup() {
 	check_ajax_referer( 'apg_city_lookup', 'nonce' );
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$postcode = isset( $_POST[ 'postcode' ] ) ? strtoupper( sanitize_text_field( wp_unslash( $_POST[ 'postcode' ] ) ) ) : '';
+	$postcode = isset( $_POST['postcode'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_POST['postcode'] ) ) ) : '';
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$country  = isset( $_POST[ 'country' ] ) ? strtoupper( sanitize_text_field( wp_unslash( $_POST[ 'country' ] ) ) ) : '';
+	$country  = isset( $_POST['country'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_POST['country'] ) ) ) : '';
 
 	if ( empty( $postcode ) || empty( $country ) || ! apg_city_table_exists() ) {
 		wp_send_json_error(
@@ -662,18 +662,18 @@ function apg_city_ajax_lookup() {
 		'postalcodes' => array_map(
 			static function ( $row ) {
 				return [
-					'countryCode' => $row[ 'country_code' ],
-					'postalCode'  => $row[ 'postal_code' ],
-					'placeName'   => $row[ 'place_name' ],
-					'adminName1'  => $row[ 'admin_name1' ],
-					'adminCode1'  => $row[ 'admin_code1' ],
-					'adminName2'  => $row[ 'admin_name2' ],
-					'adminCode2'  => $row[ 'admin_code2' ],
-					'adminName3'  => $row[ 'admin_name3' ],
-					'adminCode3'  => $row[ 'admin_code3' ],
-					'lat'         => $row[ 'latitude' ],
-					'lng'         => $row[ 'longitude' ],
-					'accuracy'    => $row[ 'accuracy' ],
+					'countryCode' => $row['country_code'],
+					'postalCode'  => $row['postal_code'],
+					'placeName'   => $row['place_name'],
+					'adminName1'  => $row['admin_name1'],
+					'adminCode1'  => $row['admin_code1'],
+					'adminName2'  => $row['admin_name2'],
+					'adminCode2'  => $row['admin_code2'],
+					'adminName3'  => $row['admin_name3'],
+					'adminCode3'  => $row['admin_code3'],
+					'lat'         => $row['latitude'],
+					'lng'         => $row['longitude'],
+					'accuracy'    => $row['accuracy'],
 				];
 			},
 			$results

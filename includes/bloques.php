@@ -25,17 +25,17 @@ function apg_city_enqueue_blocks_assets() {
 
 	global $apg_city_settings;
 
-	$google_api     = ( isset( $apg_city_settings[ 'key' ] ) && ! empty( $apg_city_settings[ 'key' ] ) ) ? sanitize_text_field( $apg_city_settings[ 'key' ] ) : '';
-	$geonames_user  = ( isset( $apg_city_settings[ 'geonames_user' ] ) && ! empty( $apg_city_settings[ 'geonames_user' ] ) ) ? sanitize_text_field( $apg_city_settings[ 'geonames_user' ] ) : '';
-	$bloqueo        = ( isset( $apg_city_settings[ 'bloqueo' ] ) && $apg_city_settings[ 'bloqueo' ] == "1" ) ? true : false;
+	$google_api     = ( isset( $apg_city_settings['key'] ) && ! empty( $apg_city_settings['key'] ) ) ? sanitize_text_field( $apg_city_settings['key'] ) : '';
+	$geonames_user  = ( isset( $apg_city_settings['geonames_user'] ) && ! empty( $apg_city_settings['geonames_user'] ) ) ? sanitize_text_field( $apg_city_settings['geonames_user'] ) : '';
+	$bloqueo        = ( isset( $apg_city_settings['bloqueo'] ) && '1' === (string) $apg_city_settings['bloqueo'] ) ? true : false;
 	$has_local_data = apg_city_local_data_available();
 	$fallback       = '';
 	$bloqueo_color  = '#eeeeee';
 
-	if ( isset( $apg_city_settings[ 'api' ] ) ) {
-		if ( 'google' === $apg_city_settings[ 'api' ] && $google_api ) {
+	if ( isset( $apg_city_settings['api'] ) ) {
+		if ( 'google' === $apg_city_settings['api'] && $google_api ) {
 			$fallback = 'google';
-		} elseif ( 'geonames' === $apg_city_settings[ 'api' ] && $geonames_user ) {
+		} elseif ( 'geonames' === $apg_city_settings['api'] && $geonames_user ) {
 			$fallback = 'geonames';
 		}
 	}
@@ -44,8 +44,8 @@ function apg_city_enqueue_blocks_assets() {
 		return;
 	}
 
-	if ( isset( $apg_city_settings[ 'bloqueo_color' ] ) ) {
-		$color = sanitize_hex_color( $apg_city_settings[ 'bloqueo_color' ] );
+	if ( isset( $apg_city_settings['bloqueo_color'] ) ) {
+		$color = sanitize_hex_color( $apg_city_settings['bloqueo_color'] );
 		if ( $color ) {
 			$bloqueo_color = $color;
 		}
@@ -72,8 +72,8 @@ function apg_city_enqueue_blocks_assets() {
 			'nonce'           => wp_create_nonce( 'apg_city_lookup' ),
 			'has_local'       => $has_local_data,
 			'fallback'        => $fallback,
-			'texto_predeterminado' => isset( $apg_city_settings[ 'predeterminado' ] ) ? $apg_city_settings[ 'predeterminado' ] : __( 'Select city name', 'wc-apg-city' ),
-			'texto_carga_campo'    => isset( $apg_city_settings[ 'carga' ] ) ? $apg_city_settings[ 'carga' ] : __( "My city isn't on the list", 'wc-apg-city' ),
+			'texto_predeterminado' => isset( $apg_city_settings['predeterminado'] ) ? $apg_city_settings['predeterminado'] : __( 'Select city name', 'wc-apg-city' ),
+			'texto_carga_campo'    => isset( $apg_city_settings['carga'] ) ? $apg_city_settings['carga'] : __( "My city isn't on the list", 'wc-apg-city' ),
 			'bloqueo'         => $bloqueo,
 		]
 	);

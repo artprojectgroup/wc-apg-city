@@ -9,11 +9,11 @@ Requires at least: 5.0
 
 Tested up to: 6.9
 
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 
 WC requires at least: 5.6
 
-WC tested up to: 10.4.0
+WC tested up to: 10.5.0
 
 License: GNU General Public License v2 or later
 
@@ -57,7 +57,7 @@ No olvides dejarnos tu comentario en:
 
 * [WC - APG City](https://artprojectgroup.es/plugins-para-woocommerce/wc-apg-city) en Art Project Group.
 * [Art Project Group](https://www.facebook.com/artprojectgroup) en Facebook.
-* [@artprojectgroup](https://twitter.com/artprojectgroup) en Twitter.
+* [@artprojectgroup](https://x.com/artprojectgroup) en X.
 
 ### Más plugins
 Recuerda que puedes encontrar más [plugins para WordPress](https://artprojectgroup.es/plugins-para-wordpress) y más [plugins para WooCommerce](https://artprojectgroup.es/plugins-para-woocommerce) en [Art Project Group](https://artprojectgroup.es) y en nuestro perfil en [WordPress](http://profiles.wordpress.org/artprojectgroup/).
@@ -86,6 +86,9 @@ Si necesitas ayuda para configurar o instalar **WC - APG City**, **Art Project G
 *En ningún caso **Art Project Group** proporciona ningún tipo de soporte técnico gratuito.*
 
 ## Changelog
+### 2.0.4
+* Arreglo menor.
+
 ### 2.0.3
 * Arreglo menor.
 
