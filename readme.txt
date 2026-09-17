@@ -2,10 +2,10 @@
 Contributors: artprojectgroup
 Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: city, state, postcode, geonames, google maps
-Requires at least: 5.0
+Requires at least: 5.1
 Tested up to: 7.2
 Requires PHP: 7.4
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 WC requires at least: 5.6
 WC tested up to: 11.1.0
 License: GNU General Public License v3 or later
@@ -61,6 +61,10 @@ It depends on many factors, but the one that has given us the best results is th
 3. Screenshot of WC - APG City. Billing and shipping forms. Checkout block.
 
 == Changelog ==
+= 2.1.1 =
+* Fixed: a fatal error on WordPress 5.0; the plugin now declares that it needs 5.1.
+* The postcode import now rejects a malformed batch instead of sending a broken query.
+* Code cleanup so the plugin passes the wordpress.org Plugin Check with no warnings.
 = 2.1.0 =
 * Security: the Google Maps API Key and the GeoNames username are no longer sent to the browser.
 * Security: the customizable texts of the city field can no longer inject code into the checkout.
@@ -181,6 +185,8 @@ It depends on many factors, but the one that has given us the best results is th
 * Initial version.
 
 == Upgrade Notice ==
+= 2.1.1 =
+* Maintenance release. It also fixes a fatal error on WordPress 5.0.
 = 2.1.0 =
 * Security update: API credentials are no longer exposed to the browser and lookups are validated and rate limited. Update recommended.
 

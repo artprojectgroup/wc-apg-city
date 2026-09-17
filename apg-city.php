@@ -2,14 +2,14 @@
 /*
 Plugin Name: WC - APG City
 Requires Plugins: woocommerce
-Version: 2.1.0
+Version: 2.1.1
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Adds automatic city detection from postcode to WooCommerce.
 Author URI: https://artprojectgroup.es/
 Author: Art Project Group
 License: GNU General Public License v3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
-Requires at least: 5.0
+Requires at least: 5.1
 Requires PHP: 7.4
 Tested up to: 7.2
 WC requires at least: 5.6
@@ -36,7 +36,7 @@ define( 'DIRECCION_apg_city', plugin_basename( __FILE__ ) );
  * Constante con la versión actual del plugin.
  * @var string
  */
-define( 'VERSION_apg_city', '2.1.0' );
+define( 'VERSION_apg_city', '2.1.1' );
 
 /**
  * Devuelve los ajustes del plugin con todas las claves presentes.
@@ -378,8 +378,8 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			return;
 		}
 
-		$billing_city  = isset( $_POST['billing_city'] ) ? wc_clean( wp_unslash( $_POST['billing_city'] ) ) : '';
-		$shipping_city = isset( $_POST['shipping_city'] ) ? wc_clean( wp_unslash( $_POST['shipping_city'] ) ) : '';
+		$billing_city  = isset( $_POST['billing_city'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_city'] ) ) : '';
+		$shipping_city = isset( $_POST['shipping_city'] ) ? sanitize_text_field( wp_unslash( $_POST['shipping_city'] ) ) : '';
 
 		if ( 'carga_campo' === $billing_city || 'carga_campo' === $shipping_city ) {
 			$campo = ( 'carga_campo' === $billing_city )

@@ -180,8 +180,17 @@ function apg_city_delete_working_directory() {
 		}
 	}
 
-	// phpcs:ignore WordPress.WP.AlternativeFunctions.dir_rmdir -- Directorio propio del plugin, ya vaciado.
-	@rmdir( $target_dir );
+	if ( ! apg_city_init_filesystem() ) {
+		return;
+	}
+
+	global $wp_filesystem;
+
+	if ( $wp_filesystem ) {
+		// rmdir() de WP_Filesystem en lugar de la función nativa: sin el segundo
+		// argumento no borra nada si quedara algún archivo dentro.
+		$wp_filesystem->rmdir( $target_dir );
+	}
 }
 
 /**
@@ -509,6 +518,54 @@ function apg_city_prepare_import_file() {
 }
 
 /**
+ * Número de columnas que ocupa cada fila en el lote de inserción.
+ *
+ * @var int
+ */
+define( 'APG_CITY_COLUMNAS', 12 );
+
+/**
+ * Inserta un lote de códigos postales.
+ *
+ * El número de filas se deduce de los propios valores, de modo que no puede
+ * discrepar de ellos y generar una consulta con marcadores de más. El nombre de
+ * tabla y la lista de marcadores se construyen aquí a partir de esc_sql() y de
+ * una plantilla literal, así que la consulta se puede verificar leyendo esta
+ * función sola; los valores viajan siempre por prepare().
+ *
+ * @param array<int,mixed> $values Valores en el orden de las columnas, una tanda por fila.
+ *
+ * @return int Número de filas enviadas.
+ */
+function apg_city_insert_batch( $values ) {
+	global $wpdb;
+
+	if ( ! is_array( $values ) ) {
+		return 0;
+	}
+
+	$filas = absint( count( $values ) / APG_CITY_COLUMNAS );
+
+	if ( ! $filas || count( $values ) !== $filas * APG_CITY_COLUMNAS ) {
+		return 0;
+	}
+
+	// El escapado va en su propio paso, con el nombre ya en una variable: las
+	// herramientas de análisis no pueden seguir el valor a través de una llamada
+	// a función, y con esta forma sí verifican que pasa por esc_sql().
+	$nombre = apg_city_get_table_name();
+	$table  = esc_sql( $nombre );
+
+	// Un grupo de marcadores por fila, a partir de una plantilla literal.
+	$grupos = implode( ',', array_fill( 0, $filas, '(%s,%s,%s,%s,%s,%s,%s,%s,%s,%f,%f,%d)' ) );
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- El número de filas del lote es variable, así que la lista de marcadores no puede ser literal; los valores van todos por prepare() y el nombre de tabla por esc_sql() unas líneas más arriba. Inserción masiva: no hay cache aplicable.
+	$wpdb->query( $wpdb->prepare( 'INSERT INTO `' . $table . '` (country_code, postal_code, place_name, admin_name1, admin_code1, admin_name2, admin_code2, admin_name3, admin_code3, latitude, longitude, accuracy) VALUES ' . $grupos . ' ON DUPLICATE KEY UPDATE admin_name1=VALUES(admin_name1), admin_code1=VALUES(admin_code1), admin_name2=VALUES(admin_name2), admin_code2=VALUES(admin_code2), admin_name3=VALUES(admin_name3), admin_code3=VALUES(admin_code3), latitude=VALUES(latitude), longitude=VALUES(longitude), accuracy=VALUES(accuracy)', $values ) );
+
+	return $filas;
+}
+
+/**
  * Procesa un bloque de líneas del archivo local.
  *
  * @param array<string,mixed> $state Estado actual del importador.
@@ -527,8 +584,6 @@ function apg_city_process_import_chunk( $state ) {
 		return $result;
 	}
 
-	$table_name = esc_sql( apg_city_get_table_name() );
-
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen, WordPress.WP.AlternativeFunctions.file_system_operations_fopen
 	$handle = fopen( $state['file'], 'r' );
 
@@ -540,14 +595,13 @@ function apg_city_process_import_chunk( $state ) {
 		fseek( $handle, (int) $state['offset'] );
 	}
 
-	$placeholders   = [];
 	$values         = [];
+	$filas_lote     = 0;
 	$batch_size     = 300;
 	$rows_this_run  = 0;
 	$lines_this_run = 0;
 
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fgets
-	// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 	// El corte va por líneas leídas, no por filas insertadas: si todas las líneas
 	// de un lote se descartaran, $rows_this_run seguiría a 0 y el bucle se
 	// tragaría el archivo entero en una sola ejecución.
@@ -560,7 +614,7 @@ function apg_city_process_import_chunk( $state ) {
 			continue;
 		}
 
-		$placeholders[] = "(%s,%s,%s,%s,%s,%s,%s,%s,%s,%f,%f,%d)";
+		++$filas_lote;
 
 		$values[] = $parts[0]; // country_code.
 		$values[] = $parts[1]; // postal_code.
@@ -575,31 +629,14 @@ function apg_city_process_import_chunk( $state ) {
 		$values[] = (float) $parts[10]; // longitude.
 		$values[] = (int) $parts[11]; // accuracy.
 
-		if ( count( $placeholders ) >= $batch_size ) {
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Dynamic placeholders prepared below.
-			$query = $wpdb->prepare(
-				"INSERT INTO `$table_name` (country_code, postal_code, place_name, admin_name1, admin_code1, admin_name2, admin_code2, admin_name3, admin_code3, latitude, longitude, accuracy) VALUES " . implode( ',', $placeholders ) . " ON DUPLICATE KEY UPDATE admin_name1=VALUES(admin_name1), admin_code1=VALUES(admin_code1), admin_name2=VALUES(admin_name2), admin_code2=VALUES(admin_code2), admin_name3=VALUES(admin_name3), admin_code3=VALUES(admin_code3), latitude=VALUES(latitude), longitude=VALUES(longitude), accuracy=VALUES(accuracy)",
-				$values
-			);
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- $query viene de $wpdb->prepare() en la instrucción inmediatamente anterior; inserción masiva en tabla propia, sin cache aplicable.
-			$wpdb->query( $query );
-			$rows_this_run += count( $placeholders );
-			$placeholders = [];
-			$values       = [];
+		if ( $filas_lote >= $batch_size ) {
+			$rows_this_run += apg_city_insert_batch( $values );
+			$values         = [];
+			$filas_lote     = 0;
 		}
 	}
 
-	if ( ! empty( $placeholders ) ) {
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Dynamic placeholders prepared below.
-		$query = $wpdb->prepare(
-			"INSERT INTO `$table_name` (country_code, postal_code, place_name, admin_name1, admin_code1, admin_name2, admin_code2, admin_name3, admin_code3, latitude, longitude, accuracy) VALUES " . implode( ',', $placeholders ) . " ON DUPLICATE KEY UPDATE admin_name1=VALUES(admin_name1), admin_code1=VALUES(admin_code1), admin_name2=VALUES(admin_name2), admin_code2=VALUES(admin_code2), admin_name3=VALUES(admin_name3), admin_code3=VALUES(admin_code3), latitude=VALUES(latitude), longitude=VALUES(longitude), accuracy=VALUES(accuracy)",
-			$values
-		);
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- $query viene de $wpdb->prepare() en la instrucción inmediatamente anterior; inserción masiva en tabla propia, sin cache aplicable.
-		$wpdb->query( $query );
-		$rows_this_run += count( $placeholders );
-	}
-	// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+	$rows_this_run += apg_city_insert_batch( $values );
 
 	$state['offset'] = ftell( $handle );
 
