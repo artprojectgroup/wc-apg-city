@@ -32,6 +32,177 @@ define( 'APG_CITY_IMPORT_CHUNK', 20000 );
 define( 'APG_CITY_CRON_HOOK', 'apg_city_update_postcodes_event' );
 
 /**
+ * Número máximo de consultas a APIs externas por IP y ventana de tiempo.
+ *
+ * @var int
+ */
+define( 'APG_CITY_API_RATE_LIMIT', 40 );
+
+/**
+ * Duración de la ventana del límite de consultas, en segundos.
+ *
+ * @var int
+ */
+define( 'APG_CITY_API_RATE_WINDOW', 5 * MINUTE_IN_SECONDS );
+
+/**
+ * Número máximo de consultas a la base de datos local por IP y ventana.
+ *
+ * @var int
+ */
+define( 'APG_CITY_LOCAL_RATE_LIMIT', 200 );
+
+/**
+ * Normaliza y valida un código de país ISO 3166-1 alfa-2.
+ *
+ * @param string $country Código de país recibido.
+ *
+ * @return string Código válido en mayúsculas o cadena vacía.
+ */
+function apg_city_validate_country( $country ) {
+	$country = strtoupper( trim( (string) $country ) );
+
+	return preg_match( '/^[A-Z]{2}$/', $country ) ? $country : '';
+}
+
+/**
+ * Normaliza y valida un código postal.
+ *
+ * Acepta el formato más amplio en uso (alfanumérico con espacios y guiones,
+ * de 2 a 12 caracteres) para no excluir países como Reino Unido, Irlanda o
+ * Brasil, y rechaza cualquier otra cosa antes de llegar a la base de datos,
+ * a la API externa o a la clave del transient.
+ *
+ * @param string $postcode Código postal recibido.
+ *
+ * @return string Código válido en mayúsculas o cadena vacía.
+ */
+function apg_city_validate_postcode( $postcode ) {
+	$postcode = strtoupper( trim( (string) $postcode ) );
+	$postcode = preg_replace( '/\s+/', ' ', $postcode );
+
+	return preg_match( '/^[A-Z0-9][A-Z0-9 \-]{1,11}$/', $postcode ) ? $postcode : '';
+}
+
+/**
+ * Devuelve la IP del visitante saneada.
+ *
+ * @return string IP validada o cadena vacía.
+ */
+function apg_city_get_remote_ip() {
+	$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+	$ip = filter_var( $ip, FILTER_VALIDATE_IP );
+
+	return $ip ? $ip : '';
+}
+
+/**
+ * Limita las consultas a APIs externas por IP.
+ *
+ * El endpoint es accesible sin autenticar y gasta cuota de la clave de Google
+ * o del usuario de GeoNames de la tienda, así que se acota el número de
+ * peticiones que una misma IP puede provocar.
+ *
+ * @return bool True si la petición está dentro del límite.
+ */
+function apg_city_check_rate_limit( $bucket = 'api', $limite = APG_CITY_API_RATE_LIMIT ) {
+	$ip = apg_city_get_remote_ip();
+
+	if ( ! $ip ) {
+		return true;
+	}
+
+	/**
+	 * Filtra el número máximo de consultas por IP y ventana.
+	 *
+	 * Detrás de una CDN o un proxy inverso todas las visitas comparten
+	 * REMOTE_ADDR, así que una tienda en esa situación necesita subirlo.
+	 *
+	 * @param int    $limite Tope de consultas.
+	 * @param string $bucket Contador afectado: 'api' o 'local'.
+	 */
+	$limite = (int) apply_filters( 'apg_city_rate_limit', $limite, $bucket );
+
+	if ( $limite <= 0 ) {
+		return true;
+	}
+
+	$key  = 'apg_city_rl_' . $bucket . '_' . md5( $ip );
+	$hits = (int) get_transient( $key );
+
+	if ( $hits >= $limite ) {
+		return false;
+	}
+
+	set_transient( $key, $hits + 1, APG_CITY_API_RATE_WINDOW );
+
+	return true;
+}
+
+/**
+ * Construye la clave de cache de una consulta a la API externa.
+ *
+ * Se usa un hash para que la clave nunca supere la longitud máxima admitida
+ * por la tabla de opciones.
+ *
+ * @param string $api      API consultada.
+ * @param string $country  Código de país.
+ * @param string $postcode Código postal.
+ *
+ * @return string Clave del transient.
+ */
+function apg_city_get_cache_key( $api, $country, $postcode ) {
+	return 'apg_city_api_' . md5( $api . '|' . $country . '|' . $postcode );
+}
+
+/**
+ * Elimina el directorio de trabajo del importador.
+ *
+ * @return void
+ */
+function apg_city_delete_working_directory() {
+	$upload_dir = wp_upload_dir();
+
+	if ( ! empty( $upload_dir['error'] ) ) {
+		return;
+	}
+
+	$target_dir = trailingslashit( $upload_dir['basedir'] ) . 'apg-city';
+
+	if ( ! is_dir( $target_dir ) ) {
+		return;
+	}
+
+	foreach ( [ 'allCountries.txt', 'readme.txt', 'index.html', '.htaccess' ] as $archivo ) {
+		$ruta = trailingslashit( $target_dir ) . $archivo;
+		if ( file_exists( $ruta ) ) {
+			wp_delete_file( $ruta );
+		}
+	}
+
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.dir_rmdir -- Directorio propio del plugin, ya vaciado.
+	@rmdir( $target_dir );
+}
+
+/**
+ * Borra los transients de cache de consultas.
+ *
+ * @return void
+ */
+function apg_city_delete_lookup_cache() {
+	global $wpdb;
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Limpieza puntual en la desinstalación.
+	$wpdb->query(
+		$wpdb->prepare(
+			"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
+			$wpdb->esc_like( '_transient_apg_city_' ) . '%',
+			$wpdb->esc_like( '_transient_timeout_apg_city_' ) . '%'
+		)
+	);
+}
+
+/**
  * Nombre de la tabla para almacenar códigos postales.
  *
  * @return string
@@ -45,17 +216,30 @@ function apg_city_get_table_name() {
 /**
  * Comprueba si la tabla de códigos postales existe.
  *
+ * @param bool $refrescar Fuerza una nueva comprobación en lugar de reutilizar la memoizada.
+ *
  * @return bool
  */
-function apg_city_table_exists() {
+function apg_city_table_exists( $refrescar = false ) {
 	global $wpdb;
 
-	$table = esc_sql( apg_city_get_table_name() );
+	static $existe = null;
 
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Direct check to avoid extra overhead.
-	$found_table = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
+	// La comprobación se repetía en cada carga del checkout y en cada consulta AJAX.
+	if ( null !== $existe && ! $refrescar ) {
+		return $existe;
+	}
 
-	return $found_table === $table;
+	$table = apg_city_get_table_name();
+
+	// esc_like(): el guion bajo del prefijo es un comodín de LIKE y podía
+	// devolver el nombre de otra tabla, dando un falso negativo.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- SHOW TABLES no admite cache de objetos; el resultado se memoiza en la propia petición.
+	$found_table = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) );
+
+	$existe = ( $found_table === $table );
+
+	return $existe;
 }
 
 /**
@@ -64,9 +248,41 @@ function apg_city_table_exists() {
  * @return bool
  */
 function apg_city_local_data_available() {
-	$has_rows = (int) get_option( 'apg_city_rows', 0 );
+	static $disponible = null;
 
-	return $has_rows > 0 && apg_city_table_exists();
+	if ( null !== $disponible ) {
+		return $disponible;
+	}
+
+	if ( ! apg_city_table_exists() ) {
+		$disponible = false;
+
+		return $disponible;
+	}
+
+	global $wpdb;
+
+	$table = esc_sql( apg_city_get_table_name() );
+
+	// No basta con leer apg_city_rows: si la tabla se vacía por fuera (una
+	// restauración, una migración, un reinicio de la base de datos) la opción
+	// se queda diciendo que hay millones de filas. Con ese desajuste el
+	// checkout gastaba una consulta AJAX inútil en cada búsqueda y, peor, el
+	// cron mensual descargaba el volcado, veía que el hash coincidía y se
+	// saltaba la importación, dejando la tabla vacía para siempre.
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Sondeo O(1) sobre la tabla propia, memoizado en la petición; sin datos de la petición en la consulta.
+	$tiene_filas = (bool) $wpdb->get_var( "SELECT id FROM `$table` LIMIT 1" );
+
+	$contadas = (int) get_option( 'apg_city_rows', 0 );
+
+	// Reajusta la opción cuando ha quedado obsoleta, para que el cron vuelva a importar.
+	if ( ! $tiene_filas && $contadas > 0 ) {
+		update_option( 'apg_city_rows', 0, false );
+	}
+
+	$disponible = $tiene_filas;
+
+	return $disponible;
 }
 
 /**
@@ -121,6 +337,8 @@ function apg_city_create_table() {
 	) $charset_collate;";
 
 	dbDelta( $sql );
+
+	apg_city_table_exists( true );
 }
 
 /**
@@ -177,6 +395,42 @@ function apg_city_init_filesystem() {
 }
 
 /**
+ * Impide el acceso público al directorio de trabajo del importador.
+ *
+ * El volcado de GeoNames se descarga dentro de uploads, que es accesible por
+ * HTTP; se deja un index.html vacío y un .htaccess que deniega el acceso.
+ *
+ * @param string $target_dir Directorio de trabajo.
+ *
+ * @return void
+ */
+function apg_city_protect_working_directory( $target_dir ) {
+	if ( ! apg_city_init_filesystem() ) {
+		return;
+	}
+
+	global $wp_filesystem;
+
+	if ( ! $wp_filesystem ) {
+		return;
+	}
+
+	$index = trailingslashit( $target_dir ) . 'index.html';
+	if ( ! $wp_filesystem->exists( $index ) ) {
+		$wp_filesystem->put_contents( $index, '', FS_CHMOD_FILE );
+	}
+
+	$htaccess = trailingslashit( $target_dir ) . '.htaccess';
+	if ( ! $wp_filesystem->exists( $htaccess ) ) {
+		// Se cubren Apache 2.4 y 2.2. En nginx no se leen los .htaccess, pero el
+		// volcado se borra en cuanto termina la importación.
+		$reglas = "<IfModule mod_authz_core.c>\n\tRequire all denied\n</IfModule>\n"
+			. "<IfModule !mod_authz_core.c>\n\tOrder allow,deny\n\tDeny from all\n</IfModule>\n";
+		$wp_filesystem->put_contents( $htaccess, $reglas, FS_CHMOD_FILE );
+	}
+}
+
+/**
  * Prepara el archivo de trabajo descargándolo y descomprimiéndolo.
  *
  * @return array<string,mixed>|null Estado inicial o null en caso de error.
@@ -187,15 +441,24 @@ function apg_city_prepare_import_file() {
 	wp_raise_memory_limit( 'admin' );
 
 	$upload_dir = wp_upload_dir();
+
+	if ( ! empty( $upload_dir['error'] ) ) {
+		return null;
+	}
+
 	$target_dir = trailingslashit( $upload_dir['basedir'] ) . 'apg-city';
 
 	$txt_file = trailingslashit( $target_dir ) . 'allCountries.txt';
 
-	if ( ! file_exists( $txt_file ) ) {
-		if ( ! wp_mkdir_p( $target_dir ) ) {
-			return null;
-		}
+	if ( ! wp_mkdir_p( $target_dir ) ) {
+		return null;
+	}
 
+	// Se protege siempre, no solo al descargar: una instalación que ya tenía el
+	// volcado de una versión anterior se quedaba sin index.html ni .htaccess.
+	apg_city_protect_working_directory( $target_dir );
+
+	if ( ! file_exists( $txt_file ) ) {
 		$temp_file = download_url( APG_CITY_POSTCODES_URL, 300 );
 
 		if ( is_wp_error( $temp_file ) ) {
@@ -277,14 +540,20 @@ function apg_city_process_import_chunk( $state ) {
 		fseek( $handle, (int) $state['offset'] );
 	}
 
-	$placeholders = [];
-	$values       = [];
-	$batch_size   = 300;
-	$rows_this_run = 0;
+	$placeholders   = [];
+	$values         = [];
+	$batch_size     = 300;
+	$rows_this_run  = 0;
+	$lines_this_run = 0;
 
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fgets
 	// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-	while ( $rows_this_run < APG_CITY_IMPORT_CHUNK && ( $line = fgets( $handle ) ) !== false ) {
+	// El corte va por líneas leídas, no por filas insertadas: si todas las líneas
+	// de un lote se descartaran, $rows_this_run seguiría a 0 y el bucle se
+	// tragaría el archivo entero en una sola ejecución.
+	while ( $lines_this_run < APG_CITY_IMPORT_CHUNK && ( $line = fgets( $handle ) ) !== false ) {
+		++$lines_this_run;
+
 		$parts = explode( "\t", trim( $line ) );
 
 		if ( count( $parts ) < 12 ) {
@@ -312,7 +581,7 @@ function apg_city_process_import_chunk( $state ) {
 				"INSERT INTO `$table_name` (country_code, postal_code, place_name, admin_name1, admin_code1, admin_name2, admin_code2, admin_name3, admin_code3, latitude, longitude, accuracy) VALUES " . implode( ',', $placeholders ) . " ON DUPLICATE KEY UPDATE admin_name1=VALUES(admin_name1), admin_code1=VALUES(admin_code1), admin_name2=VALUES(admin_name2), admin_code2=VALUES(admin_code2), admin_name3=VALUES(admin_name3), admin_code3=VALUES(admin_code3), latitude=VALUES(latitude), longitude=VALUES(longitude), accuracy=VALUES(accuracy)",
 				$values
 			);
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Query prepared above.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- $query viene de $wpdb->prepare() en la instrucción inmediatamente anterior; inserción masiva en tabla propia, sin cache aplicable.
 			$wpdb->query( $query );
 			$rows_this_run += count( $placeholders );
 			$placeholders = [];
@@ -326,7 +595,7 @@ function apg_city_process_import_chunk( $state ) {
 			"INSERT INTO `$table_name` (country_code, postal_code, place_name, admin_name1, admin_code1, admin_name2, admin_code2, admin_name3, admin_code3, latitude, longitude, accuracy) VALUES " . implode( ',', $placeholders ) . " ON DUPLICATE KEY UPDATE admin_name1=VALUES(admin_name1), admin_code1=VALUES(admin_code1), admin_name2=VALUES(admin_name2), admin_code2=VALUES(admin_code2), admin_name3=VALUES(admin_name3), admin_code3=VALUES(admin_code3), latitude=VALUES(latitude), longitude=VALUES(longitude), accuracy=VALUES(accuracy)",
 			$values
 		);
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Query prepared above.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- $query viene de $wpdb->prepare() en la instrucción inmediatamente anterior; inserción masiva en tabla propia, sin cache aplicable.
 		$wpdb->query( $query );
 		$rows_this_run += count( $placeholders );
 	}
@@ -339,7 +608,9 @@ function apg_city_process_import_chunk( $state ) {
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose, WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 	fclose( $handle );
 
-	if ( $at_end || $rows_this_run === 0 ) {
+	// Se mira si se han leído líneas, no si se han insertado filas: un lote
+	// entero de líneas descartadas no significa que el archivo se haya acabado.
+	if ( $at_end || 0 === $lines_this_run ) {
 		$result['finished'] = true;
 	}
 
@@ -364,6 +635,10 @@ function apg_city_refresh_data() {
 
 	$state = apg_city_get_import_state();
 
+	// Una importación a medias tiene que continuar aunque el archivo no haya
+	// cambiado: si no, el atajo por hash la daba por terminada en el primer lote.
+	$reanudando = ! empty( $state['offset'] );
+
 	if ( empty( $state ) || empty( $state['file'] ) || ! file_exists( $state['file'] ) ) {
 		$state = apg_city_prepare_import_file();
 		if ( empty( $state ) ) {
@@ -378,7 +653,17 @@ function apg_city_refresh_data() {
 
 	$last_hash = get_option( 'apg_city_last_hash' );
 
-	if ( $last_hash && ! empty( $state['hash'] ) && $last_hash === $state['hash'] && apg_city_local_data_available() ) {
+	// "Mismo archivo" no significa "ya importado": la tabla puede haberse vaciado
+	// o haberse quedado a medias. Solo se salta la importación si el número de
+	// filas alcanza el que se registró al terminar la última vez.
+	global $wpdb;
+	$nombre_tabla  = esc_sql( apg_city_get_table_name() );
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Recuento de la tabla propia, una vez por ejecución del cron.
+	$filas_reales  = (int) $wpdb->get_var( "SELECT COUNT(*) FROM `$nombre_tabla`" );
+	$filas_previas = (int) get_option( 'apg_city_rows', 0 );
+	$esta_completa = ( $filas_previas > 0 && $filas_reales >= $filas_previas );
+
+	if ( ! $reanudando && $last_hash && ! empty( $state['hash'] ) && $last_hash === $state['hash'] && $esta_completa ) {
 		apg_city_clear_import_state();
 		update_option( 'apg_city_last_import', time() );
 		delete_transient( 'apg_city_seed_scheduled' );
@@ -395,11 +680,8 @@ function apg_city_refresh_data() {
 		apg_city_clear_import_state();
 		update_option( 'apg_city_last_import', time() );
 		update_option( 'apg_city_last_hash', isset( $result['state']['hash'] ) ? $result['state']['hash'] : '' );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- count for status.
-		global $wpdb;
-		$table_name = esc_sql( apg_city_get_table_name() );
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- table name ok.
-		$count      = (int) $wpdb->get_var( "SELECT COUNT(*) FROM `$table_name`" );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Recuento de la tabla propia del plugin; sin datos de la petición en la consulta.
+		$count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM `$nombre_tabla`" );
 		update_option( 'apg_city_rows', $count );
 		delete_transient( 'apg_city_seed_scheduled' );
 	} else {
@@ -418,16 +700,19 @@ function apg_city_refresh_data() {
 function apg_city_api_lookup() {
 	check_ajax_referer( 'apg_city_lookup', 'nonce' );
 
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	$api      = isset( $_POST['api'] ) ? sanitize_key( wp_unslash( $_POST['api'] ) ) : '';
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$postcode = isset( $_POST['postcode'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_POST['postcode'] ) ) ) : '';
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$country  = isset( $_POST['country'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_POST['country'] ) ) ) : '';
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$postcode = isset( $_POST['postcode'] ) ? apg_city_validate_postcode( sanitize_text_field( wp_unslash( $_POST['postcode'] ) ) ) : '';
+	$country  = isset( $_POST['country'] ) ? apg_city_validate_country( sanitize_text_field( wp_unslash( $_POST['country'] ) ) ) : '';
 	$lang     = isset( $_POST['lang'] ) ? sanitize_text_field( wp_unslash( $_POST['lang'] ) ) : '';
 
-	if ( empty( $api ) || empty( $postcode ) || empty( $country ) ) {
+	// El idioma solo viaja a Google: se acota a un código de idioma válido.
+	$lang = preg_match( '/^[a-zA-Z]{2}(-[a-zA-Z]{2,4})?$/', $lang ) ? $lang : 'en';
+
+	if ( ! in_array( $api, [ 'geonames', 'google' ], true ) ) {
+		wp_send_json_error( [ 'message' => __( 'Unknown API.', 'wc-apg-city' ) ] );
+	}
+
+	if ( '' === $postcode || '' === $country ) {
 		wp_send_json_error(
 			[
 				'message' => __( 'Missing parameters.', 'wc-apg-city' ),
@@ -435,10 +720,14 @@ function apg_city_api_lookup() {
 		);
 	}
 
-	$cache_key = 'apg_city_api_' . $api . '_' . $country . '_' . $postcode;
+	$cache_key = apg_city_get_cache_key( $api, $country, $postcode );
 	$cached    = get_transient( $cache_key );
 
-	if ( $cached ) {
+	if ( is_array( $cached ) ) {
+		if ( empty( $cached ) ) { // Resultado negativo cacheado: evita repetir la consulta externa.
+			wp_send_json_error( [ 'message' => __( 'No results found.', 'wc-apg-city' ) ] );
+		}
+
 		wp_send_json_success(
 			[
 				'postalcodes' => $cached,
@@ -447,10 +736,16 @@ function apg_city_api_lookup() {
 		);
 	}
 
-	$settings = get_option( 'apg_city_settings', [] );
+	// Solo se aplica el límite cuando la consulta va a salir de verdad a Internet.
+	if ( ! apg_city_check_rate_limit() ) {
+		wp_send_json_error( [ 'message' => __( 'Too many lookups, please try again in a few minutes.', 'wc-apg-city' ) ], 429 );
+	}
+
+	$settings = apg_city_get_settings();
+	$rows     = [];
 
 	if ( 'geonames' === $api ) {
-		$username = isset( $settings['geonames_user'] ) ? sanitize_text_field( $settings['geonames_user'] ) : '';
+		$username = sanitize_text_field( (string) $settings['geonames_user'] );
 		if ( ! $username ) {
 			wp_send_json_error(
 				[
@@ -458,33 +753,48 @@ function apg_city_api_lookup() {
 				]
 			);
 		}
-		$url      = 'https://www.geonames.org/postalCodeLookupJSON?postalcode=' . rawurlencode( $postcode ) . '&country=' . rawurlencode( $country ) . '&username=' . rawurlencode( $username );
+		$url      = add_query_arg(
+			[
+				'postalcode' => $postcode,
+				'country'    => $country,
+				'username'   => $username,
+			],
+			'https://www.geonames.org/postalCodeLookupJSON'
+		);
 		$response = wp_remote_get( $url, [ 'timeout' => 15 ] );
 		if ( is_wp_error( $response ) ) {
-			wp_send_json_error( [ 'message' => $response->get_error_message() ] );
+			// El detalle del error se queda en el registro: no se expone al visitante.
+			wp_send_json_error( [ 'message' => __( 'Postal code lookup is not available right now.', 'wc-apg-city' ) ] );
 		}
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
-		$rows = [];
-		if ( isset( $body['postalcodes'] ) && is_array( $body['postalcodes'] ) ) {
+
+		// GeoNames devuelve {"postalcodes":[...]} cuando responde de verdad y
+		// {"status":{...}} cuando falla: solo lo primero es cacheable en negativo.
+		$respuesta_valida = ( isset( $body['postalcodes'] ) && is_array( $body['postalcodes'] ) );
+
+		if ( $respuesta_valida ) {
 			foreach ( $body['postalcodes'] as $row ) {
+				if ( ! is_array( $row ) ) {
+					continue;
+				}
 				$rows[] = [
-					'countryCode' => isset( $row['countryCode'] ) ? $row['countryCode'] : $country,
-					'postalCode'  => isset( $row['postalCode'] ) ? $row['postalCode'] : $postcode,
-					'placeName'   => isset( $row['placeName'] ) ? $row['placeName'] : '',
-					'adminName1'  => isset( $row['adminName1'] ) ? $row['adminName1'] : '',
-					'adminCode1'  => isset( $row['adminCode1'] ) ? $row['adminCode1'] : '',
-					'adminName2'  => isset( $row['adminName2'] ) ? $row['adminName2'] : '',
-					'adminCode2'  => isset( $row['adminCode2'] ) ? $row['adminCode2'] : '',
-					'adminName3'  => isset( $row['adminName3'] ) ? $row['adminName3'] : '',
-					'adminCode3'  => isset( $row['adminCode3'] ) ? $row['adminCode3'] : '',
-					'lat'         => isset( $row['lat'] ) ? $row['lat'] : '',
-					'lng'         => isset( $row['lng'] ) ? $row['lng'] : '',
-					'accuracy'    => isset( $row['accuracy'] ) ? $row['accuracy'] : '',
+					'countryCode' => isset( $row['countryCode'] ) ? sanitize_text_field( (string) $row['countryCode'] ) : $country,
+					'postalCode'  => isset( $row['postalCode'] ) ? sanitize_text_field( (string) $row['postalCode'] ) : $postcode,
+					'placeName'   => isset( $row['placeName'] ) ? sanitize_text_field( (string) $row['placeName'] ) : '',
+					'adminName1'  => isset( $row['adminName1'] ) ? sanitize_text_field( (string) $row['adminName1'] ) : '',
+					'adminCode1'  => isset( $row['adminCode1'] ) ? sanitize_text_field( (string) $row['adminCode1'] ) : '',
+					'adminName2'  => isset( $row['adminName2'] ) ? sanitize_text_field( (string) $row['adminName2'] ) : '',
+					'adminCode2'  => isset( $row['adminCode2'] ) ? sanitize_text_field( (string) $row['adminCode2'] ) : '',
+					'adminName3'  => isset( $row['adminName3'] ) ? sanitize_text_field( (string) $row['adminName3'] ) : '',
+					'adminCode3'  => isset( $row['adminCode3'] ) ? sanitize_text_field( (string) $row['adminCode3'] ) : '',
+					'lat'         => isset( $row['lat'] ) ? sanitize_text_field( (string) $row['lat'] ) : '',
+					'lng'         => isset( $row['lng'] ) ? sanitize_text_field( (string) $row['lng'] ) : '',
+					'accuracy'    => isset( $row['accuracy'] ) ? sanitize_text_field( (string) $row['accuracy'] ) : '',
 				];
 			}
 		}
-	} elseif ( 'google' === $api ) {
-		$api_key = isset( $settings['key'] ) ? sanitize_text_field( $settings['key'] ) : '';
+	} else {
+		$api_key = sanitize_text_field( (string) $settings['key'] );
 		if ( ! $api_key ) {
 			wp_send_json_error(
 				[
@@ -494,54 +804,68 @@ function apg_city_api_lookup() {
 		}
 		$url      = add_query_arg(
 			[
-				'components' => 'country:' . rawurlencode( $country ) . '|postal_code:' . rawurlencode( $postcode ),
-				'key'        => rawurlencode( $api_key ),
-				'language'   => rawurlencode( $lang ? $lang : 'en' ),
+				'components' => 'country:' . $country . '|postal_code:' . $postcode,
+				'key'        => $api_key,
+				'language'   => $lang,
 			],
 			'https://maps.googleapis.com/maps/api/geocode/json'
 		);
 		$response = wp_remote_get( $url, [ 'timeout' => 15 ] );
 		if ( is_wp_error( $response ) ) {
-			wp_send_json_error( [ 'message' => $response->get_error_message() ] );
+			wp_send_json_error( [ 'message' => __( 'Postal code lookup is not available right now.', 'wc-apg-city' ) ] );
 		}
-		$body = json_decode( wp_remote_retrieve_body( $response ), true );
-		$rows = [];
+		$body   = json_decode( wp_remote_retrieve_body( $response ), true );
+		$estado = isset( $body['status'] ) ? $body['status'] : '';
 
-		if ( isset( $body['status'] ) && 'OK' === $body['status'] && ! empty( $body['results'] ) ) {
+		// OK y ZERO_RESULTS son respuestas reales. OVER_QUERY_LIMIT, REQUEST_DENIED
+		// y compañía son fallos: no se cachean como "sin resultados".
+		$respuesta_valida = in_array( $estado, [ 'OK', 'ZERO_RESULTS' ], true );
+
+		if ( 'OK' === $estado && ! empty( $body['results'][0] ) ) {
 			$result = $body['results'][0];
 			$city   = '';
 			$state  = '';
 			$pais   = '';
 
-			foreach ( $result['address_components'] as $component ) {
+			$componentes = ( isset( $result['address_components'] ) && is_array( $result['address_components'] ) ) ? $result['address_components'] : [];
+
+			foreach ( $componentes as $component ) {
+				if ( ! isset( $component['types'] ) || ! is_array( $component['types'] ) ) {
+					continue;
+				}
+				$largo = isset( $component['long_name'] ) ? sanitize_text_field( (string) $component['long_name'] ) : '';
+				$corto = isset( $component['short_name'] ) ? sanitize_text_field( (string) $component['short_name'] ) : '';
+
 				if ( in_array( 'locality', $component['types'], true ) || in_array( 'postal_town', $component['types'], true ) ) {
-					$city = $component['long_name'];
+					$city = $largo;
 				}
 				if ( in_array( 'administrative_area_level_2', $component['types'], true ) && ! $state ) {
-					$state = $component['short_name'];
+					$state = $corto;
 				}
 				if ( in_array( 'administrative_area_level_1', $component['types'], true ) && ! $state ) {
-					$state = $component['short_name'];
+					$state = $corto;
 				}
 				if ( in_array( 'country', $component['types'], true ) ) {
-					$pais = $component['short_name'];
+					$pais = $corto;
 				}
 			}
 
-			if ( isset( $result['postcode_localities'] ) && is_array( $result['postcode_localities'] ) && count( $result['postcode_localities'] ) > 0 ) {
-				foreach ( $result['postcode_localities'] as $loc ) {
+			$localidades = ( isset( $result['postcode_localities'] ) && is_array( $result['postcode_localities'] ) ) ? $result['postcode_localities'] : [];
+
+			if ( ! empty( $localidades ) ) {
+				foreach ( $localidades as $loc ) {
 					$rows[] = [
 						'countryCode' => $pais ? $pais : $country,
 						'postalCode'  => $postcode,
-						'placeName'   => $loc,
+						'placeName'   => sanitize_text_field( (string) $loc ),
 						'adminName1'  => '',
 						'adminCode1'  => '',
 						'adminName2'  => '',
 						'adminCode2'  => $state,
 						'adminName3'  => '',
 						'adminCode3'  => '',
-						'latitude'    => '',
-						'longitude'   => '',
+						'lat'         => '',
+						'lng'         => '',
 						'accuracy'    => '',
 					];
 				}
@@ -556,21 +880,25 @@ function apg_city_api_lookup() {
 					'adminCode2'  => $state,
 					'adminName3'  => '',
 					'adminCode3'  => '',
-					'latitude'    => '',
-					'longitude'   => '',
+					'lat'         => '',
+					'lng'         => '',
 					'accuracy'    => '',
 				];
 			}
 		}
-	} else {
-		wp_send_json_error( [ 'message' => __( 'Unknown API.', 'wc-apg-city' ) ] );
 	}
 
 	if ( empty( $rows ) ) {
+		if ( $respuesta_valida ) {
+			// Cachea el resultado vacío, pero poco tiempo: un código postal nuevo
+			// no debe quedar sin resolver durante un año.
+			set_transient( $cache_key, [], DAY_IN_SECONDS );
+		}
+
 		wp_send_json_error( [ 'message' => __( 'No results found.', 'wc-apg-city' ) ] );
 	}
 
-	set_transient( $cache_key, $rows, YEAR_IN_SECONDS );
+	set_transient( $cache_key, $rows, MONTH_IN_SECONDS );
 
 	wp_send_json_success(
 		[
@@ -624,12 +952,10 @@ function apg_city_activate() {
 function apg_city_ajax_lookup() {
 	check_ajax_referer( 'apg_city_lookup', 'nonce' );
 
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$postcode = isset( $_POST['postcode'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_POST['postcode'] ) ) ) : '';
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$country  = isset( $_POST['country'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_POST['country'] ) ) ) : '';
+	$postcode = isset( $_POST['postcode'] ) ? apg_city_validate_postcode( sanitize_text_field( wp_unslash( $_POST['postcode'] ) ) ) : '';
+	$country  = isset( $_POST['country'] ) ? apg_city_validate_country( sanitize_text_field( wp_unslash( $_POST['country'] ) ) ) : '';
 
-	if ( empty( $postcode ) || empty( $country ) || ! apg_city_table_exists() ) {
+	if ( '' === $postcode || '' === $country || ! apg_city_table_exists() ) {
 		wp_send_json_error(
 			[
 				'message' => __( 'Postal code lookup is not available right now.', 'wc-apg-city' ),
@@ -637,18 +963,21 @@ function apg_city_ajax_lookup() {
 		);
 	}
 
-	global $wpdb;
+	// Cache en el objeto, no en transients: un visitante anónimo podía llenar
+	// wp_options con una fila por cada código postal que se inventara. Sin cache
+	// persistente esto es memoria de la propia petición, y la consulta va por
+	// índice, así que el coste es asumible.
+	$cache_key = 'local_' . md5( $country . '|' . $postcode );
+	$results   = wp_cache_get( $cache_key, 'apg_city' );
 
-	$table   = esc_sql( apg_city_get_table_name() );
-	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared -- Table name interpolated intentionally; placeholders prepared below.
-	$query = $wpdb->prepare(
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name enclosed intentionally.
-		"SELECT country_code, postal_code, place_name, admin_name1, admin_code1, admin_name2, admin_code2, admin_name3, admin_code3, latitude, longitude, accuracy FROM `$table` WHERE postal_code = %s AND country_code = %s",
-		$postcode,
-		$country
-	);
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Targeted read for AJAX response; prepared above.
-	$results = $wpdb->get_results( $query, ARRAY_A );
+	if ( false === $results ) {
+		if ( ! apg_city_check_rate_limit( 'local', APG_CITY_LOCAL_RATE_LIMIT ) ) {
+			wp_send_json_error( [ 'message' => __( 'Too many lookups, please try again in a few minutes.', 'wc-apg-city' ) ], 429 );
+		}
+
+		$results = apg_city_query_local( $postcode, $country );
+		wp_cache_set( $cache_key, $results, 'apg_city', HOUR_IN_SECONDS );
+	}
 
 	if ( empty( $results ) ) {
 		wp_send_json_error(
@@ -658,27 +987,60 @@ function apg_city_ajax_lookup() {
 		);
 	}
 
-	$data = [
-		'postalcodes' => array_map(
-			static function ( $row ) {
-				return [
-					'countryCode' => $row['country_code'],
-					'postalCode'  => $row['postal_code'],
-					'placeName'   => $row['place_name'],
-					'adminName1'  => $row['admin_name1'],
-					'adminCode1'  => $row['admin_code1'],
-					'adminName2'  => $row['admin_name2'],
-					'adminCode2'  => $row['admin_code2'],
-					'adminName3'  => $row['admin_name3'],
-					'adminCode3'  => $row['admin_code3'],
-					'lat'         => $row['latitude'],
-					'lng'         => $row['longitude'],
-					'accuracy'    => $row['accuracy'],
-				];
-			},
-			$results
-		),
-	];
+	wp_send_json_success(
+		[
+			'postalcodes' => array_map( 'apg_city_map_row', $results ),
+		]
+	);
+}
 
-	wp_send_json_success( $data );
+/**
+ * Consulta la tabla local de códigos postales.
+ *
+ * @param string $postcode Código postal validado.
+ * @param string $country  Código de país validado.
+ *
+ * @return array<int,array<string,mixed>> Filas encontradas.
+ */
+function apg_city_query_local( $postcode, $country ) {
+	global $wpdb;
+
+	$table = esc_sql( apg_city_get_table_name() );
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Tabla propia del plugin; el resultado se cachea en apg_city_ajax_lookup().
+	$results = $wpdb->get_results(
+		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Nombre de tabla propio, pasado por esc_sql(); los valores van con marcadores.
+			"SELECT country_code, postal_code, place_name, admin_name1, admin_code1, admin_name2, admin_code2, admin_name3, admin_code3, latitude, longitude, accuracy FROM `$table` WHERE postal_code = %s AND country_code = %s",
+			$postcode,
+			$country
+		),
+		ARRAY_A
+	);
+
+	return is_array( $results ) ? $results : [];
+}
+
+/**
+ * Normaliza una fila de la tabla local al formato que espera el JavaScript.
+ *
+ * @param array<string,mixed> $row Fila de la base de datos.
+ *
+ * @return array<string,mixed> Fila normalizada.
+ */
+function apg_city_map_row( $row ) {
+	return [
+		'countryCode' => isset( $row['country_code'] ) ? $row['country_code'] : '',
+		'postalCode'  => isset( $row['postal_code'] ) ? $row['postal_code'] : '',
+		'placeName'   => isset( $row['place_name'] ) ? $row['place_name'] : '',
+		'adminName1'  => isset( $row['admin_name1'] ) ? $row['admin_name1'] : '',
+		'adminCode1'  => isset( $row['admin_code1'] ) ? $row['admin_code1'] : '',
+		'adminName2'  => isset( $row['admin_name2'] ) ? $row['admin_name2'] : '',
+		'adminCode2'  => isset( $row['admin_code2'] ) ? $row['admin_code2'] : '',
+		'adminName3'  => isset( $row['admin_name3'] ) ? $row['admin_name3'] : '',
+		'adminCode3'  => isset( $row['admin_code3'] ) ? $row['admin_code3'] : '',
+		'lat'         => isset( $row['latitude'] ) ? $row['latitude'] : '',
+		'lng'         => isset( $row['longitude'] ) ? $row['longitude'] : '',
+		'accuracy'    => isset( $row['accuracy'] ) ? $row['accuracy'] : '',
+	];
 }

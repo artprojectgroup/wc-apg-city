@@ -209,7 +209,7 @@
 
 		select.empty();
 
-		select.append( $( '<option />', { value: '', text: settings.texto_predeterminado || '', disabled: true } ) );
+		select.append( $( '<option />', { value: '', text: settings.texto_predeterminado || '', disabled: true, selected: true } ) );
 		select.append( $( '<option />', { value: 'carga_campo', text: settings.texto_carga_campo || '' } ) );
 
 		if ( postalcodes.length ) {
@@ -283,10 +283,18 @@
 	};
 
 	const lookupApi = function( type, postcode, country, cb ) {
+		// Sin API externa configurada no hay a quién preguntar: se responde vacío
+		// en lugar de lanzar una consulta que el servidor va a rechazar.
+		if ( ! settings.fallback ) {
+			cb( [] );
+
+			return;
+		}
+
 		const data = {
 			action: 'apg_city_api_lookup',
 			nonce: settings.nonce,
-			api: settings.fallback || 'google',
+			api: settings.fallback,
 			postcode: postcode,
 			country: country,
 			lang: document.documentElement.lang || 'en'
@@ -302,6 +310,10 @@
 				} else {
 					cb( [] );
 				}
+			},
+			// Sin este manejador, un error de red dejaba los campos bloqueados para siempre.
+			error: function() {
+				cb( [] );
 			}
 		} );
 	};
@@ -374,12 +386,20 @@
 				// Carga opciones de un posible valor previo.
 				var currentVal = $( '#' + ( type === 'shipping' ? 'shipping-city' : 'billing-city' ) ).val() || '';
 				select.empty();
-				select.append( $( '<option />', { value: '', text: settings.texto_predeterminado || '', disabled: true } ) );
+				// El placeholder se marca como seleccionado cuando no hay valor: si no,
+				// el navegador saltaba a la primera opción activa ('carga_campo') y el
+				// manejador de change destruía el select recién creado.
+				select.append( $( '<option />', {
+					value: '',
+					text: settings.texto_predeterminado || '',
+					disabled: true,
+					selected: ! currentVal
+				} ) );
 				select.append( $( '<option />', { value: 'carga_campo', text: settings.texto_carga_campo || '' } ) );
 				if ( currentVal ) {
-					select.append( $( '<option />', { value: currentVal, text: currentVal, selected: 'selected' } ) );
+					select.append( $( '<option />', { value: currentVal, text: currentVal, selected: true } ) );
 				}
-				select.trigger( 'change' );
+				// Sin trigger( 'change' ): aquí no hay nada que sincronizar todavía.
 				if ( settings.bloqueo ) {
 					select.prop( 'disabled', true );
 				}

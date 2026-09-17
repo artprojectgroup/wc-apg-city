@@ -5,28 +5,30 @@
  * Muestra el panel de configuración dentro de WooCommerce
  * para seleccionar API, claves y opciones relacionadas.
  *
+ * Los ajustes se obtienen con apg_city_get_settings(); la capacidad del usuario
+ * se comprueba en apg_city_tab() antes de incluir esta plantilla.
+ *
  * @package WC_APG_City
- * @global array<string,mixed> $apg_city_settings Ajustes del plugin.
- * @global array<string,string> $apg_city          Datos de información del plugin.
+ * @global array<string,string> $apg_city Datos de información del plugin.
  */
 
 // Igual no deberías poder abrirme.
 defined( 'ABSPATH' ) || exit;
 
-global $apg_city_settings, $apg_city;
+global $apg_city;
 
-// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Options page is already protected by WordPress nonces.
-if ( isset( $_GET['page'] ) ) {
-	if ( ( ! isset( $apg_city_settings['key'] ) || '' === $apg_city_settings['key'] ) && isset( $apg_city_settings['api'] ) && 'geonames' !== $apg_city_settings['api'] ) {
-		echo '<div class="notice notice-error is-dismissible" id="wc-apg-city"><p>' . esc_html__( 'Google Maps API Key is a required field.', 'wc-apg-city' ) . '</p></div>';
-		$apg_city_settings['api'] = 'geonames';
-		update_option( 'apg_city_settings', $apg_city_settings );
-		$apg_city_settings = get_option( 'apg_city_settings' );
-	}
+$apg_city_settings = apg_city_get_settings();
 
-	if ( ( ! isset( $apg_city_settings['geonames_user'] ) || '' === $apg_city_settings['geonames_user'] ) && isset( $apg_city_settings['api'] ) && 'geonames' === $apg_city_settings['api'] ) {
-		echo '<div class="notice notice-error is-dismissible" id="wc-apg-city"><p>' . esc_html__( 'GeoNames username is a required field.', 'wc-apg-city' ) . '</p></div>';
-	}
+// Google seleccionado sin clave no puede funcionar: se avisa y se muestra GeoNames.
+// No se guarda la corrección, porque pintar una pantalla no debe escribir en la
+// base de datos; el frontend ya ignora una API sin credenciales.
+if ( '' === $apg_city_settings['key'] && 'geonames' !== $apg_city_settings['api'] ) {
+	echo '<div class="notice notice-error is-dismissible" id="wc-apg-city"><p>' . esc_html__( 'Google Maps API Key is a required field.', 'wc-apg-city' ) . '</p></div>';
+	$apg_city_settings['api'] = 'geonames';
+}
+
+if ( '' === $apg_city_settings['geonames_user'] && 'geonames' === $apg_city_settings['api'] ) {
+	echo '<div class="notice notice-error is-dismissible" id="wc-apg-city"><p>' . esc_html__( 'GeoNames username is a required field.', 'wc-apg-city' ) . '</p></div>';
 }
 
 settings_errors();
@@ -140,61 +142,3 @@ $tab = 1;
 		<?php submit_button(); ?>
 	</form>
 </div>
-<script>
-( function( $ ) {
-	// Muestra u oculta las filas según la API seleccionada.
-    var $api = $( '#apg_city_settings\\[api\\]' );
-    var $bloqueo = $( '#apg_city_settings\\[bloqueo\\]' );
-    var $bloqueoColor = $( '#apg_city_settings\\[bloqueo_color\\]' );
-    var $bloqueoColorText = $( '#apg_city_settings\\[bloqueo_color_text\\]' );
-    var toggleRows = function( value ) {
-        if ( value === 'google' ) {
-            $( '.api' ).show();
-            $( '.geonames' ).hide();
-        } else {
-            $( '.api' ).hide();
-            $( '.geonames' ).show();
-        }
-    };
-	// Muestra u oculta las opciones de color de bloqueo.
-    var toggleBloqueoColor = function( checked ) {
-        $( '.bloqueo-color' ).toggle( !! checked );
-    };
-	// Sincroniza los campos de color.
-    var syncColorInputs = function( value, fromText ) {
-        var hex = ( value || '' ).trim();
-        if ( ! hex ) {
-            return;
-        }
-        if ( fromText && hex.charAt(0) !== '#' ) {
-            hex = '#' + hex;
-        }
-        var match = hex.match( /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/ );
-        if ( ! match ) {
-            return;
-        }
-        if ( match[1].length === 3 ) { // Expande formato #rgb a #rrggbb.
-            hex = '#' + match[1].split( '' ).map( function( c ) { return c + c; } ).join( '' );
-        }
-        $bloqueoColor.val( hex );
-        $bloqueoColorText.val( hex );
-    };
-
-    toggleRows( $api.val() );
-    toggleBloqueoColor( $bloqueo.is( ':checked' ) );
-    syncColorInputs( $bloqueoColor.val() );
-
-    $api.on( 'change', function() {
-        toggleRows( this.value );
-    } );
-    $bloqueo.on( 'change', function() {
-        toggleBloqueoColor( this.checked );
-    } );
-    $bloqueoColor.on( 'change', function() {
-        syncColorInputs( this.value );
-    } );
-    $bloqueoColorText.on( 'change keyup', function() {
-        syncColorInputs( this.value, true );
-    } );
-} )( jQuery );
-</script>

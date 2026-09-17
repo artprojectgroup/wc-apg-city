@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
   <div class="fila">
     <div class="columna">
       <p>
-        <?php esc_html_e( 'If you enjoyed and find helpful this plugin, please make a donation:', 'wc-apg-city' ); ?>
+        <?php esc_html_e( 'If you enjoy this plugin and find it helpful, please make a donation:', 'wc-apg-city' ); ?>
       </p>
       <p><a href="<?php echo esc_url( $apg_city['donacion'] ); ?>" target="_blank" title="<?php esc_attr_e( 'Make a donation by ', 'wc-apg-city' ); ?>APG"><span class="genericon genericon-cart"></span></a></p>
     </div>
@@ -52,9 +52,9 @@ defined( 'ABSPATH' ) || exit;
   <div class="fila">
     <div class="columna">
       <p>
-        <?php esc_html_e( 'Contact with us:', 'wc-apg-city' ); ?>
+        <?php esc_html_e( 'Contact us:', 'wc-apg-city' ); ?>
       </p>
-      <p><a href="mailto:info@artprojectgroup.es" title="<?php esc_attr_e( 'Contact with us by ', 'wc-apg-city' ); ?>e-mail"><span class="genericon genericon-mail"></span></a> <a href="skype:artprojectgroup" title="<?php esc_attr_e( 'Contact with us by ', 'wc-apg-city' ); ?>Skype"><span class="genericon genericon-skype"></span></a></p>
+      <p><a href="mailto:info@artprojectgroup.es" title="<?php esc_attr_e( 'Contact us by ', 'wc-apg-city' ); ?>e-mail"><span class="genericon genericon-mail"></span></a> <a href="skype:artprojectgroup" title="<?php esc_attr_e( 'Contact us by ', 'wc-apg-city' ); ?>Skype"><span class="genericon genericon-skype"></span></a></p>
     </div>
     <div class="columna">
       <p>

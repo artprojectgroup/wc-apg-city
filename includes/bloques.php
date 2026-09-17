@@ -19,42 +19,36 @@ function apg_city_enqueue_blocks_assets() {
 	if ( ! class_exists( '\Automattic\WooCommerce\Blocks\Package' ) ) {
 		return;
 	}
-	if ( function_exists( 'has_block' ) && ! has_block( 'woocommerce/checkout' ) ) {
+	$es_checkout = ( function_exists( 'is_checkout' ) && is_checkout() );
+
+	if ( ! $es_checkout && function_exists( 'has_block' ) && ! has_block( 'woocommerce/checkout' ) ) {
 		return;
 	}
 
-	global $apg_city_settings;
+	$apg_city_settings = apg_city_get_settings();
 
-	$google_api     = ( isset( $apg_city_settings['key'] ) && ! empty( $apg_city_settings['key'] ) ) ? sanitize_text_field( $apg_city_settings['key'] ) : '';
-	$geonames_user  = ( isset( $apg_city_settings['geonames_user'] ) && ! empty( $apg_city_settings['geonames_user'] ) ) ? sanitize_text_field( $apg_city_settings['geonames_user'] ) : '';
-	$bloqueo        = ( isset( $apg_city_settings['bloqueo'] ) && '1' === (string) $apg_city_settings['bloqueo'] ) ? true : false;
+	$google_api     = sanitize_text_field( (string) $apg_city_settings['key'] );
+	$geonames_user  = sanitize_text_field( (string) $apg_city_settings['geonames_user'] );
+	$bloqueo        = ( '1' === (string) $apg_city_settings['bloqueo'] );
 	$has_local_data = apg_city_local_data_available();
 	$fallback       = '';
-	$bloqueo_color  = '#eeeeee';
+	$bloqueo_color  = $apg_city_settings['bloqueo_color'];
 
-	if ( isset( $apg_city_settings['api'] ) ) {
-		if ( 'google' === $apg_city_settings['api'] && $google_api ) {
-			$fallback = 'google';
-		} elseif ( 'geonames' === $apg_city_settings['api'] && $geonames_user ) {
-			$fallback = 'geonames';
-		}
+	if ( 'google' === $apg_city_settings['api'] && $google_api ) {
+		$fallback = 'google';
+	} elseif ( 'geonames' === $apg_city_settings['api'] && $geonames_user ) {
+		$fallback = 'geonames';
 	}
 
 	if ( ! $has_local_data && '' === $fallback ) {
 		return;
 	}
 
-	if ( isset( $apg_city_settings['bloqueo_color'] ) ) {
-		$color = sanitize_hex_color( $apg_city_settings['bloqueo_color'] );
-		if ( $color ) {
-			$bloqueo_color = $color;
-		}
-	}
-
 	wp_register_script(
 		'apg-city-blocks',
 		plugins_url( '../assets/js/apg-city-blocks.js', __FILE__ ),
 		[
+			'jquery',
 			'wc-blocks-checkout',
 			'wc-blocks-registry',
 			'wp-element',
@@ -72,8 +66,8 @@ function apg_city_enqueue_blocks_assets() {
 			'nonce'           => wp_create_nonce( 'apg_city_lookup' ),
 			'has_local'       => $has_local_data,
 			'fallback'        => $fallback,
-			'texto_predeterminado' => isset( $apg_city_settings['predeterminado'] ) ? $apg_city_settings['predeterminado'] : __( 'Select city name', 'wc-apg-city' ),
-			'texto_carga_campo'    => isset( $apg_city_settings['carga'] ) ? $apg_city_settings['carga'] : __( "My city isn't on the list", 'wc-apg-city' ),
+			'texto_predeterminado' => $apg_city_settings['predeterminado'],
+			'texto_carga_campo'    => $apg_city_settings['carga'],
 			'bloqueo'         => $bloqueo,
 		]
 	);
@@ -84,7 +78,8 @@ function apg_city_enqueue_blocks_assets() {
 	wp_register_style( 'apg_city_blocks_position', plugins_url( '../assets/css/apg-city-blocks-position.css', __FILE__ ), [], VERSION_apg_city );
 
 	if ( $bloqueo ) {
-		wp_add_inline_style( 'apg_city_blocks_style', ':root{--apg-city-locked-bg:' . esc_attr( $bloqueo_color ) . ';}' );
+		// sanitize_hex_color() deja solo #rrggbb: es la validación válida en contexto CSS.
+		wp_add_inline_style( 'apg_city_blocks_style', ':root{--apg-city-locked-bg:' . sanitize_hex_color( $bloqueo_color ) . ';}' );
 		wp_enqueue_style( 'apg_city_blocks_style' );
 	}
 	wp_enqueue_style( 'apg_city_blocks_position' );
