@@ -2,7 +2,7 @@
 /*
 Plugin Name: WC - APG City
 Requires Plugins: woocommerce
-Version: 2.1.1
+Version: 2.1.2
 Plugin URI: https://wordpress.org/plugins/wc-apg-city/
 Description: Adds automatic city detection from postcode to WooCommerce.
 Author URI: https://artprojectgroup.es/
@@ -36,7 +36,7 @@ define( 'DIRECCION_apg_city', plugin_basename( __FILE__ ) );
  * Constante con la versión actual del plugin.
  * @var string
  */
-define( 'VERSION_apg_city', '2.1.1' );
+define( 'VERSION_apg_city', '2.1.2' );
 
 /**
  * Devuelve los ajustes del plugin con todas las claves presentes.
@@ -101,6 +101,42 @@ function apg_city_es_contexto_publico() {
 	}
 
 	return true;
+}
+
+/**
+ * Indica si la tienda usa el bloque de Finalizar compra.
+ *
+ * is_checkout() NO sirve para decidirlo: es cierto tanto en el checkout clásico
+ * como en el de bloques. Usarlo para detectar bloques hacía que en una tienda
+ * clásica se cargara el JavaScript de bloques —que busca los campos con guion,
+ * billing-city, cuando el checkout clásico los tiene con guion bajo— y el campo
+ * de población dejaba de rellenarse.
+ *
+ * WooCommerce ya resuelve la pregunta, y contempla los temas de bloques, donde
+ * el checkout vive en una plantilla y no en el contenido de la página.
+ *
+ * @return bool
+ */
+function apg_city_checkout_usa_bloques() {
+	static $usa_bloques = null;
+
+	if ( null !== $usa_bloques ) {
+		return $usa_bloques;
+	}
+
+	$utilidad = '\\Automattic\\WooCommerce\\Blocks\\Utils\\CartCheckoutUtils';
+
+	if ( is_callable( [ $utilidad, 'is_checkout_block_default' ] ) ) {
+		$usa_bloques = (bool) call_user_func( [ $utilidad, 'is_checkout_block_default' ] );
+
+		return $usa_bloques;
+	}
+
+	// Respaldo para versiones de WooCommerce sin esa utilidad.
+	$pagina      = function_exists( 'wc_get_page_id' ) ? wc_get_page_id( 'checkout' ) : 0;
+	$usa_bloques = ( $pagina > 0 && function_exists( 'has_block' ) && has_block( 'woocommerce/checkout', $pagina ) );
+
+	return $usa_bloques;
 }
 
 // Funciones generales de APG.
@@ -303,9 +339,11 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			return;
 		}
 
-		// En un checkout con bloques los ids son billing-city, no billing_city:
-		// este script no tendría nada que hacer y solo añadiría peso.
-		if ( wp_script_is( 'apg-city-blocks', 'enqueued' ) || wp_script_is( 'apg-city-blocks', 'registered' ) ) {
+		// En el checkout de bloques los ids son billing-city, no billing_city, así
+		// que este script no tendría nada que hacer. Se comprueba el checkout de
+		// bloques, no is_checkout(): en Mi cuenta los campos siguen siendo clásicos
+		// aunque la tienda use el bloque, y allí este script sí hace falta.
+		if ( is_checkout() && apg_city_checkout_usa_bloques() ) {
 			return;
 		}
 

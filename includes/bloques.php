@@ -19,9 +19,13 @@ function apg_city_enqueue_blocks_assets() {
 	if ( ! class_exists( '\Automattic\WooCommerce\Blocks\Package' ) ) {
 		return;
 	}
-	$es_checkout = ( function_exists( 'is_checkout' ) && is_checkout() );
+	// Dos condiciones distintas: estar en el checkout, y que ese checkout sea el
+	// de bloques. Confundirlas cargaba este módulo en checkouts clásicos.
+	if ( ! function_exists( 'is_checkout' ) || ! is_checkout() ) {
+		return;
+	}
 
-	if ( ! $es_checkout && function_exists( 'has_block' ) && ! has_block( 'woocommerce/checkout' ) ) {
+	if ( ! apg_city_checkout_usa_bloques() ) {
 		return;
 	}
 

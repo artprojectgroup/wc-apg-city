@@ -5,7 +5,7 @@ Tags: city, state, postcode, geonames, google maps
 Requires at least: 5.1
 Tested up to: 7.2
 Requires PHP: 7.4
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 WC requires at least: 5.6
 WC tested up to: 11.1.0
 License: GNU General Public License v3 or later
@@ -61,6 +61,8 @@ It depends on many factors, but the one that has given us the best results is th
 3. Screenshot of WC - APG City. Billing and shipping forms. Checkout block.
 
 == Changelog ==
+= 2.1.2 =
+* Fixed: on a classic checkout the city field stopped filling in, because the plugin loaded the Checkout block script instead of the classic one.
 = 2.1.1 =
 * Fixed: a fatal error on WordPress 5.0; the plugin now declares that it needs 5.1.
 * The postcode import now rejects a malformed batch instead of sending a broken query.
@@ -185,6 +187,8 @@ It depends on many factors, but the one that has given us the best results is th
 * Initial version.
 
 == Upgrade Notice ==
+= 2.1.2 =
+* Fixes the city field on classic checkouts, broken since 2.1.0. Update recommended.
 = 2.1.1 =
 * Maintenance release. It also fixes a fatal error on WordPress 5.0.
 = 2.1.0 =
